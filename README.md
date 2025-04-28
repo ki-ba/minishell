@@ -1,0 +1,3 @@
+# minishell
+
+contributors : kbarru, mlouis
