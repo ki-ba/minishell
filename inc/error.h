@@ -7,7 +7,7 @@ enum e_error
 	ERR_PARSING,
 	ERR_ALLOC,
 	ERR_PRINT
-}
+};
 
 void	error_exit(int err);
 
