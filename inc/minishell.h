@@ -11,7 +11,7 @@
 /* note : a TOKEN_FILE can only be after a redirection : in other cases, it is considered a TOKEN_STR, even when it is supposed to refer to a file (i.e the arg after `cat` command) */
 typedef enum e_token_type
 {
-	TOKEN_CMD,
+	TOKEN_CMD = 0,
 	TOKEN_OPT,
 	TOKEN_STR,
 	TOKEN_PIPE,
