@@ -19,7 +19,7 @@ OBJ_DIR = .obj/
 INC_DIR = inc/
 TEST_DIR = test/
 
-SRC = main.c env/env.c debug.c
+SRC = main.c env/env.c history.c debug.c
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 INCLUDES = $(INC_DIR)minishell.h
@@ -56,3 +56,6 @@ test : all
 
 re : fclean
 	$(MAKE) all
+
+mac :
+	$(MAKE) all LIBS="-L$(LIB_DIR) -lft -ledit"

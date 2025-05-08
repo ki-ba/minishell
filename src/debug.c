@@ -7,19 +7,19 @@ void	display_token(t_token *token)
 
 	type_int = token->type;
 	if (token->type == TOKEN_CMD)
-		strcpy(token_type, "COMMAND");
+		ft_strlcpy(token_type, "COMMAND", 10);
 	else if (token->type == TOKEN_OPT)
-		strcpy(token_type, "OPTION");
+		ft_strlcpy(token_type, "OPTION", 10);
 	else if (type_int == TOKEN_STR)
-		strcpy(token_type, "STRING");
+		ft_strlcpy(token_type, "STRING", 10);
 	else if (type_int == TOKEN_PIPE)
-		strcpy(token_type, "PIPE");
+		ft_strlcpy(token_type, "PIPE", 10);
 	else if (type_int == TOKEN_REDIRECT)
-		strcpy(token_type, "REDIRECT");
+		ft_strlcpy(token_type, "REDIRECT", 10);
 	else if (type_int == TOKEN_FILE)
-		strcpy(token_type, "FILE");
+		ft_strlcpy(token_type, "FILE", 10);
 	else
-		strcpy(token_type, "UNKNOWN");
+		ft_strlcpy(token_type, "UNKNOWN", 10);
 	ft_printf("-----\ntoken %p : %s\n^%s$\n------\n", token, token_type, token->token);
 }
 

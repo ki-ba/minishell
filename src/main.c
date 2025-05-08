@@ -60,18 +60,23 @@ t_bool	determine_option(char token_str[])
 	return (ft_strlen(token_str) == 2 && token_str[0] == '-');
 }
 
+t_bool determine_pipe(char token_str[])
+{
+	return (!ft_strncmp(token_str, "|", 2));
+}
+
 t_token_type	determine_token_type(char token_str[], t_token_type last_type)
 {
 	if (determine_redirect(token_str))
 		return (TOKEN_REDIRECT);
-	else if (last_type == TOKEN_FILE && ft_str_is_alnum(token_str))
-		return (TOKEN_CMD);
 	else if (last_type == TOKEN_REDIRECT)
 		return (TOKEN_FILE);
 	else if (determine_option(token_str))
 		return (TOKEN_OPT);
-	else if (token_str[0] == '|')
+	else if (determine_pipe(token_str))
 		return (TOKEN_PIPE);
+	else if (ft_str_is_alnum(token_str))
+		return (TOKEN_CMD);
 	else
 		return (TOKEN_STR);
 }
@@ -89,8 +94,7 @@ t_token	*create_token(t_list **tokens, char *token_str)
 	last_type = TOKEN_PIPE;
 	if (last_lst)
 		last_type = ((t_token *)(last_lst->content))->type;
-	if (last_type == TOKEN_PIPE)
-		new_token->type = determine_token_type(token_str, last_type);
+	new_token->type = determine_token_type(token_str, last_type);
 	new_token->token = token_str;
 	return (new_token);
 }
@@ -132,14 +136,22 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 int	readline_loop(t_env_lst *env_lst)
 {
 	char	*cmd;
+	int	hist_fd;
+	char	*last_cmd;
 	int		status;
-
+	
+	last_cmd = NULL;
+	hist_fd = retrieve_history(&last_cmd);
+	ft_printf("last cmd : %s\n", last_cmd);
 	while (TRUE)
 	{
-		cmd = readline("zinzinshell >");
-		add_history(cmd);
+		cmd = readline("zinzinshell $");
+		ft_add_history(hist_fd, cmd, last_cmd);
 		status = interpret_line(cmd, env_lst);
+		free(last_cmd);
+		last_cmd = ft_strdup(cmd);
 	}
+	close(hist_fd);
 	return (status);
 }
 

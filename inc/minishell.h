@@ -7,7 +7,11 @@
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <editline/readline.h>
 
+# ifndef HIST_FILE
+#  define HIST_FILE ".zzsh_history"
+# endif
 /* note : a TOKEN_FILE can only be after a redirection : in other cases, it is considered a TOKEN_STR, even when it is supposed to refer to a file (i.e the arg after `cat` command) */
 typedef enum e_token_type
 {
@@ -40,14 +44,18 @@ typedef struct s_env_lst
 	struct s_env_lst	*next;
 }						t_env_lst;
 
-// ENV.C
 size_t		ft_strlen_c(char str[], char c);
 t_env_lst	*create_env_lst(char name[]);
 void		env_add_back(t_env_lst **head, t_env_lst *new);
 t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[]);
 void		print_env(t_env_lst *env_lst);
 
-// DEBUG.c
+/* debug.c */
 void		display_token(t_token *token);
 void		print_token_list(t_list *tokens);
 #endif
+
+/* history.c */
+
+void	ft_add_history(int hist_fd, char entry[], char last_cmd[]);
+int	retrieve_history(char *last_cmd[]);
