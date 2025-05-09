@@ -5,14 +5,22 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <editline/readline.h>
+
+# ifdef __linux__
+#  include <readline/readline.h>
+#  include <readline/history.h>
+# elif __APPLE__
+#  include <editline/readline.h>
+# endif
 
 # ifndef HIST_FILE
 #  define HIST_FILE ".zzsh_history"
 # endif
-/* note : a TOKEN_FILE can only be after a redirection : in other cases, it is considered a TOKEN_STR, even when it is supposed to refer to a file (i.e the arg after `cat` command) */
+
+/* note : a TOKEN_FILE can only be after a redirection.
+ * in other cases, it is considered a TOKEN_STR,
+ * even when it is supposed to refer to a file
+ * (i.e the arg after `cat` command) */
 typedef enum e_token_type
 {
 	TOKEN_CMD = 0,
@@ -36,7 +44,8 @@ typedef struct s_exec_lst
 	struct s_exec_lst	*next;
 }						t_exec_lst;
 
-/* storing env as a linked list is simplifies the implementation of functions that modifiy the environment size, i.e unset, export.... */
+/* storing env as a linked list is simplifies the implementation
+ * of functions that modifiy the environment size, i.e unset, export.... */
 typedef struct s_env_lst
 {
 	char				*name;
@@ -53,9 +62,9 @@ void		print_env(t_env_lst *env_lst);
 /* debug.c */
 void		display_token(t_token *token);
 void		print_token_list(t_list *tokens);
-#endif
 
 /* history.c */
 
-void	ft_add_history(int hist_fd, char entry[], char last_cmd[]);
-int	retrieve_history(char *last_cmd[]);
+void		ft_add_history(int hist_fd, char entry[], char last_cmd[]);
+int			retrieve_history(char *last_cmd[]);
+#endif

@@ -2,6 +2,10 @@
 #include "minishell.h"
 #include <stdlib.h>
 
+/**
+	* @brief checks wether the provided `line` has unclosed quotes.
+	* @returns 0 if all quotes are correctly closed, non-zero otherwise.
+*/
 int	check_quotes(char *line)
 {
 	size_t	simple_n;
@@ -60,7 +64,7 @@ t_bool	determine_option(char token_str[])
 	return (ft_strlen(token_str) == 2 && token_str[0] == '-');
 }
 
-t_bool determine_pipe(char token_str[])
+t_bool	determine_pipe(char token_str[])
 {
 	return (!ft_strncmp(token_str, "|", 2));
 }
@@ -102,7 +106,6 @@ t_token	*create_token(t_list **tokens, char *token_str)
 void	tokenize(t_list **tokens, char *line)
 {
 	t_token			*token;
-	/*t_token_type	last_type;*/
 	size_t			cur_token_len;
 	size_t			i;
 
@@ -136,20 +139,23 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 int	readline_loop(t_env_lst *env_lst)
 {
 	char	*cmd;
-	int	hist_fd;
+	int		hist_fd;
 	char	*last_cmd;
 	int		status;
-	
+
 	last_cmd = NULL;
 	hist_fd = retrieve_history(&last_cmd);
 	ft_printf("last cmd : %s\n", last_cmd);
 	while (TRUE)
 	{
 		cmd = readline("zinzinshell $");
-		ft_add_history(hist_fd, cmd, last_cmd);
-		status = interpret_line(cmd, env_lst);
-		free(last_cmd);
-		last_cmd = ft_strdup(cmd);
+		if (cmd && cmd[0])
+		{
+			ft_add_history(hist_fd, cmd, last_cmd);
+			status = interpret_line(cmd, env_lst);
+			free(last_cmd);
+			last_cmd = ft_strdup(cmd);
+		}
 	}
 	close(hist_fd);
 	return (status);
