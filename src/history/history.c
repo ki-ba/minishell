@@ -26,7 +26,6 @@ int	retrieve_history(char *last_cmd[])
 		hist_entry[ft_strlen(hist_entry) - 1] = '\0';
 		free(*last_cmd);
 		*last_cmd = ft_strdup(hist_entry);
-		/*(*last_cmd)[ft_strlen(*last_cmd) - 1] = '\0';*/
 		add_history(hist_entry);
 		free(hist_entry);
 		hist_entry = get_next_line(hist_fd);

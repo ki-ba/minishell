@@ -19,7 +19,20 @@ OBJ_DIR = .obj/
 INC_DIR = inc/
 TEST_DIR = test/
 
-SRC = main.c env/env.c history.c debug.c
+
+ENV_SRC = env.c
+HISTORY_SRC = history.c
+LEXING_SRC = lexing.c lexing_utils.c
+
+ENV_SRC_DIR = env/
+HISTORY_SRC_DIR = history/
+LEXING_SRC_DIR = lexing/
+P_ENV = $(addprefix $(ENV_SRC_DIR), $(ENV_SRC))
+P_HISTORY = $(addprefix $(HISTORY_SRC_DIR), $(HISTORY_SRC))
+P_LEXING = $(addprefix $(LEXING_SRC_DIR), $(LEXING_SRC))
+
+
+SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) main.c debug.c
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 INCLUDES = $(INC_DIR)minishell.h
@@ -39,7 +52,9 @@ $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(INCLUDES) | $(OBJ_DIR)
 
 $(OBJ_DIR) :
 	mkdir -p $(OBJ_DIR)
-	mkdir -p $(OBJ_DIR)env
+	mkdir -p $(OBJ_DIR)$(ENV_SRC_DIR)
+	mkdir -p $(OBJ_DIR)$(HISTORY_SRC_DIR)
+	mkdir -p $(OBJ_DIR)$(LEXING_SRC_DIR)
 
 $(LIB_DIR)libft.a :
 	$(MAKE) -C $(LIB_DIR)

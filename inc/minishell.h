@@ -53,18 +53,32 @@ typedef struct s_env_lst
 	struct s_env_lst	*next;
 }						t_env_lst;
 
-size_t		ft_strlen_c(char str[], char c);
-t_env_lst	*create_env_lst(char name[]);
-void		env_add_back(t_env_lst **head, t_env_lst *new);
-t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[]);
-void		print_env(t_env_lst *env_lst);
+t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
+t_env_lst		*create_env_lst(char name[]);
+size_t			ft_strlen_c(char str[], char c);
+void			env_add_back(t_env_lst **head, t_env_lst *new);
+void			print_env(t_env_lst *env_lst);
 
 /* debug.c */
-void		display_token(t_token *token);
-void		print_token_list(t_list *tokens);
+void			display_token(t_token *token);
+void			print_token_list(t_list *tokens);
 
 /* history.c */
 
-void		ft_add_history(int hist_fd, char entry[], char last_cmd[]);
-int			retrieve_history(char *last_cmd[]);
+void			ft_add_history(int hist_fd, char entry[], char last_cmd[]);
+int				retrieve_history(char *last_cmd[]);
+
+/* lexing.c */
+
+t_token_type	determine_token_type(char token_str[], t_token_type last_type, t_bool *cmd_bool);
+t_token			*create_token(t_list **tokens, char *token_str, t_bool *cmd_bool);
+void			tokenize(t_list **tokens, char *line);
+
+/* lexing_utils.c */
+
+int				check_quotes(char *line);
+size_t			count_token_len(char *line);
+t_bool			determine_redirect(char token_str[]);
+t_bool			determine_option(char token_str[]);
+t_bool			determine_pipe(char token_str[]);
 #endif
