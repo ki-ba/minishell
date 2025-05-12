@@ -1,17 +1,5 @@
 #include "minishell.h"
 
-size_t	ft_strlen_c(char str[], char c)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] && str[i] != c)
-		++i;
-	if (str[i] != c)
-		return (0);
-	return (i);
-}
-
 t_env_lst	*create_env_lst(char name[])
 {
 	t_env_lst	*new;

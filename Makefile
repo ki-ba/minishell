@@ -22,7 +22,7 @@ TEST_DIR = test/
 
 ENV_SRC = env.c
 HISTORY_SRC = history.c
-LEXING_SRC = lexing.c lexing_utils.c
+LEXING_SRC = lexing.c lexing_utils.c expand.c
 
 ENV_SRC_DIR = env/
 HISTORY_SRC_DIR = history/

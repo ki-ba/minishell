@@ -1,3 +1,4 @@
+#include "libft.h"
 #include "minishell.h"
 
 t_token_type	determine_token_type(char token_str[], t_token_type last_type, t_bool *cmd_bool)
@@ -51,6 +52,7 @@ void	tokenize(t_list **tokens, char *line)
 	i = 0;
 	if (!line || check_quotes(line))
 		return ;
+	ft_print_arr(split_by_vars(line));
 	while (line[i])
 	{
 		cur_token_len = count_token_len(&line[i]);

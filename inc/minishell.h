@@ -81,4 +81,9 @@ size_t			count_token_len(char *line);
 t_bool			determine_redirect(char token_str[]);
 t_bool			determine_option(char token_str[]);
 t_bool			determine_pipe(char token_str[]);
+
+/* expand.c */
+size_t			count_parts(char str[]);
+char			**split_by_vars(char str[]);
+
 #endif
