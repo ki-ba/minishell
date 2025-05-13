@@ -1,28 +1,48 @@
 #include "minishell.h"
 
 /**
+ * @brief helper function to for check_quotes.
+ */
+int	check_open(int open, char c)
+{
+	if (c == '\'')
+	{
+		if (open == 0)
+			open = 1;
+		else if (open == 1)
+			open = 0;
+	}
+	if (c == '"')
+	{
+		if (open == 0)
+			open = 2;
+		else if (open == 2)
+			open = 0;
+	}
+	return (open);
+}
+
+/**
  * @brief checks wether the provided `line` has unclosed quotes.
+ * @param open is 0 when not open, 1 when single quote, 2 when double.
  * @returns 0 if all quotes are correctly closed, non-zero otherwise.
  */
-int check_quotes(char *line)
+int	check_quotes(char *line)
 {
-  size_t simple_n;
-  size_t double_n;
-  size_t i;
+	size_t	i;
+	int		open;
 
-  simple_n = 0;
-  double_n = 0;
-  i = 0;
-  if (!line)
-    return (1);
-  while (line[i]) {
-    if (line[i] == '"')
-      ++double_n;
-    else if (line[i] == '\'')
-      ++simple_n;
-    ++i;
-  }
-  return (simple_n % 2 || double_n % 2);
+	open = 0;
+	i = 0;
+	if (!line)
+		return (1);
+	while (line[i])
+	{
+		if (line[i] == '\'' || line [i] == '"')
+			open = check_open(open, line[i]);
+		++i;
+	}
+	return (open);
 }
 
 size_t count_token_len(char *line) {
