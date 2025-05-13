@@ -25,7 +25,7 @@ int	ft_cd(char *new_path, t_env_lst *env)
 	err = chdir(new_path); //chdir(full_path);
 	if (err != 0)
 	{
-		perror("minishell: cd: ");
+		perror("minishell: cd");
 		return (err);
 	}
 	err = update_env(new_path, env);
@@ -71,7 +71,7 @@ static int	update_env(char *new_path, t_env_lst *env)
 	char	*cpy_pwd;
 
 	cpy_pwd = ft_calloc(1, sizeof(char));
-	getcwd(new_path, PATH_MAX); //? malloc check, symlink ?
+	getcwd(new_path, PATH_MAX);
 	env = search_env_var(env, "PWD");
 	cpy_pwd = ft_strdup(env->value);
 	if (!cpy_pwd)
