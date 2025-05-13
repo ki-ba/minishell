@@ -6,9 +6,9 @@ static int	no_arg_cd(t_env_lst *env);
 static int	update_env(char *new_path, t_env_lst *env);
 static int	check_dir_access(char *new_path);
 
-/** if relative => check access from end to start */
-/** @param:  */
-/** @param: */
+/** @brief if relative => check access from end to start */
+/** @param  */
+/** @param */
 /** @return  */
 int	ft_cd(char *new_path, t_env_lst *env)
 {
