@@ -6,7 +6,7 @@
 #    By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 13:36:15 by kbarru            #+#    #+#              #
-#    Updated: 2025/05/14 14:02:35 by mlouis           ###   ########.fr        #
+#    Updated: 2025/05/14 14:06:33 by mlouis           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ TEST_DIR = test/
 ENV_SRC = env.c
 HISTORY_SRC = history.c
 LEXING_SRC = lexing.c lexing_utils.c expand.c
-BUILTINS_SRC = builtins_utils.c cd.c
+BUILTINS_SRC = builtins_utils.c cd.c pwd.c
 
 ENV_SRC_DIR = env/
 HISTORY_SRC_DIR = history/
@@ -58,6 +58,7 @@ $(OBJ_DIR) :
 	mkdir -p $(OBJ_DIR)$(ENV_SRC_DIR)
 	mkdir -p $(OBJ_DIR)$(HISTORY_SRC_DIR)
 	mkdir -p $(OBJ_DIR)$(LEXING_SRC_DIR)
+	mkdir -p $(OBJ_DIR)$(BUILTINS_SRC_DIR)
 
 $(LIB_DIR)libft.a :
 	$(MAKE) -C $(LIB_DIR)
