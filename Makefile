@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+         #
+#    By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 13:36:15 by kbarru            #+#    #+#              #
-#    Updated: 2025/04/29 15:02:00 by kbarru           ###   ########lyon.fr    #
+#    Updated: 2025/05/14 14:02:35 by mlouis           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,16 +23,19 @@ TEST_DIR = test/
 ENV_SRC = env.c
 HISTORY_SRC = history.c
 LEXING_SRC = lexing.c lexing_utils.c expand.c
+BUILTINS_SRC = builtins_utils.c cd.c
 
 ENV_SRC_DIR = env/
 HISTORY_SRC_DIR = history/
 LEXING_SRC_DIR = lexing/
+BUILTINS_SRC_DIR = builtins/
 P_ENV = $(addprefix $(ENV_SRC_DIR), $(ENV_SRC))
 P_HISTORY = $(addprefix $(HISTORY_SRC_DIR), $(HISTORY_SRC))
 P_LEXING = $(addprefix $(LEXING_SRC_DIR), $(LEXING_SRC))
+P_BUILTINS = $(addprefix $(BUILTINS_SRC_DIR), $(BUILTINS_SRC))
 
 
-SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) main.c debug.c
+SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) main.c debug.c
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 INCLUDES = $(INC_DIR)minishell.h
