@@ -24,9 +24,7 @@ size_t	count_parts(char str[])
 {
 	size_t	i;
 	size_t	count;
-	char	*last_part;
 
-	last_part = str;
 	i = 0;
 	count = 0;
 	while (str[i])
