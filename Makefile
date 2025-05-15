@@ -6,14 +6,14 @@
 #    By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/28 13:36:15 by kbarru            #+#    #+#              #
-#    Updated: 2025/04/29 15:02:00 by kbarru           ###   ########lyon.fr    #
+#    Updated: 2025/05/15 11:03:59 by kbarru           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-
+DEBUG_FLAGS = -Wall -Wextra -g -fsanitize=address
 SRC_DIR = src/
 OBJ_DIR = .obj/
 INC_DIR = inc/
@@ -74,3 +74,7 @@ re : fclean
 
 mac :
 	$(MAKE) all LIBS="-L$(LIB_DIR) -lft -ledit"
+
+debug :
+	$(MAKE) re CFLAGS="$(DEBUG_FLAGS)"
+	$(MAKE) clean

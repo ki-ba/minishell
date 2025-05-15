@@ -3,12 +3,14 @@
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
 	t_list	*tokens;
+	char	*expanded;
 
 	tokens = NULL;
-	tokenize(&tokens, cmd);
+	expanded = expand_line(env_lst, cmd);
+	tokenize(&tokens, expanded);
 	print_token_list(tokens);
-	(void)cmd;
-	(void)env_lst;
+	ft_printf("%s\n", expanded);
+	free(expanded);
 	return (0);
 }
 
@@ -28,8 +30,9 @@ int	readline_loop(t_env_lst *env_lst)
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
 			status = interpret_line(cmd, env_lst);
-			free(last_cmd);
-			last_cmd = ft_strdup(cmd);
+			if (last_cmd)
+				free(last_cmd);
+			last_cmd = cmd;
 		}
 	}
 	close(hist_fd);

@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/15 10:17:27 by kbarru            #+#    #+#             */
+/*   Updated: 2025/05/15 10:48:45 by kbarru           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
 #include "minishell.h"
 
 t_env_lst	*create_env_lst(char name[])
@@ -49,4 +62,18 @@ void	print_env(t_env_lst *env_lst)
 		ft_printf("%s=%s\n", env_lst->name, env_lst->value);
 		env_lst = env_lst->next;
 	}
+}
+
+char	*get_env_val(t_env_lst *env, char name[])
+{
+	t_env_lst	*current;
+
+	current = env;
+	while (current)
+	{
+		if (!ft_strncmp(name, current->name, ft_strlen(name)))
+			return (current->value);
+		current = current->next;
+	}
+	return (NULL);
 }

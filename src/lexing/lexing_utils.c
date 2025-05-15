@@ -52,7 +52,6 @@ void	tokenize(t_list **tokens, char *line)
 	i = 0;
 	if (!line || check_quotes(line))
 		return ;
-	ft_print_arr(split_by_vars(line));
 	while (line[i])
 	{
 		cur_token_len = count_token_len(&line[i]);

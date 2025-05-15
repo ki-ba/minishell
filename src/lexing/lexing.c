@@ -45,38 +45,43 @@ int	check_quotes(char *line)
 	return (open);
 }
 
-size_t count_token_len(char *line) {
-  size_t i;
-  int simple_q;
-  int double_q;
+size_t	count_token_len(char *line)
+{
+	size_t		i;
+	int			simple_q;
+	int			double_q;
 
-  i = 0;
-  simple_q = 0;
-  double_q = 0;
-  while (line[i] && (line[i] != ' ' || simple_q || double_q)) {
-    if (line[i] == '"')
-      double_q = !double_q;
-    else if (line[i] == '\'')
-      simple_q = !simple_q;
-    ++i;
-  }
-  return (i);
+	i = 0;
+	simple_q = 0;
+	double_q = 0;
+	while (line[i] && (line[i] != ' ' || simple_q || double_q))
+	{
+		if (line[i] == '"')
+			double_q = !double_q;
+		else if (line[i] == '\'')
+			simple_q = !simple_q;
+		++i;
+	}
+	return (i);
 }
 
-t_bool determine_redirect(char token_str[]) {
-  if (ft_strncmp(token_str, ">", 2) == 0)
-    return (TRUE);
-  else if (ft_strncmp(token_str, "<", 2) == 0)
-    return (TRUE);
-  else if (ft_strncmp(token_str, ">>", 3) == 0)
-    return (TRUE);
-  return (FALSE);
+t_bool	determine_redirect(char token_str[])
+{
+	if (ft_strncmp(token_str, ">", 2) == 0)
+		return (TRUE);
+	else if (ft_strncmp(token_str, "<", 2) == 0)
+		return (TRUE);
+	else if (ft_strncmp(token_str, ">>", 3) == 0)
+		return (TRUE);
+	return (FALSE);
 }
 
-t_bool determine_option(char token_str[]) {
-  return (ft_strlen(token_str) == 2 && token_str[0] == '-');
+t_bool	determine_option(char token_str[])
+{
+	return (ft_strlen(token_str) == 2 && token_str[0] == '-');
 }
 
-t_bool determine_pipe(char token_str[]) {
-  return (!ft_strncmp(token_str, "|", 2));
+t_bool	determine_pipe(char token_str[])
+{
+	return (!ft_strncmp(token_str, "|", 2));
 }

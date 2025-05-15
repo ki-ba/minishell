@@ -83,7 +83,19 @@ t_bool			determine_option(char token_str[]);
 t_bool			determine_pipe(char token_str[]);
 
 /* expand.c */
-size_t			count_parts(char str[]);
-char			**split_by_vars(char str[]);
+/*size_t			count_parts(char str[]);*/
+/*char			**split_by_vars(char str[]);*/
+
+/*static size_t	varnamelen(char str[]);*/
+/*static size_t	get_part_len(char str[]);*/
+char			*expand_line(t_env_lst *env, char str[]);
+
+/* env.c */
+
+t_env_lst		*create_env_lst(char name[]);
+void			env_add_back(t_env_lst **head, t_env_lst *new);
+t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
+void			print_env(t_env_lst *env_lst);
+char			*get_env_val(t_env_lst *env, char name[]);
 
 #endif
