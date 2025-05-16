@@ -1,4 +1,6 @@
 minishell
+.unity_obj/
+runtest
 .cache
 .obj
 compile_commands.json

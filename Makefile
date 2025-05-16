@@ -36,7 +36,7 @@ INC_DIR = inc/
 TEST_DIR = test/
 
 
-ENV_SRC = env.c
+ENV_SRC = env.c env_utils.c
 HISTORY_SRC = history.c
 LEXING_SRC = lexing.c lexing_utils.c expand.c
 
