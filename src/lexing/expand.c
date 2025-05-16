@@ -19,57 +19,28 @@ static size_t	varnamelen(char str[])
 	return (i);
 }
 
-/*size_t	count_parts(char str[])*/
-/*{*/
-/*	size_t	i;*/
-/*	size_t	count;*/
-/**/
-/*	i = 0;*/
-/*	count = 0;*/
-/*	while (str[i])*/
-/*	{*/
-/*		if (str[i] && str[i] == '$')*/
-/*		{*/
-/*			++count;*/
-/*			i += varnamelen(&str[i]);*/
-/*		}*/
-/*		else*/
-/*		{*/
-/*			++count;*/
-/*			i += ft_strlen_c(&str[i], '$');*/
-/*		}*/
-/*	}*/
-/*	return (count);*/
-/*}*/
+size_t	count_parts(char str[])
+{
+	size_t	i;
+	size_t	count;
 
-/*char	**split_by_vars(char str[])*/
-/*{*/
-/*	size_t	i;*/
-/*	size_t	part_n;*/
-/*	char	**arr;*/
-/*	size_t	size;*/
-/*	size_t	part_len;*/
-/**/
-/*	part_n = 0;*/
-/*	size = count_parts(str);*/
-/*	arr = ft_calloc(size + 1, sizeof(char *));*/
-/*	i = 0;*/
-/*	while (part_n < size)*/
-/*	{*/
-/*		if (str[i] == '$')*/
-/*		{*/
-/*			part_len = varnamelen(&str[i]);*/
-/*		}*/
-/*		else*/
-/*		{*/
-/*			part_len = ft_strlen_c(&str[i], '$');*/
-/*		}*/
-/*		arr[part_n] = ft_substr(str, i, part_len);*/
-/*		i += part_len;*/
-/*		++part_n;*/
-/*	}*/
-/*	return (arr);*/
-/*}*/
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] && str[i] == '$')
+		{
+			++count;
+			i += varnamelen(&str[i]);
+		}
+		else
+		{
+			++count;
+			i += ft_strlen_c(&str[i], '$');
+		}
+	}
+	return (count);
+}
 
 static size_t	get_part_len(char str[])
 {
@@ -81,21 +52,6 @@ static size_t	get_part_len(char str[])
 		part_len = ft_strlen_c(&str[0], '$');
 	return (part_len);
 }
-
-/*static char	*extract_part(char str[])*/
-/*{*/
-/*	size_t	part_len;*/
-/**/
-/*	if (!str)*/
-/*		return (NULL);*/
-/*	if (str[0] == '$')*/
-/*	{*/
-/*		part_len = varnamelen(str);*/
-/*	}*/
-/*	else*/
-/*		part_len = ft_strlen_c(str, '$');*/
-/*	return (ft_substr(str, 0, part_len));*/
-/*}*/
 
 char	*expand_line(t_env_lst *env, char str[])
 {
