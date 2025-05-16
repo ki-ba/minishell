@@ -44,7 +44,7 @@ t_token	*create_token(t_list **tokens, char *token_str, t_bool *cmd_bool)
 void	tokenize(t_list **tokens, char *line)
 {
 	t_token			*token;
-	size_t			cur_token_len;
+	size_t			cur_len;
 	size_t			i;
 	t_bool			cmd_bool;
 
@@ -54,11 +54,11 @@ void	tokenize(t_list **tokens, char *line)
 		return ;
 	while (line[i])
 	{
-		cur_token_len = count_token_len(&line[i]);
-		token = create_token(tokens, ft_substr(line, i, cur_token_len), &cmd_bool);
+		cur_len = count_token_len(&line[i]);
+		token = create_token(tokens, ft_substr(line, i, cur_len), &cmd_bool);
 		ft_lstadd_back(tokens, ft_lstnew(token));
-		i += cur_token_len;
-		while (line[i] == ' ') // FIXME replace by iswhitespace()
+		i += cur_len;
+		while (ft_iswhitespace(line[i]))
 			++i;
 	}
 }
