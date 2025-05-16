@@ -44,10 +44,9 @@ int	main(int argc, char *argv[], char *envp[])
 	t_env_lst	*env_lst;
 	int			exit_status;
 
-	env_lst = NULL;
-	(void)argc;
-	(void)argv;
 	env_lst = create_environment(&env_lst, envp);
+	if (argc == 3 && !ft_strncmp(argv[1], "-c", 3))
+		interpret_line(argv[2], env_lst);
 	exit_status = readline_loop(env_lst);
 	return (exit_status);
 }

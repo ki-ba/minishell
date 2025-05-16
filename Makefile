@@ -113,3 +113,9 @@ testmac : mac $(TEST_OBJ) $(UNITY_OBJ)
 	chmod +x runtest
 	rm $(TEST_OBJ)
 	./runtest
+
+test : all $(TEST_OBJ) $(UNITY_OBJ)
+	$(CC) $(CFLAGS) $(TOBJ) $(TEST_OBJ) $(UNITY_OBJ) $(LIBS) -lft -o runtest
+	chmod +x runtest
+	rm $(TEST_OBJ)
+	./runtest

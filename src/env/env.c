@@ -44,6 +44,7 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 	size_t	i;
 	char	*name;
 
+	*env_lst = NULL;
 	i = 0;
 	while (envp[i])
 	{
