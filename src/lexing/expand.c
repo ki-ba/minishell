@@ -5,6 +5,7 @@
 *	@brief name and the beginning/end of the string.
 *	@brief for instance, "Hi $USR you are at $PWD" contains 4 parts.
 */
+#include "libft.h"
 #include "minishell.h"
 
 static size_t	varnamelen(char str[])
@@ -19,29 +20,6 @@ static size_t	varnamelen(char str[])
 	return (i);
 }
 
-size_t	count_parts(char str[])
-{
-	size_t	i;
-	size_t	count;
-
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] && str[i] == '$')
-		{
-			++count;
-			i += varnamelen(&str[i]);
-		}
-		else
-		{
-			++count;
-			i += ft_strlen_c(&str[i], '$');
-		}
-	}
-	return (count);
-}
-
 static size_t	get_part_len(char str[])
 {
 	size_t	part_len;
@@ -51,6 +29,24 @@ static size_t	get_part_len(char str[])
 	else
 		part_len = ft_strlen_c(&str[0], '$');
 	return (part_len);
+}
+
+t_bool	must_expand(char str[], size_t pos)
+{
+	char	quote;
+	size_t	i;
+
+	i = 0;
+	quote = '\0';
+	while (i < pos)
+	{
+		if ((str[i] == '"' || str[i] == '\'') && !quote)
+			quote = str[i];
+		else if (str[i] == quote)
+			quote = '\0';
+		++i;
+	}
+	return (quote != '\'');
 }
 
 char	*expand_line(t_env_lst *env, char str[])
@@ -67,7 +63,7 @@ char	*expand_line(t_env_lst *env, char str[])
 	{
 		part_len = get_part_len(&str[i]);
 		part = ft_substr(&str[i], 0, part_len);
-		if (part[0] == '$')
+		if (part[0] == '$' && must_expand(str, i))
 		{
 			env_val = get_env_val(env, &part[1]);
 			if (env_val)

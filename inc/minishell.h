@@ -62,7 +62,7 @@ void			print_env(t_env_lst *env_lst);
 /* debug.c */
 void			display_token(t_token *token);
 void			print_token_list(t_list *tokens);
-
+char			*summarize_lexing(t_list *tokens);
 /* history.c */
 
 void			ft_add_history(int hist_fd, char entry[], char last_cmd[]);
@@ -87,6 +87,7 @@ t_bool			determine_pipe(char token_str[]);
 /*static size_t	varnamelen(char str[]);*/
 /*static size_t	get_part_len(char str[]);*/
 char			*expand_line(t_env_lst *env, char str[]);
+t_bool	must_expand(char str[], size_t pos);
 
 /* env.c */
 

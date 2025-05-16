@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <stdlib.h>
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
@@ -46,7 +47,10 @@ int	main(int argc, char *argv[], char *envp[])
 
 	env_lst = create_environment(&env_lst, envp);
 	if (argc == 3 && !ft_strncmp(argv[1], "-c", 3))
+	{
 		interpret_line(argv[2], env_lst);
+		exit(EXIT_SUCCESS);
+	}
 	exit_status = readline_loop(env_lst);
 	return (exit_status);
 }

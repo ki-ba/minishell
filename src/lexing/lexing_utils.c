@@ -57,7 +57,6 @@ void	tokenize(t_list **tokens, char *line)
 		cur_token_len = count_token_len(&line[i]);
 		token = create_token(tokens, ft_substr(line, i, cur_token_len), &cmd_bool);
 		ft_lstadd_back(tokens, ft_lstnew(token));
-		ft_printf("new size of list: %d\n", ft_lstsize(*tokens));
 		i += cur_token_len;
 		while (line[i] == ' ') // FIXME replace by iswhitespace()
 			++i;
