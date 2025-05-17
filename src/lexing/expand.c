@@ -59,6 +59,7 @@ char	*expand_line(t_env_lst *env, char str[])
 
 	i = 0;
 	expanded = ft_calloc(1, sizeof(char));
+	env_val = NULL;
 	while (str[i])
 	{
 		part_len = get_part_len(&str[i]);

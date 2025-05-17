@@ -1,6 +1,8 @@
 #include "libft.h"
 #include "unity.h"
 #include "minishell.h"
+#include "builtins.h"
+#include <stdlib.h>
 
 void	setUp(void)
 {
@@ -117,6 +119,25 @@ void	test_must_expand(void)
 	TEST_ASSERT_FALSE(must_expand("Hello '$USER'", 7));
 }
 
+void	test_expand_line(void)
+{
+	extern char	**environ;
+	char		*line, *line2, *line3;
+	char		*expanded, *expanded2, *expanded3;
+	t_env_lst	*env_lst;
+
+	env_lst = NULL;
+	create_environment(&env_lst, environ);
+	line = ft_strdup("hello $USER you are at $PWD");
+	line2 = ft_strdup("hello '$USER' you are at $PWD");
+	line3 = ft_strdup("hello \"$USER you\" are 'at $'PWD");
+	expanded = ft_concat(4, "hello ",getenv("USER"), " you are at", getenv("PWD"));
+	expanded2 = ft_concat(3, "hello '$USER' you are at \"", getenv("PWD"), "\"");
+	expanded3 = ft_concat(3, "hello \"", getenv("USER"), "\" you are 'at $'PWD");
+	TEST_ASSERT_EQUAL_STRING(expanded, expand_line(env_lst, line));
+	TEST_ASSERT_EQUAL_STRING(expanded2, expand_line(env_lst, line2));
+	TEST_ASSERT_EQUAL_STRING(expanded3, expand_line(env_lst, line3));
+}
 void	test_summarize_lexing(void)
 {
 	t_list	*tokens;
@@ -131,6 +152,28 @@ void	test_summarize_lexing(void)
 	tokenize(&tokens, "echo \"hi there\" -n | rev > outfile");
 	TEST_ASSERT_EQUAL_STRING("0213045;", summarize_lexing(tokens));
 }
+
+void	test_cd(void)
+{
+	extern char **environ;
+	t_env_lst	*env_lst;
+	char		*cur_wd;
+	char		*old_wd;
+
+	env_lst = NULL;
+	create_environment(&env_lst, environ);
+	cur_wd = get_env_val(env_lst, "PWD");
+	ft_cd(ft_strdup("/home"), env_lst);
+	TEST_ASSERT_EQUAL_STRING("/home", get_env_val(env_lst, "PWD"));
+	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "OLDPWD"));
+
+	cur_wd = get_env_val(env_lst, "PWD");
+	old_wd = get_env_val(env_lst, "OLDPWD");
+	ft_cd(ft_strdup("/home/inexistent_folder"), env_lst);
+	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
+	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
+}
+
 // not needed when using generate_test_runner.rb
 int	main(void)
 {
@@ -145,5 +188,6 @@ int	main(void)
 	RUN_TEST(test_create_env_arr);
 	RUN_TEST(test_must_expand);
 	RUN_TEST(test_summarize_lexing);
+	RUN_TEST(test_cd);
 	return UNITY_END();
 }

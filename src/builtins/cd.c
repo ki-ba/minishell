@@ -1,6 +1,5 @@
 #include "minishell.h"
 #include "builtins.h"
-#include <limits.h>
 
 static int	no_arg_cd(t_env_lst *env);
 static int	update_env(char *new_path, t_env_lst *env);

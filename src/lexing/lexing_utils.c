@@ -1,11 +1,11 @@
 #include "libft.h"
 #include "minishell.h"
 
-t_token_type	determine_token_type(char token_str[], t_token_type last_type, t_bool *cmd_bool)
+t_token_type	determine_token_type(char token_str[], t_token_type *last_type, t_bool *cmd_bool)
 {
 	if (determine_redirect(token_str))
 		return (TOKEN_REDIRECT);
-	else if (last_type == TOKEN_REDIRECT)
+	else if (*last_type == TOKEN_REDIRECT)
 		return (TOKEN_FILE);
 	else if (determine_option(token_str))
 		return (TOKEN_OPT);
@@ -36,7 +36,7 @@ t_token	*create_token(t_list **tokens, char *token_str, t_bool *cmd_bool)
 	last_type = TOKEN_PIPE;
 	if (last_lst)
 		last_type = ((t_token *)(last_lst->content))->type;
-	new_token->type = determine_token_type(token_str, last_type, cmd_bool);
+	new_token->type = determine_token_type(token_str, &last_type, cmd_bool);
 	new_token->token = token_str;
 	return (new_token);
 }

@@ -43,7 +43,7 @@ char	*get_env_val(t_env_lst *env, char name[])
 	current = env;
 	while (current)
 	{
-		if (!ft_strncmp(name, current->name, ft_strlen(name)))
+		if (!ft_strncmp(name, current->name, ft_strlen(name) + 1))
 			return (current->value);
 		current = current->next;
 	}

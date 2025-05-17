@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include <stdlib.h>
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
@@ -12,6 +11,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 	print_token_list(tokens);
 	ft_printf("%s\n", expanded);
 	free(expanded);
+	ft_lstclear(&tokens, deltoken);
 	return (0);
 }
 
@@ -23,8 +23,9 @@ int	readline_loop(t_env_lst *env_lst)
 	int		status;
 
 	last_cmd = NULL;
+	cmd = NULL;
 	hist_fd = retrieve_history(&last_cmd);
-	while (TRUE)
+	while (TRUE && (!cmd || strncmp(cmd, "exit", ft_strlen(cmd))))
 	{
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
@@ -52,5 +53,6 @@ int	main(int argc, char *argv[], char *envp[])
 		exit(EXIT_SUCCESS);
 	}
 	exit_status = readline_loop(env_lst);
+	destroy_env_lst(env_lst);
 	return (exit_status);
 }

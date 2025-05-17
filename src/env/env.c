@@ -35,3 +35,16 @@ char	**create_env_arr(t_env_lst *env_lst)
 	}
 	return (env_arr);
 }
+
+void	destroy_env_lst(t_env_lst *env_lst)
+{
+	t_env_lst	*tmp;
+
+	while (env_lst)
+	{
+		tmp = env_lst->next;
+		free(env_lst->name);
+		free(env_lst);
+		env_lst = tmp;
+	}
+}
