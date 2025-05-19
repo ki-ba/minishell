@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+
+//! getenv could replace that function
 t_env_lst	*search_env_var(t_env_lst *env, char *var)
 {
 	t_env_lst	*tmp;
