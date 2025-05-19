@@ -3,6 +3,7 @@
 
 # include "libft.h"
 # include "data_structures.h"
+# include <limits.h>
 
 # ifdef __linux__
 #  include <readline/readline.h>
