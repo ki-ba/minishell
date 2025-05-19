@@ -27,6 +27,16 @@ typedef enum e_token_type
 	TOKEN_FILE,
 }	t_token_type;
 
+typedef enum e_redir
+{
+	INFILE,
+	OUTFILE,
+}	t_redir;
+/**
+ * token extracted from a list.
+ * has a type (see e_token_type)
+ * and a value string.
+ */
 typedef struct s_token
 {
 	enum e_token_type	type;
@@ -34,11 +44,17 @@ typedef struct s_token
 
 }						t_token;
 
-typedef struct s_exec_lst
+/**
+ * list of commands to execute.
+ * Created by the parsing part of the project to be interpreted by
+ * execution part.
+ */
+typedef struct s_exec_node
 {
 	char				**cmd;
-	struct s_exec_lst	*next;
-}						t_exec_lst;
+	char				*(filename[2]); // each can be NULL or a filename
+	int					io[2]; // both can be either 0, 1, 2, or 3 (for file)
+}						t_exec_node;
 
 /* storing env as a linked list is simplifies the implementation
  * of functions that modifiy the environment size, i.e unset, export.... */

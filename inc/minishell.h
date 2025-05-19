@@ -68,4 +68,12 @@ void			env_add_back(t_env_lst **head, t_env_lst *new);
 void			print_env(t_env_lst *env_lst);
 char			*get_env_val(t_env_lst *env, char name[]);
 size_t			get_env_size(t_env_lst *env_lst);
+
+/* parsing.c */
+
+char			**add_to_array(char **arr, char *str);
+t_exec_node		*create_exec_node(void);
+t_list			*parse_tokens(t_list *tokens);
+void			print_exec(t_list	*exec_lst);
+
 #endif

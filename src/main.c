@@ -4,12 +4,15 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
 	t_list	*tokens;
 	char	*expanded;
+	t_list	*exec_lst;
 
 	tokens = NULL;
 	expanded = expand_line(env_lst, cmd);
 	tokenize(&tokens, expanded);
 	print_token_list(tokens);
 	ft_printf("%s\n", expanded);
+	exec_lst = parse_tokens(tokens);
+	print_exec(exec_lst);
 	free(expanded);
 	ft_lstclear(&tokens, deltoken);
 	return (0);
