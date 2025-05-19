@@ -28,7 +28,6 @@ char	**add_to_array(char **arr, char *str)
 	}
 	arr2[initial_size] = ft_strdup(str);
 	arr2[initial_size + 1] = NULL;
-
 	return (arr2);
 }
 
@@ -37,10 +36,9 @@ t_exec_node	*create_exec_node(void)
 	t_exec_node	*new;
 
 	new = ft_calloc(1, sizeof (*new));
-	new->cmd = NULL;
+	new->cmd = ft_calloc(1, sizeof(char *));
 	new->filename[0] = malloc(sizeof *(new->filename));
 	new->filename[1] = malloc(sizeof *(new->filename));
-	printf("allocating %zu B for filename storage\n", sizeof *(new->filename));
 	(new->filename)[0] = NULL;
 	(new->filename)[1] = NULL;
 	new->io[0] = STDIN_FILENO;

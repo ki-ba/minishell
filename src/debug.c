@@ -21,7 +21,7 @@ void	display_token(t_token *token)
 		ft_strlcpy(token_type, "FILE", 10);
 	else
 		ft_strlcpy(token_type, "UNKNOWN", 10);
-	ft_printf("-----\ntoken %p : %s\n^%s$\n------\n", token, token_type, token->token);
+	ft_printf("-----\ntoken %p : %s\n[%s]\n------\n", token, token_type, token->token);
 }
 
 void	print_token_list(t_list *tokens)
