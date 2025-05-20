@@ -18,6 +18,9 @@ TEST_OBJ = $(addprefix $(TEST_DIR), $(TEST_SRC:%.c=%.o))
 TEST_SRC = test/test.o
 ##################
 
+###### SOURCE AND OBJ #####
+
+
 SRC_DIR = src/
 OBJ_DIR = .obj/
 INC_DIR = inc/
@@ -26,7 +29,7 @@ TEST_DIR = test/
 
 ENV_SRC = env.c env_utils.c
 HISTORY_SRC = history.c
-LEXING_SRC = lexing.c lexing_utils.c expand.c token.c
+LEXING_SRC = lexing.c lexing_utils.c expand.c token.c id_token.c
 BUILTINS_SRC = cd.c builtins_utils.c
 PARSING_SRC = parsing.c
 
@@ -35,6 +38,7 @@ HISTORY_SRC_DIR = history/
 LEXING_SRC_DIR = lexing/
 BUILTINS_SRC_DIR = builtins/
 PARSING_SRC_DIR = parsing/
+LIB_DIR = lib/libft/
 
 P_ENV = $(addprefix $(ENV_SRC_DIR), $(ENV_SRC))
 P_HISTORY = $(addprefix $(HISTORY_SRC_DIR), $(HISTORY_SRC))
@@ -47,10 +51,7 @@ TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 INCLUDES = $(INC_DIR)minishell.h
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:%.c=%.o)) 
-
 TOBJ = $(filter-out $(OBJ_DIR)main.o, $(OBJ))
-
-LIB_DIR = lib/libft/
 
 .PHONY = all clean fclean re lib test
 
@@ -62,6 +63,9 @@ $(NAME) : $(OBJ) $(LIB_DIR)libft.a
 $(OBJ_DIR)%.o : $(SRC_DIR)%.c $(INCLUDES) | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -I$(INC_DIR) -I$(LIB_DIR) -c $< -o $@
 
+##### DIRECTORIES #####
+
+
 $(OBJ_DIR) :
 	mkdir -p $(OBJ_DIR)
 	mkdir -p $(OBJ_DIR)$(ENV_SRC_DIR)
@@ -70,8 +74,16 @@ $(OBJ_DIR) :
 	mkdir -p $(OBJ_DIR)$(BUILTINS_SRC_DIR)
 	mkdir -p $(OBJ_DIR)$(PARSING_SRC_DIR)
 
+$(UNITY_OBJ_DIR) :
+	mkdir -p $(UNITY_OBJ_DIR)
+
+##### LIB #####
+
 $(LIB_DIR)libft.a :
 	$(MAKE) -C $(LIB_DIR)
+
+##### PHONY #####
+
 
 clean :
 	$(MAKE) -C $(LIB_DIR) clean
@@ -81,8 +93,6 @@ clean :
 fclean :	clean
 	$(MAKE) -C $(LIB_DIR) fclean
 	rm -rf $(NAME)
-
-test : all
 
 re : fclean
 	$(MAKE) all
@@ -94,6 +104,9 @@ debug :
 	$(MAKE) re CFLAGS="$(DEBUG_FLAGS)"
 	$(MAKE) clean
 
+###### OBJECT FILES ######
+
+
 $(TEST_DIR)%.o : $(TEST_DIR)%.c $(UNITY_INCS) | $(TEST_DIR)
 	$(CC) $(CFLAGS) -I$(INC_DIR) -I$(UNITY_DIR) -I$(LIB_DIR) -c $< -o $@
 
@@ -101,8 +114,10 @@ $(TEST_DIR)%.o : $(TEST_DIR)%.c $(UNITY_INCS) | $(TEST_DIR)
 $(UNITY_OBJ_DIR)%.o : $(UNITY_DIR)%.c | $(UNITY_OBJ_DIR)
 	$(CC) -c $< -o $@
 
-$(UNITY_OBJ_DIR) :
-	mkdir -p $(UNITY_OBJ_DIR)
+
+
+######## TESTING #########
+
 
 testmac : mac $(TEST_OBJ) $(UNITY_OBJ)
 	$(CC) $(CFLAGS) $(TOBJ) $(TEST_OBJ) $(UNITY_OBJ) -L$(LIB_DIR) -lft -ledit -o runtest

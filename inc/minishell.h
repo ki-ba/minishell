@@ -36,6 +36,7 @@ int				retrieve_history(char *last_cmd[]);
 t_token_type	determine_token_type(char token_str[], t_token_type *last_type, t_bool *cmd_bool);
 t_token			*create_token(t_list **tokens, char *token_str, t_bool *cmd_bool);
 void			tokenize(t_list **tokens, char *line);
+void			remove_quotes(void *item);
 
 /* token.c */
 void			deltoken(void *token);

@@ -72,7 +72,7 @@ void test_tokenize(void)
     TEST_ASSERT_EQUAL_STRING("echo", token->token);
     token = (t_token *)tokens->next->content;
     TEST_ASSERT_EQUAL(TOKEN_STR, token->type);
-    TEST_ASSERT_EQUAL_STRING("'Hello, World!'", token->token);
+    TEST_ASSERT_EQUAL_STRING("Hello, World!", token->token);
 }
 
 void test_create_env(void)
@@ -166,12 +166,28 @@ void	test_cd(void)
 	ft_cd(ft_strdup("/home"), env_lst);
 	TEST_ASSERT_EQUAL_STRING("/home", get_env_val(env_lst, "PWD"));
 	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "OLDPWD"));
-
 	cur_wd = get_env_val(env_lst, "PWD");
 	old_wd = get_env_val(env_lst, "OLDPWD");
 	ft_cd(ft_strdup("/home/inexistent_folder"), env_lst);
 	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
 	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
+}
+
+void	test_remove_quotes(void)
+{
+	t_list	*tokens;
+	t_list	*current;
+	tokens = NULL;
+	char	line[] = "\"hello world\" 'h''e''l''l''o w''o''r''l''d' \"h\"\"e\"\"l\"\"l\"\"o\"\" \"\"w\"\"o\"\"r\"\"l\"\"d\"";
+	tokenize(&tokens, line);
+	current = tokens;
+	ft_lstiter(tokens, remove_quotes);
+	while (current)
+	{
+		TEST_ASSERT_EQUAL_STRING("hello world", ((t_token *)current->content)->token);
+		current = current->next;
+	}
+	ft_lstclear(&tokens, deltoken);
 }
 
 // not needed when using generate_test_runner.rb
@@ -189,5 +205,6 @@ int	main(void)
 	RUN_TEST(test_must_expand);
 	RUN_TEST(test_summarize_lexing);
 	RUN_TEST(test_cd);
+	RUN_TEST(test_remove_quotes);
 	return UNITY_END();
 }

@@ -1,5 +1,6 @@
 #include "libft.h"
 #include "minishell.h"
+#include <string.h>
 
 t_token_type	determine_token_type(char token_str[], t_token_type *last_type, t_bool *cmd_bool)
 {
@@ -61,4 +62,33 @@ void	tokenize(t_list **tokens, char *line)
 		while (ft_iswhitespace(line[i]))
 			++i;
 	}
+	ft_lstiter(*tokens, remove_quotes);
+}
+
+/**
+	* @brief removes quotes from the given string in-place.
+	* @brief the string is re-null-terminated accordingly.
+	* @brief exceeding space is not freed.
+*/
+void	remove_quotes(void *item)
+{
+	int		quote_lvl;
+	size_t	i;
+	size_t	dest_i;
+	char	*new_str;
+	char	*str;
+
+	str = (char *)((t_token *)item)->token;
+	i = 0;
+	dest_i = 0;
+	quote_lvl = 0;
+	new_str = ft_calloc(ft_strlen(str) + 1, sizeof(char));
+	while (str[i])
+	{
+		if ((str[i] != '\'' && str[i] != '"') || quote_lvl > 0)
+			new_str[dest_i++] = str[i];
+		++i;
+	}
+	free(str);
+	((t_token *)item)->token = new_str;
 }

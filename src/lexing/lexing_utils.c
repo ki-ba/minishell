@@ -3,7 +3,7 @@
 /**
  * @brief helper function to for check_quotes.
  */
-int	check_open(int open, char c)
+static int	check_open(int open, char c)
 {
 	if (c == '\'')
 	{
@@ -45,6 +45,11 @@ int	check_quotes(char *line)
 	return (open);
 }
 
+/**
+	* @brief counts the length of the first token of the provided line.
+	* @brief a "token" is a sequence of characters delimited by an
+	* @brief unescaped space or the end of the string.
+*/
 size_t	count_token_len(char *line)
 {
 	size_t		i;
@@ -63,25 +68,4 @@ size_t	count_token_len(char *line)
 		++i;
 	}
 	return (i);
-}
-
-t_bool	determine_redirect(char token_str[])
-{
-	if (ft_strncmp(token_str, ">", 2) == 0)
-		return (TRUE);
-	else if (ft_strncmp(token_str, "<", 2) == 0)
-		return (TRUE);
-	else if (ft_strncmp(token_str, ">>", 3) == 0)
-		return (TRUE);
-	return (FALSE);
-}
-
-t_bool	determine_option(char token_str[])
-{
-	return (ft_strlen(token_str) == 2 && token_str[0] == '-');
-}
-
-t_bool	determine_pipe(char token_str[])
-{
-	return (!ft_strncmp(token_str, "|", 2));
 }
