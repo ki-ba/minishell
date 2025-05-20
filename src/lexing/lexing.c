@@ -1,87 +1,64 @@
+#include "libft.h"
 #include "minishell.h"
 
-/**
- * @brief helper function to for check_quotes.
- */
-int	check_open(int open, char c)
+t_token_type	determine_token_type(char token_str[], t_token_type *last_type, t_bool *cmd_bool)
 {
-	if (c == '\'')
+	if (determine_redirect(token_str))
+		return (TOKEN_REDIRECT);
+	else if (*last_type == TOKEN_REDIRECT)
+		return (TOKEN_FILE);
+	else if (determine_option(token_str))
+		return (TOKEN_OPT);
+	else if (determine_pipe(token_str))
 	{
-		if (open == 0)
-			open = 1;
-		else if (open == 1)
-			open = 0;
+		*cmd_bool = FALSE;
+		return (TOKEN_PIPE);
 	}
-	if (c == '"')
+	else if (!(*cmd_bool) && ft_str_is_alnum(token_str))
 	{
-		if (open == 0)
-			open = 2;
-		else if (open == 2)
-			open = 0;
+		*cmd_bool = TRUE;
+		return (TOKEN_CMD);
 	}
-	return (open);
+	else
+		return (TOKEN_STR);
 }
 
-/**
- * @brief checks wether the provided `line` has unclosed quotes.
- * @param open is 0 when not open, 1 when single quote, 2 when double.
- * @returns 0 if all quotes are correctly closed, non-zero otherwise.
- */
-int	check_quotes(char *line)
+t_token	*create_token(t_list **tokens, char *token_str, t_bool *cmd_bool)
 {
-	size_t	i;
-	int		open;
+	t_token_type	last_type;
+	t_list			*last_lst;
+	t_token			*new_token;
 
-	open = 0;
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+		return (NULL);
+	last_lst = ft_lstlast(*tokens);
+	last_type = TOKEN_PIPE;
+	if (last_lst)
+		last_type = ((t_token *)(last_lst->content))->type;
+	new_token->type = determine_token_type(token_str, &last_type, cmd_bool);
+	new_token->token = token_str;
+	return (new_token);
+}
+
+void	tokenize(t_list **tokens, char *line)
+{
+	t_token			*token;
+	size_t			cur_len;
+	size_t			i;
+	t_bool			cmd_bool;
+
+	cmd_bool = FALSE;
 	i = 0;
-	if (!line)
-		return (1);
+	if (!line || check_quotes(line))
+		return ;
 	while (line[i])
 	{
-		if (line[i] == '\'' || line [i] == '"')
-			open = check_open(open, line[i]);
-		++i;
+		cur_len = count_token_len(&line[i]);
+		token = create_token(tokens, ft_substr(line, i, cur_len), &cmd_bool);
+		ft_lstadd_back(tokens, ft_lstnew(token));
+		i += cur_len;
+		while (ft_iswhitespace(line[i]))
+			++i;
 	}
-	return (open);
-}
-
-size_t	count_token_len(char *line)
-{
-	size_t		i;
-	int			simple_q;
-	int			double_q;
-
-	i = 0;
-	simple_q = 0;
-	double_q = 0;
-	while (line[i] && (line[i] != ' ' || simple_q || double_q))
-	{
-		if (line[i] == '"')
-			double_q = !double_q;
-		else if (line[i] == '\'')
-			simple_q = !simple_q;
-		++i;
-	}
-	return (i);
-}
-
-t_bool	determine_redirect(char token_str[])
-{
-	if (ft_strncmp(token_str, ">", 2) == 0)
-		return (TRUE);
-	else if (ft_strncmp(token_str, "<", 2) == 0)
-		return (TRUE);
-	else if (ft_strncmp(token_str, ">>", 3) == 0)
-		return (TRUE);
-	return (FALSE);
-}
-
-t_bool	determine_option(char token_str[])
-{
-	return (ft_strlen(token_str) == 2 && token_str[0] == '-');
-}
-
-t_bool	determine_pipe(char token_str[])
-{
-	return (!ft_strncmp(token_str, "|", 2));
 }
