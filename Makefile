@@ -37,25 +37,16 @@ ENV_SRC_DIR = env/
 HISTORY_SRC_DIR = history/
 LEXING_SRC_DIR = lexing/
 BUILTINS_SRC_DIR = builtins/
-<<<<<<< HEAD
-=======
 PARSING_SRC_DIR = parsing/
 LIB_DIR = lib/libft/
 
->>>>>>> origin/main
 P_ENV = $(addprefix $(ENV_SRC_DIR), $(ENV_SRC))
 P_HISTORY = $(addprefix $(HISTORY_SRC_DIR), $(HISTORY_SRC))
 P_LEXING = $(addprefix $(LEXING_SRC_DIR), $(LEXING_SRC))
 P_BUILTINS = $(addprefix $(BUILTINS_SRC_DIR), $(BUILTINS_SRC))
-<<<<<<< HEAD
-
-
-SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) main.c debug.c
-=======
 P_PARSING = $(addprefix $(PARSING_SRC_DIR), $(PARSING_SRC))
 
 SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) main.c debug.c
->>>>>>> origin/main
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 INCLUDES = $(INC_DIR)minishell.h
@@ -81,15 +72,12 @@ $(OBJ_DIR) :
 	mkdir -p $(OBJ_DIR)$(HISTORY_SRC_DIR)
 	mkdir -p $(OBJ_DIR)$(LEXING_SRC_DIR)
 	mkdir -p $(OBJ_DIR)$(BUILTINS_SRC_DIR)
-<<<<<<< HEAD
-=======
 	mkdir -p $(OBJ_DIR)$(PARSING_SRC_DIR)
 
 $(UNITY_OBJ_DIR) :
 	mkdir -p $(UNITY_OBJ_DIR)
 
 ##### LIB #####
->>>>>>> origin/main
 
 $(LIB_DIR)libft.a :
 	$(MAKE) -C $(LIB_DIR)
