@@ -63,7 +63,7 @@ t_list	*parse_tokens(t_list *tokens)
 			ft_lstadd_back(&exec_lst, ft_lstnew(create_exec_node()));
 			node = (t_exec_node *)ft_lstlast(exec_lst)->content;
 		}
-		if (token->type == TOKEN_CMD || token->type == TOKEN_OPT)
+		if (token->type == TOKEN_CMD || token->type == TOKEN_OPT || token->type == TOKEN_STR)
 		{
 			node->cmd = add_to_array(node->cmd, token->token);
 		}
