@@ -177,14 +177,28 @@ void	test_remove_quotes(void)
 {
 	t_list	*tokens;
 	t_list	*current;
-	tokens = NULL;
 	char	line[] = "\"hello world\" 'h''e''l''l''o w''o''r''l''d' \"h\"\"e\"\"l\"\"l\"\"o\"\" \"\"w\"\"o\"\"r\"\"l\"\"d\"";
+	char	line2[] = "\"hello 'world'\" 'hel\"lo world\"' \"'hello '\"world";
+	char	*expected[] = {"hello 'world'", "hel\"lo world\"", "'hello 'world"};
+	size_t	i;
+
+	tokens = NULL;
+	i = 0;
 	tokenize(&tokens, line);
 	current = tokens;
 	ft_lstiter(tokens, remove_quotes);
 	while (current)
 	{
 		TEST_ASSERT_EQUAL_STRING("hello world", ((t_token *)current->content)->token);
+		current = current->next;
+	}
+	ft_lstclear(&tokens, deltoken);
+	tokenize(&tokens, line2);
+	current = tokens;
+	while (current)
+	{
+		TEST_ASSERT_EQUAL_STRING(expected[i], ((t_token *)current->content)->token);
+		++i;
 		current = current->next;
 	}
 	ft_lstclear(&tokens, deltoken);

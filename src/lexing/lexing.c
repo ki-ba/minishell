@@ -65,6 +65,10 @@ void	tokenize(t_list **tokens, char *line)
 	ft_lstiter(*tokens, remove_quotes);
 }
 
+int	is_quote(char c)
+{
+	return (c == '\'' || c == '"');
+}
 /**
 	* @brief removes quotes from the given string in-place.
 	* @brief the string is re-null-terminated accordingly.
@@ -72,7 +76,7 @@ void	tokenize(t_list **tokens, char *line)
 */
 void	remove_quotes(void *item)
 {
-	int		quote_lvl;
+	char	quote;
 	size_t	i;
 	size_t	dest_i;
 	char	*new_str;
@@ -81,11 +85,20 @@ void	remove_quotes(void *item)
 	str = (char *)((t_token *)item)->token;
 	i = 0;
 	dest_i = 0;
-	quote_lvl = 0;
+	quote = '\0';
 	new_str = ft_calloc(ft_strlen(str) + 1, sizeof(char));
 	while (str[i])
 	{
-		if ((str[i] != '\'' && str[i] != '"') || quote_lvl > 0)
+		if (is_quote(str[i]))
+		{
+			if (str[i] == quote)
+				quote = '\0';
+			else if (quote == 0)
+				quote = str[i];
+			else
+				new_str[dest_i++] = str[i];
+		}
+		else
 			new_str[dest_i++] = str[i];
 		++i;
 	}

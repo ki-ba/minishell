@@ -41,6 +41,9 @@ void			remove_quotes(void *item);
 /* token.c */
 void			deltoken(void *token);
 
+/* exec_node.c */
+void			del_exec_node(void *node);
+
 /* lexing_utils.c */
 
 int				check_quotes(char *line);

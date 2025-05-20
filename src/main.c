@@ -1,3 +1,4 @@
+#include "libft.h"
 #include "minishell.h"
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
@@ -15,6 +16,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 	print_exec(exec_lst);
 	free(expanded);
 	ft_lstclear(&tokens, deltoken);
+	ft_lstclear(&exec_lst, del_exec_node);
 	return (0);
 }
 
