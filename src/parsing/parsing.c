@@ -1,3 +1,4 @@
+#include "data_structures.h"
 #include "minishell.h"
 
 /**
@@ -25,6 +26,20 @@ char	**add_to_array(char **arr, char *str)
 	return (arr2);
 }
 
+static void	handle_redirect(t_token *token, t_redir *redir_type)
+{
+	if (!strncmp(token->token, ">", 2) || !strncmp(token->token, ">>", 3))
+		*redir_type = OUTFILE;
+	else if (!strncmp(token->token, "<", 2) || !strncmp(token->token, "<<", 3))
+		*redir_type = INFILE;
+}
+
+static void	handle_file(t_exec_node *node, t_token *token, t_redir redir_type)
+{
+	node->io[redir_type] = 3;
+	node->filename[redir_type] = ft_strdup(token->token);
+}
+
 t_list	*parse_tokens(t_list *tokens)
 {
 	t_list		*exec_lst;
@@ -42,22 +57,12 @@ t_list	*parse_tokens(t_list *tokens)
 			ft_lstadd_back(&exec_lst, ft_lstnew(create_exec_node()));
 			node = (t_exec_node *)ft_lstlast(exec_lst)->content;
 		}
-		if (token->type == TOKEN_CMD || token->type == TOKEN_OPT || token->type == TOKEN_STR)
-		{
+		if (token->type >= TOKEN_CMD && token->type <= TOKEN_STR)
 			node->cmd = add_to_array(node->cmd, token->token);
-		}
 		else if (token->type == TOKEN_REDIRECT)
-		{
-			if (!strncmp(token->token, ">", 2) || !strncmp(token->token, ">>", 3))
-				redir_type = OUTFILE;
-			else if (!strncmp(token->token, "<", 2) || !strncmp(token->token, "<<", 3))
-				redir_type = INFILE;
-		}
+			handle_redirect(token, &redir_type);
 		else if (token->type == TOKEN_FILE)
-		{
-			node->io[redir_type] = 3;
-			node->filename[redir_type] = ft_strdup(token->token);
-		}
+			handle_file(node, token, redir_type);
 		tokens = tokens->next;
 	}
 	return (exec_lst);
