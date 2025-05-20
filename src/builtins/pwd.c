@@ -1,7 +1,7 @@
 #include "builtins.h"
 #include <limits.h>
 
-int	ft_pwd(char	*cmd)
+int	ft_pwd(char **cmd)
 {
 	char	*path;
 

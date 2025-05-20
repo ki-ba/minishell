@@ -20,56 +20,60 @@ static size_t	varnamelen(char str[])
 	return (i);
 }
 
-size_t	count_parts(char str[])
+static size_t	get_part_len(char str[])
 {
-	size_t	i;
-	size_t	count;
-	char	*last_part;
-
-	last_part = str;
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] && str[i] == '$')
-		{
-			++count;
-			i += varnamelen(&str[i]);
-		}
-		else
-		{
-			++count;
-			i += ft_strlen_c(&str[i], '$');
-		}
-	}
-	return (count);
-}
-
-char	**split_by_vars(char str[])
-{
-	size_t	i;
-	size_t	part_n;
-	char	**arr;
-	size_t	size;
 	size_t	part_len;
 
-	part_n = 0;
-	size = count_parts(str);
-	arr = ft_calloc(size + 1, sizeof(char *));
+	if (str[0] == '$')
+		part_len = varnamelen(&str[0]);
+	else
+		part_len = ft_strlen_c(&str[0], '$');
+	return (part_len);
+}
+
+t_bool	must_expand(char str[], size_t pos)
+{
+	char	quote;
+	size_t	i;
+
 	i = 0;
-	while (part_n < size)
+	quote = '\0';
+	while (i < pos)
 	{
-		if (str[i] == '$')
+		if ((str[i] == '"' || str[i] == '\'') && !quote)
+			quote = str[i];
+		else if (str[i] == quote)
+			quote = '\0';
+		++i;
+	}
+	return (quote != '\'');
+}
+
+char	*expand_line(t_env_lst *env, char str[])
+{
+	size_t	i;
+	size_t	part_len;
+	char	*env_val;
+	char	*expanded;
+	char	*part;
+
+	i = 0;
+	expanded = ft_calloc(1, sizeof(char));
+	env_val = NULL;
+	while (str[i])
+	{
+		part_len = get_part_len(&str[i]);
+		part = ft_substr(&str[i], 0, part_len);
+		if (part[0] == '$' && must_expand(str, i))
 		{
-			part_len = varnamelen(&str[i]);
+			env_val = get_env_val(env, &part[1]);
+			if (env_val)
+				expanded = ft_strjoin(expanded, env_val);
 		}
 		else
-		{
-			part_len = ft_strlen_c(&str[i], '$');
-		}
-		arr[part_n] = ft_substr(str, i, part_len);
+			expanded = ft_strjoin(expanded, part);
 		i += part_len;
-		++part_n;
+		free(part);
 	}
-	return (arr);
+	return (expanded);
 }
