@@ -1,5 +1,6 @@
 #include "libft.h"
 #include "minishell.h"
+#include "builtins.h"
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
@@ -33,6 +34,7 @@ int	readline_loop(t_env_lst *env_lst)
 	while (TRUE && (!cmd || strncmp(cmd, "exit", ft_strlen(cmd))))
 	{
 		cmd = readline("zinzinshell $");
+		builtins_call(ft_split(cmd, ' '), env_lst);
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
