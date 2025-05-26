@@ -16,6 +16,10 @@
 #  define HIST_FILE ".zzsh_history"
 # endif
 
+# ifndef HERE_DOC_LEN
+#  define HERE_DOC_LEN 8
+# endif
+
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 t_env_lst		*create_env_lst(char name[]);
 size_t			ft_strlen_c(char str[], char c);
@@ -80,4 +84,7 @@ t_exec_node		*create_exec_node(void);
 t_list			*parse_tokens(t_list *tokens);
 void			print_exec(t_list	*exec_lst);
 
+/* here_doc.c */
+
+int				here_doc(char *delimiter);
 #endif

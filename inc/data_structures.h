@@ -54,6 +54,7 @@ typedef struct s_exec_node
 	char				**cmd;
 	char				*(filename[2]); // each can be NULL or a filename
 	int					io[2]; // both can be either 0, 1, 2, or 3 (for file)
+	int					oflags[2];
 }						t_exec_node;
 
 /* storing env as a linked list is simplifies the implementation
