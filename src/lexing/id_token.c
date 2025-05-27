@@ -11,6 +11,8 @@ t_bool	determine_redirect(char token_str[])
 		return (TRUE);
 	else if (ft_strncmp(token_str, ">>", 3) == 0)
 		return (TRUE);
+	else if (ft_strncmp(token_str, "<<", 3) == 0)
+		return (TRUE);
 	return (FALSE);
 }
 

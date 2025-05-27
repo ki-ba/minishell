@@ -1,5 +1,5 @@
-#include "data_structures.h"
 #include "minishell.h"
+
 
 /**
 * Parse the token list and create a process list with correct infiles,
@@ -26,18 +26,42 @@ char	**add_to_array(char **arr, char *str)
 	return (arr2);
 }
 
-static void	handle_redirect(t_token *token, t_redir *redir_type)
+static int	handle_redirect(t_exec_node *node, t_token *token, t_redir *redir)
 {
 	if (!strncmp(token->token, ">", 2) || !strncmp(token->token, ">>", 3))
-		*redir_type = OUTFILE;
+	{
+		*redir = OUTFILE;
+		if (!strncmp(token->token, ">", 2))
+			return (O_CREAT | O_TRUNC | O_WRONLY);
+		return (O_CREAT | O_APPEND | O_RDONLY);
+	}
 	else if (!strncmp(token->token, "<", 2) || !strncmp(token->token, "<<", 3))
-		*redir_type = INFILE;
+	{
+		*redir = INFILE;
+		if (!strncmp(token->token, "<<", 2))
+			node->io[0] = MAX_FD + 1;
+		return (O_RDONLY);
+	}
+	return (0);
 }
 
-static void	handle_file(t_exec_node *node, t_token *token, t_redir redir_type)
+static void	handle_file(t_exec_node *node, t_token *token, t_redir redir)
 {
-	node->io[redir_type] = 3;
-	node->filename[redir_type] = ft_strdup(token->token);
+	int	fd;
+
+	if (redir == 0 && node->io[redir] > MAX_FD)
+		node->io[0] = here_doc(token->token);
+	else
+	{
+		node->filename[redir] = ft_strdup(token->token);
+		fd = open(node->filename[redir], node->oflags[redir], 0644);
+		if (fd < 0)
+		{
+			perror("open");
+			exit(EXIT_FAILURE);
+		}
+		node->io[redir] = fd;
+	}
 }
 
 t_list	*parse_tokens(t_list *tokens)
@@ -60,7 +84,7 @@ t_list	*parse_tokens(t_list *tokens)
 		if (token->type >= TOKEN_CMD && token->type <= TOKEN_STR)
 			node->cmd = add_to_array(node->cmd, token->token);
 		else if (token->type == TOKEN_REDIRECT)
-			handle_redirect(token, &redir_type);
+			node->oflags[redir_type] = handle_redirect(node, token, &redir_type);
 		else if (token->type == TOKEN_FILE)
 			handle_file(node, token, redir_type);
 		tokens = tokens->next;
