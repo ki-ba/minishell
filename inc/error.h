@@ -3,7 +3,8 @@
 
 enum e_error
 {
-	ERR_ARGS = 1,
+	SUCCESS = 0,
+	ERR_ARGS,
 	ERR_PARSING,
 	ERR_ALLOC,
 	ERR_PRINT
