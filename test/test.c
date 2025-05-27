@@ -163,14 +163,42 @@ void	test_cd(void)
 	env_lst = NULL;
 	create_environment(&env_lst, environ);
 	cur_wd = get_env_val(env_lst, "PWD");
-	ft_cd(ft_strdup("/home"), env_lst);
+	ft_cd(ft_split("cd /home", ' '), env_lst);
 	TEST_ASSERT_EQUAL_STRING("/home", get_env_val(env_lst, "PWD"));
 	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "OLDPWD"));
 	cur_wd = get_env_val(env_lst, "PWD");
 	old_wd = get_env_val(env_lst, "OLDPWD");
-	ft_cd(ft_strdup("/home/inexistent_folder"), env_lst);
+	ft_cd(ft_split("cd /home/inexistent_folder", ' '), env_lst);
 	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
 	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
+	cur_wd = get_env_val(env_lst, "PWD");
+	old_wd = get_env_val(env_lst, "OLDPWD");
+	ft_cd(ft_split("cd", ' '), env_lst);
+	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
+	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
+	// cur_wd = get_env_val(env_lst, "PWD");
+	// old_wd = get_env_val(env_lst, "OLDPWD");
+	// ft_cd(ft_split("cd \0", ' '), env_lst);
+	// TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
+	// TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
+	cur_wd = get_env_val(env_lst, "PWD");
+	old_wd = get_env_val(env_lst, "OLDPWD");
+	ft_cd(ft_split("cd / home", ' '), env_lst);
+	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
+	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
+}
+
+
+void	test_pwd(void)
+{
+	extern char **environ;
+	t_env_lst	*env_lst;
+
+	env_lst = NULL;
+	create_environment(&env_lst, environ);
+	TEST_ASSERT_TRUE(ft_pwd(ft_split("pwd", ' ')) == 0);
+	ft_printf("%s\n", get_env_val(env_lst, "PWD"));
+	TEST_ASSERT_TRUE(ft_pwd(ft_split("pwd test", ' ')) != 0);
 }
 
 void	test_remove_quotes(void)
@@ -219,6 +247,7 @@ int	main(void)
 	RUN_TEST(test_must_expand);
 	RUN_TEST(test_summarize_lexing);
 	RUN_TEST(test_cd);
+	RUN_TEST(test_pwd);
 	RUN_TEST(test_remove_quotes);
 	return UNITY_END();
 }
