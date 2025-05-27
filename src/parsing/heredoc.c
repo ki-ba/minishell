@@ -6,12 +6,13 @@ int	here_doc(char *delimiter)
 	char	*line;
 	int		hd_fd;
 
-	filename = create_random_str(HERE_DOC_LEN);
+	filename = ft_concat(2, "tmp_", create_random_str(HERE_DOC_LEN));
 	if (!filename)
 		exit(EXIT_FAILURE);
 	hd_fd = open(filename, O_CREAT | O_WRONLY, 0644);
 	if (hd_fd < 0)
 		exit(EXIT_FAILURE);
+	unlink(filename);
 	line = NULL;
 	write(1, "here_doc_ish", ft_strlen("here_doc_ish"));
 	line = get_next_line(STDIN_FILENO);
