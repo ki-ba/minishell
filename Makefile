@@ -101,8 +101,12 @@ re : fclean
 mac :
 	$(MAKE) all LIBS="-L$(LIB_DIR) -lft -ledit"
 
-debug :
+asan :
 	$(MAKE) re CFLAGS="$(DEBUG_FLAGS)"
+	$(MAKE) clean
+
+debug :
+	$(MAKE) re CFLAGS+="-D DEBUG=TRUE"
 	$(MAKE) clean
 
 ###### OBJECT FILES ######

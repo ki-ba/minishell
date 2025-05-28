@@ -14,6 +14,6 @@ int			ft_pwd(char **cmd);
 // int			ft_exit(int	*gc); //garbage collector
 
 t_env_lst	*search_env_var(t_env_lst *env, char *var);
-int			builtins_call(char **cmd, t_env_lst *env);
+int			builtins_call(char *line, t_env_lst *env);
 
 #endif

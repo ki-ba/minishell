@@ -10,6 +10,8 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 	while (envp[i])
 	{
 		name = ft_substr(envp[i], 0, ft_strlen_c(envp[i], '='));
+		if (!name)
+			return (NULL);
 		env_add_back(env_lst, create_env_lst(name));
 		++i;
 	}
@@ -27,9 +29,13 @@ char	**create_env_arr(t_env_lst *env_lst)
 	current = env_lst;
 	env_size = get_env_size(env_lst);
 	env_arr = ft_calloc(env_size, sizeof(char *));
+	if (!env_arr)
+		return (NULL);
 	while (i < env_size)
 	{
 		env_arr[i] = ft_concat(3, current->name, "=", current->value);
+		if (!env_arr[i])
+			return (env_arr);
 		current = current->next;
 		++i;
 	}
