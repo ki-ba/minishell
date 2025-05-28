@@ -44,7 +44,10 @@ char	**create_env_arr(t_env_lst *env_lst)
 	{
 		env_arr[i] = ft_concat(3, current->name, "=", current->value);
 		if (!env_arr[i])
-			return (env_arr);
+		{
+			ft_free_arr(env_arr);
+			return (NULL);
+		}
 		current = current->next;
 		++i;
 	}

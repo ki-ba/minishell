@@ -3,6 +3,8 @@
 
 # include "libft.h"
 # include "data_structures.h"
+# include "builtins.h"
+# include "error.h"
 # include <limits.h>
 
 # ifdef __linux__
@@ -19,7 +21,6 @@
 # ifndef DEBUG
 #  define DEBUG FALSE
 # endif
-
 
 # ifndef HERE_DOC_LEN
 #  define HERE_DOC_LEN 8
@@ -42,9 +43,13 @@ int				retrieve_history(char *last_cmd[]);
 
 /* lexing.c */
 
-t_token_type	determine_token_type(char token_str[], t_token_type *last_type, t_bool *cmd_bool);
-t_token			*create_token(t_list **tokens, char *token_str, t_bool *cmd_bool);
-void			tokenize(t_list **tokens, char *line);
+t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b);
+t_token			*token(t_list **tokens, char *token_str, t_bool *cmd_bool);
+int				tokenize(t_list **tokens, char *line);
+void			remove_quotes(void *item);
+
+/* quotes.c */
+
 void			remove_quotes(void *item);
 
 /* token.c */
@@ -63,8 +68,6 @@ t_bool			determine_pipe(char token_str[]);
 
 /* expand.c */
 
-/*static size_t	varnamelen(char str[]);*/
-/*static size_t	get_part_len(char str[]);*/
 char			*expand_line(t_env_lst *env, char str[]);
 t_bool			must_expand(char str[], size_t pos);
 

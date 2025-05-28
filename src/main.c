@@ -1,7 +1,5 @@
-#include "libft.h"
 #include "error.h"
 #include "minishell.h"
-#include "builtins.h"
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
@@ -11,8 +9,12 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 
 	tokens = NULL;
 	expanded = expand_line(env_lst, cmd);
-	tokenize(&tokens, expanded);
+	if (check_quotes(expanded))
+		return (ERR_PARSING);
+	if (tokenize(&tokens, expanded) != 0)
+		return (ERR_ALLOC);
 	free(expanded);
+	ft_lstiter(tokens, remove_quotes);
 	if (DEBUG)
 		print_token_list(tokens);
 	if (!tokens)
@@ -25,10 +27,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 		print_exec(exec_lst);
 	ft_lstclear(&exec_lst, del_exec_node);
 	if (!ft_strncmp(cmd, "exit", ft_strlen("exit")))
-	{
-		ft_printf("exiting\n");
-		exit(EXIT_SUCCESS);
-	}
+		return (ft_printf("exiting\n"));
 	return (0);
 }
 

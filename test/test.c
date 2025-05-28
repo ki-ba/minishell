@@ -54,12 +54,10 @@ void test_create_token(void)
 {
     t_list *tokens = NULL;
 	t_bool	cmd_bool = FALSE;
-    t_token *token = create_token(&tokens, ft_strdup("Hello"), &cmd_bool);
-	(void)token;
-	(void)tokens;
-    TEST_ASSERT_NOT_NULL(token);
-    TEST_ASSERT_EQUAL(TOKEN_CMD, token->type);
-    TEST_ASSERT_EQUAL_STRING("Hello", token->token);
+    t_token *cur_token = token(&tokens, ft_strdup("Hello"), &cmd_bool);
+    TEST_ASSERT_NOT_NULL(cur_token);
+    TEST_ASSERT_EQUAL(TOKEN_CMD, cur_token->type);
+    TEST_ASSERT_EQUAL_STRING("Hello", cur_token->token);
 }
 
 void test_tokenize(void) 
@@ -72,7 +70,7 @@ void test_tokenize(void)
     TEST_ASSERT_EQUAL_STRING("echo", token->token);
     token = (t_token *)tokens->next->content;
     TEST_ASSERT_EQUAL(TOKEN_STR, token->type);
-    TEST_ASSERT_EQUAL_STRING("Hello, World!", token->token);
+    TEST_ASSERT_EQUAL_STRING("'Hello, World!'", token->token);
 }
 
 void test_create_env(void)
@@ -188,7 +186,6 @@ void	test_cd(void)
 	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
 }
 
-
 void	test_pwd(void)
 {
 	extern char **environ;
@@ -223,6 +220,7 @@ void	test_remove_quotes(void)
 	ft_lstclear(&tokens, deltoken);
 	tokenize(&tokens, line2);
 	current = tokens;
+	ft_lstiter(tokens, remove_quotes);
 	while (current)
 	{
 		TEST_ASSERT_EQUAL_STRING(expected[i], ((t_token *)current->content)->token);
