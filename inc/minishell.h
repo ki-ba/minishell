@@ -16,6 +16,11 @@
 #  define HIST_FILE ".zzsh_history"
 # endif
 
+# ifndef DEBUG
+#  define DEBUG FALSE
+# endif
+
+
 # ifndef HERE_DOC_LEN
 #  define HERE_DOC_LEN 8
 # endif

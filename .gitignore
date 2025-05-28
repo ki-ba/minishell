@@ -6,3 +6,4 @@ runtest
 compile_commands.json
 .DS_Store
 .zzsh_history
+build_lib.sh

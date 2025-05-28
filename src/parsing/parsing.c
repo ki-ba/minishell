@@ -1,5 +1,7 @@
+#include "data_structures.h"
+#include "error.h"
+#include "libft.h"
 #include "minishell.h"
-
 
 /**
 * Parse the token list and create a process list with correct infiles,
@@ -12,7 +14,7 @@ char	**add_to_array(char **arr, char *str)
 	size_t	i;
 	size_t	initial_size;
 
-	arr2 = 0;
+	arr2 = NULL;
 	i = 0;
 	initial_size = get_arr_length(arr);
 	arr2 = ft_calloc(initial_size + 2, sizeof(char *));
@@ -23,6 +25,7 @@ char	**add_to_array(char **arr, char *str)
 	}
 	arr2[initial_size] = ft_strdup(str);
 	arr2[initial_size + 1] = NULL;
+	free(arr);
 	return (arr2);
 }
 
@@ -54,14 +57,23 @@ static void	handle_file(t_exec_node *node, t_token *token, t_redir redir)
 	else
 	{
 		node->filename[redir] = ft_strdup(token->token);
+		if (!node->filename[redir])
+			return ;
 		fd = open(node->filename[redir], node->oflags[redir], 0644);
 		if (fd < 0)
-		{
-			perror("open");
-			exit(EXIT_FAILURE);
-		}
+			return (perror("open"));
 		node->io[redir] = fd;
 	}
+}
+
+static void	handle_cmd(t_exec_node *node, t_token *token)
+{
+	char	**old_arr;
+
+	old_arr = node->cmd;
+	node->cmd = add_to_array(node->cmd, token->token);
+	if (!node->cmd)
+		ft_free_arr(old_arr);
 }
 
 t_list	*parse_tokens(t_list *tokens)
@@ -82,7 +94,14 @@ t_list	*parse_tokens(t_list *tokens)
 			node = (t_exec_node *)ft_lstlast(exec_lst)->content;
 		}
 		if (token->type >= TOKEN_CMD && token->type <= TOKEN_STR)
-			node->cmd = add_to_array(node->cmd, token->token);
+		{
+			handle_cmd(node, token);
+			if (!node->cmd)
+			{
+				ft_lstclear(&exec_lst, del_exec_node);
+				return (NULL);
+			}
+		}
 		else if (token->type == TOKEN_REDIRECT)
 			node->oflags[redir_type] = handle_redirect(node, token, &redir_type);
 		else if (token->type == TOKEN_FILE)
@@ -100,9 +119,9 @@ void	print_exec(t_list	*exec_lst)
 	{
 		current = (t_exec_node *)exec_lst->content;
 		ft_printf("========EXEC NODE=========\n\n");
-		ft_printf("IO : [%d;%d]\n", (current->io)[0], (current->io)[1]);
-		ft_printf("infile : %s\n outfile : %s\n", (current->filename)[0], (current->filename)[1]);
-		ft_printf("argv : \n");
+		ft_printf("IO:	[%d;%d]\n", (current->io)[0], (current->io)[1]);
+		ft_printf("infile:	%s\noutfile:	%s\n", (current->filename)[0], (current->filename)[1]);
+		ft_printf("argv:	\n");
 		ft_print_arr(current->cmd);
 		ft_printf("=================\n\n");
 		exec_lst = exec_lst->next;

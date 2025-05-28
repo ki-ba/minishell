@@ -1,16 +1,27 @@
+#include "data_structures.h"
+#include "libft.h"
 #include "minishell.h"
 
 t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 {
-	size_t	i;
-	char	*name;
+	size_t		i;
+	char		*name;
+	t_env_lst	*new;
 
 	*env_lst = NULL;
 	i = 0;
 	while (envp[i])
 	{
 		name = ft_substr(envp[i], 0, ft_strlen_c(envp[i], '='));
-		env_add_back(env_lst, create_env_lst(name));
+		new = create_env_lst(name);
+		if (!name || !new)
+		{
+			free(name);
+			destroy_env_lst(*env_lst);
+			ft_putstr_fd("error creating environment\n", 2);
+			return (NULL);
+		}
+		env_add_back(env_lst, new);
 		++i;
 	}
 	return (*env_lst);
@@ -27,9 +38,13 @@ char	**create_env_arr(t_env_lst *env_lst)
 	current = env_lst;
 	env_size = get_env_size(env_lst);
 	env_arr = ft_calloc(env_size, sizeof(char *));
+	if (!env_arr)
+		return (NULL);
 	while (i < env_size)
 	{
 		env_arr[i] = ft_concat(3, current->name, "=", current->value);
+		if (!env_arr[i])
+			return (env_arr);
 		current = current->next;
 		++i;
 	}
