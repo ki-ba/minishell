@@ -57,6 +57,8 @@ void	tokenize(t_list **tokens, char *line)
 	{
 		cur_len = count_token_len(&line[i]);
 		token = create_token(tokens, ft_substr(line, i, cur_len), &cmd_bool);
+		if (!token)
+			return ;
 		ft_lstadd_back(tokens, ft_lstnew(token));
 		i += cur_len;
 		while (ft_iswhitespace(line[i]))
