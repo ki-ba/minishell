@@ -4,6 +4,8 @@ t_env_lst	*create_env_lst(char name[])
 {
 	t_env_lst	*new;
 
+	if (!name)
+		return (NULL);
 	new = malloc(sizeof(t_env_lst));
 	if (!new)
 		return (NULL);
