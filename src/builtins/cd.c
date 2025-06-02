@@ -20,13 +20,13 @@ int	ft_cd(char **cmd, t_env_lst *env)
 	int		err;
 	char	path[PATH_MAX];
 
+	if (cmd[1] == NULL)
+		return (no_arg_cd(cmd, env));
 	if (cmd[2] != NULL)
 	{
 		ft_putendl_fd("minishell: cd: to many arguments", 2);
 		return (ERR_ARGS);
 	}
-	if (cmd[1] == NULL)
-		return (no_arg_cd(cmd, env));
 	if (cmd[1][0] == '\0')
 		return (SUCCESS);
 	i = ft_strlen(cmd[1]) - 1;
