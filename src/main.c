@@ -49,7 +49,6 @@ int	readline_loop(t_env_lst *env_lst)
 	while (!status) // if error occured, quit program
 	{
 		cmd = readline("zinzinshell $");
-		builtins_call(cmd, env_lst);
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);

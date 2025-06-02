@@ -18,6 +18,7 @@ int	ft_cd(char **cmd, t_env_lst *env)
 {
 	size_t	i;
 	int		err;
+	char	path[PATH_MAX];
 
 	if (cmd[2] != NULL)
 	{
@@ -38,7 +39,7 @@ int	ft_cd(char **cmd, t_env_lst *env)
 		perror("minishell: cd");
 		return (err);
 	}
-	err = update_env(getcwd(cmd[1], PATH_MAX), env);
+	err = update_env(getcwd(path, PATH_MAX), env);
 	return (err);
 }
 
@@ -50,7 +51,7 @@ static int	check_dir_access(char *new_path)
 	int		err;
 
 	i = 0;
-	full_path = ft_calloc(1, sizeof(char));
+	full_path = NULL;
 	while (new_path[i] != '\0')
 	{
 		j = i + 1;
