@@ -28,9 +28,9 @@ char	**add_to_array(char **arr, char *str)
 
 static void	handle_redirect(t_token *token, t_redir *redir_type)
 {
-	if (!strncmp(token->token, ">", 2) || !strncmp(token->token, ">>", 3))
+	if (!ft_strncmp(token->token, ">", 2) || !ft_strncmp(token->token, ">>", 3))
 		*redir_type = OUTFILE;
-	else if (!strncmp(token->token, "<", 2) || !strncmp(token->token, "<<", 3))
+	else if (!ft_strncmp(token->token, "<", 2) || !ft_strncmp(token->token, "<<", 3))
 		*redir_type = INFILE;
 }
 

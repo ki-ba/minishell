@@ -30,7 +30,7 @@ int	readline_loop(t_env_lst *env_lst)
 	last_cmd = NULL;
 	cmd = NULL;
 	hist_fd = retrieve_history(&last_cmd);
-	while (TRUE && (!cmd || strncmp(cmd, "exit", ft_strlen(cmd))))
+	while (TRUE && (!cmd || ft_strncmp(cmd, "exit", ft_strlen(cmd))))
 	{
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
