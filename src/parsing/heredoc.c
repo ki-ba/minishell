@@ -18,7 +18,7 @@ static int	open_random_file(void)
 	filename = ft_concat(2, "tmp_", random_str);
 	if (!filename)
 		return (-1);
-	while (access(filename, F_OK))
+	while (!access(filename, F_OK))
 	{
 		ft_multifree(2, 0, random_str, filename);
 		random_str = create_random_str(HERE_DOC_LEN);
