@@ -14,7 +14,10 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 	if (check_quotes(expanded))
 		return (ERR_PARSING);
 	if (tokenize(&tokens, expanded) != 0)
+	{
+		free(expanded);
 		return (ERR_ALLOC);
+	}
 	free(expanded);
 	ft_lstiter(tokens, remove_quotes);
 	if (DEBUG)

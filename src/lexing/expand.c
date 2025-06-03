@@ -5,7 +5,6 @@
 // 	return (c == '\'' || c == '"');
 // }
 
-
 char	*expand_line(t_env_lst *env, char str[])
 {
 	size_t	i;
