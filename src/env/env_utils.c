@@ -45,13 +45,15 @@ char	*get_env_val(t_env_lst *env, char name[])
 	t_env_lst	*current;
 
 	current = env;
+	if (!name)
+		return (NULL);
 	while (current)
 	{
 		if (!ft_strncmp(name, current->name, ft_strlen(name) + 1))
 			return (current->value);
 		current = current->next;
 	}
-	return (NULL);
+	return (ft_strdup(""));
 }
 
 size_t	get_env_size(t_env_lst *env_lst)

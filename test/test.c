@@ -34,6 +34,7 @@ void	test_count_token_len(void)
 	TEST_ASSERT_EQUAL_INT(ft_strlen("\"token is this whole string\""), count_token_len("\"token is this whole string\""));
 	TEST_ASSERT_EQUAL_INT(0, count_token_len(" space at the beginning"));
 	TEST_ASSERT_EQUAL_INT(ft_strlen("\" 'hi'   still token\""), count_token_len("\" 'hi'   still token\""));
+	TEST_ASSERT_EQUAL_INT(1, count_token_len("$ <- not a var because of the space"));
 }
 
 void test_determine_redirect(void)
@@ -54,12 +55,10 @@ void test_create_token(void)
 {
     t_list *tokens = NULL;
 	t_bool	cmd_bool = FALSE;
-    t_token *token = create_token(&tokens, ft_strdup("Hello"), &cmd_bool);
-	(void)token;
-	(void)tokens;
-    TEST_ASSERT_NOT_NULL(token);
-    TEST_ASSERT_EQUAL(TOKEN_CMD, token->type);
-    TEST_ASSERT_EQUAL_STRING("Hello", token->token);
+    t_token *cur_token = token(&tokens, ft_strdup("Hello"), &cmd_bool);
+    TEST_ASSERT_NOT_NULL(cur_token);
+    TEST_ASSERT_EQUAL(TOKEN_CMD, cur_token->type);
+    TEST_ASSERT_EQUAL_STRING("Hello", cur_token->token);
 }
 
 void test_tokenize(void) 
@@ -72,7 +71,7 @@ void test_tokenize(void)
     TEST_ASSERT_EQUAL_STRING("echo", token->token);
     token = (t_token *)tokens->next->content;
     TEST_ASSERT_EQUAL(TOKEN_STR, token->type);
-    TEST_ASSERT_EQUAL_STRING("Hello, World!", token->token);
+    TEST_ASSERT_EQUAL_STRING("'Hello, World!'", token->token);
 }
 
 void test_create_env(void)
@@ -122,8 +121,8 @@ void	test_must_expand(void)
 void	test_expand_line(void)
 {
 	extern char	**environ;
-	char		*line, *line2, *line3;
-	char		*expanded, *expanded2, *expanded3;
+	char		*line, *line2, *line3, *line4;
+	char		*expanded, *expanded2, *expanded3, *expanded4;
 	t_env_lst	*env_lst;
 
 	env_lst = NULL;
@@ -131,12 +130,15 @@ void	test_expand_line(void)
 	line = ft_strdup("hello $USER you are at $PWD");
 	line2 = ft_strdup("hello '$USER' you are at $PWD");
 	line3 = ft_strdup("hello \"$USER you\" are 'at $'PWD");
+	line4 = ft_strdup("echo $");
 	expanded = ft_concat(4, "hello ",getenv("USER"), " you are at", getenv("PWD"));
 	expanded2 = ft_concat(3, "hello '$USER' you are at \"", getenv("PWD"), "\"");
 	expanded3 = ft_concat(3, "hello \"", getenv("USER"), "\" you are 'at $'PWD");
+	expanded4 = ft_strdup("echo $");
 	TEST_ASSERT_EQUAL_STRING(expanded, expand_line(env_lst, line));
 	TEST_ASSERT_EQUAL_STRING(expanded2, expand_line(env_lst, line2));
 	TEST_ASSERT_EQUAL_STRING(expanded3, expand_line(env_lst, line3));
+	TEST_ASSERT_EQUAL_STRING(expanded4, expand_line(env_lst, line4));
 }
 void	test_summarize_lexing(void)
 {
@@ -159,35 +161,36 @@ void	test_cd(void)
 	t_env_lst	*env_lst;
 	char		*cur_wd;
 	char		*old_wd;
+	char		*pwd = ft_strdup("PWD");
+	char		*oldpwd = ft_strdup("OLDPWD");
 
 	env_lst = NULL;
 	create_environment(&env_lst, environ);
-	cur_wd = get_env_val(env_lst, "PWD");
+	cur_wd = get_env_val(env_lst, "PWD"); 
 	ft_cd(ft_split("cd /home", ' '), env_lst);
-	TEST_ASSERT_EQUAL_STRING("/home", get_env_val(env_lst, "PWD"));
-	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "OLDPWD"));
-	cur_wd = get_env_val(env_lst, "PWD");
-	old_wd = get_env_val(env_lst, "OLDPWD");
+	TEST_ASSERT_EQUAL_STRING("/home", get_env_val(env_lst, pwd));
+	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, oldpwd));
+	cur_wd = get_env_val(env_lst, pwd);
+	old_wd = get_env_val(env_lst, oldpwd);
 	ft_cd(ft_split("cd /home/inexistent_folder", ' '), env_lst);
-	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
-	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
-	cur_wd = get_env_val(env_lst, "PWD");
-	old_wd = get_env_val(env_lst, "OLDPWD");
+	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, pwd));
+	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, oldpwd));
+	cur_wd = get_env_val(env_lst, pwd);
+	old_wd = get_env_val(env_lst, oldpwd);
 	ft_cd(ft_split("cd", ' '), env_lst);
-	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
-	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
-	// cur_wd = get_env_val(env_lst, "PWD");
-	// old_wd = get_env_val(env_lst, "OLDPWD");
+	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, pwd));
+	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, oldpwd));
+	// cur_wd = get_env_val(env_lst, pwd);
+	// old_wd = get_env_val(env_lst, oldpwd);
 	// ft_cd(ft_split("cd \0", ' '), env_lst);
-	// TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
-	// TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
-	cur_wd = get_env_val(env_lst, "PWD");
-	old_wd = get_env_val(env_lst, "OLDPWD");
+	// TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, pwd));
+	// TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, oldpwd));
+	cur_wd = get_env_val(env_lst, pwd);
+	old_wd = get_env_val(env_lst, oldpwd);
 	ft_cd(ft_split("cd / home", ' '), env_lst);
-	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, "PWD"));
-	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, "OLDPWD"));
+	TEST_ASSERT_EQUAL_STRING(cur_wd, get_env_val(env_lst, pwd));
+	TEST_ASSERT_EQUAL_STRING(old_wd, get_env_val(env_lst, oldpwd));
 }
-
 
 void	test_pwd(void)
 {
@@ -223,6 +226,7 @@ void	test_remove_quotes(void)
 	ft_lstclear(&tokens, deltoken);
 	tokenize(&tokens, line2);
 	current = tokens;
+	ft_lstiter(tokens, remove_quotes);
 	while (current)
 	{
 		TEST_ASSERT_EQUAL_STRING(expected[i], ((t_token *)current->content)->token);
@@ -232,6 +236,28 @@ void	test_remove_quotes(void)
 	ft_lstclear(&tokens, deltoken);
 }
 
+void	test_count_parts(void)
+{
+	char *line1, *line2, *line3, *line4, *line5, *line6, *line7, *line8;
+
+	line1 = ft_strdup("a classic test without variables or quotes");
+	line2 = ft_strdup("a $test with a variable");
+	line3 = ft_strdup("a' complex test' with \" $VARS\" and q'uo'tes");
+	line4 = ft_strdup("what about '$VARS' with single quotes?");
+	line5 = ft_strdup("$var$var2$var3 \"hello $WORLD\"");
+	line6 = ft_strdup("hel$var hi there'		$zouzou'$hi");
+	line7 = ft_strdup("\"test with \"$TRUNCA\"TED variable\"");
+	line7 = ft_strdup("\"test with \"$TRUNCA\"TED variable\"");
+	line8 = ft_strdup("only two parts $USER");
+	// TEST_ASSERT_EQUAL(1, count_parts(line1));
+	// TEST_ASSERT_EQUAL(3, count_parts(line2));
+	// TEST_ASSERT_EQUAL(3, count_parts(line3));
+	// TEST_ASSERT_EQUAL(1, count_parts(line4));
+	// TEST_ASSERT_EQUAL(5, count_parts(line5));
+	// TEST_ASSERT_EQUAL(5, count_parts(line6));
+	// TEST_ASSERT_EQUAL(3, count_parts(line7));
+	// TEST_ASSERT_EQUAL(2, count_parts(line8));
+}
 // not needed when using generate_test_runner.rb
 int	main(void)
 {
@@ -249,5 +275,6 @@ int	main(void)
 	RUN_TEST(test_cd);
 	RUN_TEST(test_pwd);
 	RUN_TEST(test_remove_quotes);
+	// RUN_TEST(test_count_parts);
 	return UNITY_END();
 }
