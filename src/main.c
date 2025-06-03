@@ -1,4 +1,3 @@
-#include "libft.h"
 #include "error.h"
 #include "minishell.h"
 #include "builtins.h"

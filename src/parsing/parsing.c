@@ -31,17 +31,17 @@ char	**add_to_array(char **arr, char *str)
 
 static int	handle_redirect(t_exec_node *node, t_token *token, t_redir *redir)
 {
-	if (!strncmp(token->token, ">", 2) || !strncmp(token->token, ">>", 3))
+	if (!ft_strncmp(token->token, ">", 2) || !ft_strncmp(token->token, ">>", 3))
 	{
 		*redir = OUTFILE;
-		if (!strncmp(token->token, ">", 2))
+		if (!ft_strncmp(token->token, ">", 2))
 			return (O_CREAT | O_TRUNC | O_WRONLY);
 		return (O_CREAT | O_APPEND | O_RDONLY);
 	}
-	else if (!strncmp(token->token, "<", 2) || !strncmp(token->token, "<<", 3))
+	else if (!ft_strncmp(token->token, "<", 2) || !ft_strncmp(token->token, "<<", 3))
 	{
 		*redir = INFILE;
-		if (!strncmp(token->token, "<<", 2))
+		if (!ft_strncmp(token->token, "<<", 2))
 			node->io[0] = MAX_FD + 1;
 		return (O_RDONLY);
 	}
