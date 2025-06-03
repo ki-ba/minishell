@@ -1,4 +1,3 @@
-#include "error.h"
 #include "minishell.h"
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
@@ -6,6 +5,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 	t_list	*tokens;
 	char	*expanded;
 	t_list	*exec_lst;
+	int		err;
 
 	tokens = NULL;
 	expanded = expand_line(env_lst, cmd);
@@ -30,6 +30,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 		return (ERR_ALLOC);
 	if (DEBUG)
 		print_exec(exec_lst);
+	err = call_cmd(exec_lst->content, env_lst);
 	ft_lstclear(&exec_lst, del_exec_node);
 	if (!ft_strncmp(cmd, "exit", ft_strlen("exit")))
 		return (ft_printf("exiting\n"));
@@ -50,7 +51,6 @@ int	readline_loop(t_env_lst *env_lst)
 	while (!status) // if error occured, quit program
 	{
 		cmd = readline("zinzinshell $");
-		builtins_call(cmd, env_lst);
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
