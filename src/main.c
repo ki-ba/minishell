@@ -9,6 +9,8 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 
 	tokens = NULL;
 	expanded = expand_line(env_lst, cmd);
+	if (!expanded)
+		return (ERR_ALLOC);
 	if (check_quotes(expanded))
 		return (ERR_PARSING);
 	if (tokenize(&tokens, expanded) != 0)

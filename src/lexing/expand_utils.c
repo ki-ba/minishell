@@ -1,0 +1,74 @@
+#include "minishell.h"
+
+void	join_in_place(char **s1, char *s2)
+{
+	char	*s3;
+
+	s3 = ft_strjoin(*s1, s2);
+	free(s2);
+	free(*s1);
+	*s1 = s3;
+}
+
+size_t	varnamelen(char str[])
+{
+	size_t	i;
+
+	if (str[0] != '$')
+		return (0);
+	i = 1;
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+		++i;
+	return (i);
+}
+
+size_t	get_part_len(char str[])
+{
+	size_t	i;
+
+	i = 0;
+	if (str[0] == '$')
+		i = varnamelen(str);
+	else
+		i = ft_strlen_c(str, '$');
+	return (i);
+}
+
+t_bool	must_expand(char str[], size_t pos)
+{
+	char	quote;
+	size_t	i;
+
+	i = 0;
+	quote = '\0';
+	while (i < pos)
+	{
+		if ((str[i] == '"' || str[i] == '\'') && !quote)
+			quote = str[i];
+		else if (str[i] == quote)
+			quote = '\0';
+		++i;
+	}
+	return (quote != '\'');
+}
+
+char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
+{
+	char	*next_chunk;
+	char	*varname;
+
+	if (str[i] == '$' && must_expand(str, i) && len > 1)
+	{
+		varname = ft_substr(str, i + 1, len - 1);
+		next_chunk = ft_strdup(get_env_val(env, varname));
+		free(varname);
+	}
+	else
+	{
+		next_chunk = ft_substr(str, i, len);
+		if (!next_chunk)
+			return (NULL);
+	}
+	return (next_chunk);
+}
+
