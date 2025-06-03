@@ -1,5 +1,6 @@
 #include "minishell.h"
 #include "error.h"
+#include "exec.h"
 #include <unistd.h>
 #include <sys/wait.h>
 
@@ -45,8 +46,8 @@ int	simple_cmd(t_exec_node *exe, t_env_lst *env)
 	int		pid;
 	int		pipefd[2];
 	char	**env_arr;
+	char	*path;
 
-	(void) env;
 	if (pipe(pipefd) == -1)
 	{
 		perror("minishell: pipe");
@@ -64,7 +65,13 @@ int	simple_cmd(t_exec_node *exe, t_env_lst *env)
 		close(pipefd[1]);
 		ft_putstr_fd("child: [", 1);
 		dup2(pipefd[0], exe->io[0]);
-		if (execve("/usr/bin/echo", exe->cmd, env_arr) == -1)
+		path = find_path(exe->cmd[0], env);
+		if (!path)
+		{
+			return (ERR_ALLOC);
+		}
+		printf("path= '%s'\n", path);
+		if (execve(path, exe->cmd, env_arr) == -1)
 		{
 			ft_putstr_fd("minishell: ", 2);
 			perror(exe->cmd[0]);
