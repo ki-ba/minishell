@@ -16,7 +16,7 @@ int	here_doc(char *delimiter)
 	line = NULL;
 	write(1, "\nhere_doc_ish>", ft_strlen("\nhere_doc_ish> "));
 	line = get_next_line(STDIN_FILENO);
-	while (line && strncmp(line, delimiter, ft_strlen(delimiter)))
+	while (line && ft_strncmp(line, delimiter, ft_strlen(delimiter)))
 	{
 		write(1, "\nhere_doc_ish> ", ft_strlen("\nhere_doc_ish> "));
 		write(hd_fd, line, ft_strlen(line));
