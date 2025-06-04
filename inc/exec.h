@@ -16,6 +16,4 @@ int		call_cmd(t_exec_node *exe, t_env_lst *env);
 
 char	*find_path(char *cmd, t_env_lst *env);
 
-
-
 #endif
