@@ -1,23 +1,39 @@
-#include "libft.h"
 #include "minishell.h"
-#include "builtins.h"
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
 	t_list	*tokens;
 	char	*expanded;
 	t_list	*exec_lst;
+	int		err;
 
 	tokens = NULL;
 	expanded = expand_line(env_lst, cmd);
-	tokenize(&tokens, expanded);
-	print_token_list(tokens);
-	ft_printf("%s\n", expanded);
-	exec_lst = parse_tokens(tokens);
-	print_exec(exec_lst);
+	if (!expanded)
+		return (ERR_ALLOC);
+	if (check_quotes(expanded))
+		return (ERR_PARSING);
+	if (tokenize(&tokens, expanded) != 0)
+	{
+		free(expanded);
+		return (ERR_ALLOC);
+	}
 	free(expanded);
+	ft_lstiter(tokens, remove_quotes);
+	if (DEBUG)
+		print_token_list(tokens);
+	if (!tokens)
+		return (ERR_ALLOC);
+	exec_lst = parse_tokens(tokens);
 	ft_lstclear(&tokens, deltoken);
+	if (!exec_lst)
+		return (ERR_ALLOC);
+	if (DEBUG)
+		print_exec(exec_lst);
+	err = call_cmd(exec_lst->content, env_lst);
 	ft_lstclear(&exec_lst, del_exec_node);
+	if (!ft_strncmp(cmd, "exit", ft_strlen("exit")))
+		return (ft_printf("exiting\n"));
 	return (0);
 }
 
@@ -28,13 +44,13 @@ int	readline_loop(t_env_lst *env_lst)
 	char	*last_cmd;
 	int		status;
 
+	status = 0;
 	last_cmd = NULL;
 	cmd = NULL;
 	hist_fd = retrieve_history(&last_cmd);
-	while (TRUE && (!cmd || strncmp(cmd, "exit", ft_strlen(cmd))))
+	while (!status) // if error occured, quit program
 	{
 		cmd = readline("zinzinshell $");
-		builtins_call(ft_split(cmd, ' '), env_lst);
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
@@ -53,8 +69,12 @@ int	main(int argc, char *argv[], char *envp[])
 	t_env_lst	*env_lst;
 	int			exit_status;
 
+	exit_status = 1;
+	(void)argc;
+	(void)argv;
 	env_lst = create_environment(&env_lst, envp);
-	exit_status = readline_loop(env_lst);
+	if (env_lst)
+		exit_status = readline_loop(env_lst);
 	destroy_env_lst(env_lst);
 	return (exit_status);
 }
