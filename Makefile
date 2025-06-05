@@ -30,7 +30,7 @@ TEST_DIR = test/
 ENV_SRC = env.c env_utils.c
 HISTORY_SRC = history.c
 LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c token.c id_token.c quotes.c
-BUILTINS_SRC = builtins_utils.c cd.c pwd.c
+BUILTINS_SRC = builtins_utils.c cd.c pwd.c export.c
 PARSING_SRC = parsing.c exec_node.c heredoc.c
 EXEC_SRC = builtins_call.c simple_cmd.c
 

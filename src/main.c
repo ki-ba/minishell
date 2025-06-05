@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include "exec.h"
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {

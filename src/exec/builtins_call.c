@@ -36,8 +36,8 @@ int	call_cmd(t_exec_node *exe, t_env_lst *env)
 		return (ft_cd(exe->cmd, env));
 	if (!ft_strncmp(exe->cmd[0], "pwd", 4))
 		return (ft_pwd(exe->cmd));
-	// if (!ft_strncmp(exe->cmd[0], "export", 7))
-	// 	return (ft_export(exe->cmd, env));
+	if (!ft_strncmp(exe->cmd[0], "export", 7))
+		return (ft_export(exe->cmd, env));
 	// if (!ft_strncmp(exe->cmd[0], "unset", 6))
 	// 	return (ft_unset(exe->cmd, env));
 	// if (!ft_strncmp(exe->cmd[0], "exit", 5))
