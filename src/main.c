@@ -1,12 +1,21 @@
-#include "error.h"
 #include "minishell.h"
+
+void	wait_processes(pid_t pid)
+{
+	int	status;
+
+	if (pid > 0)
+		waitpid(pid, &status, 0);
+	while (wait(&status) > -1)
+		;
+}
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
 	t_list	*tokens;
 	char	*expanded;
 	t_list	*exec_lst;
-	int		err;
+	pid_t	pid;
 
 	tokens = NULL;
 	expanded = expand_line(env_lst, cmd);
@@ -31,10 +40,9 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 		return (ERR_ALLOC);
 	if (DEBUG)
 		print_exec(exec_lst);
-	err = call_cmd(exec_lst->content, env_lst);
+	pid = exec_pipeline(exec_lst, env_lst);
+	wait_processes(pid);
 	ft_lstclear(&exec_lst, del_exec_node);
-	if (!ft_strncmp(cmd, "exit", ft_strlen("exit")))
-		return (ft_printf("exiting\n"));
 	return (0);
 }
 
@@ -43,26 +51,26 @@ int	readline_loop(t_env_lst *env_lst)
 	char	*cmd;
 	int		hist_fd;
 	char	*last_cmd;
-	int		status;
+	int		fatal;
 
-	status = 0;
+	fatal = 0;
 	last_cmd = NULL;
 	cmd = NULL;
 	hist_fd = retrieve_history(&last_cmd);
-	while (!status) // if error occured, quit program
+	while (!fatal) // if error occured, quit program
 	{
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
-			status = interpret_line(cmd, env_lst);
+			fatal = interpret_line(cmd, env_lst);
 			if (last_cmd)
 				free(last_cmd);
 			last_cmd = cmd;
 		}
 	}
 	close(hist_fd);
-	return (status);
+	return (fatal);
 }
 
 int	main(int argc, char *argv[], char *envp[])

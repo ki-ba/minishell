@@ -1,3 +1,4 @@
+#include "data_structures.h"
 #include "minishell.h"
 #include "builtins.h"
 #include "error.h"
@@ -8,10 +9,11 @@
  * @param cmd is the command, with its options and arguments
  * @return 0 is the directory could be printed, non-zero otherwise
  */
-int	ft_pwd(char **cmd)
+int	ft_pwd(char **cmd, t_env_lst *env)
 {
 	char	*path;
 
+	(void)env;
 	path = ft_calloc(PATH_MAX, sizeof(char));
 	if (cmd[1])
 	{
@@ -24,7 +26,7 @@ int	ft_pwd(char **cmd)
 		ft_putendl_fd("minishell: pwd: couldn't get the path", 2);
 		return (ERR_ALLOC);
 	}
-	printf("%s\n", path);
+	ft_printf("%s\n", path);
 	free(path);
 	return (SUCCESS);
 }
