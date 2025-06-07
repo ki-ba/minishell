@@ -3,6 +3,7 @@
 
 # include "libft.h"
 # include "data_structures.h"
+# include "exec.h"
 # include "builtins.h"
 # include "error.h"
 # include <limits.h>
@@ -102,4 +103,5 @@ void			print_exec(t_list	*exec_lst);
 /* here_doc.c */
 
 int				here_doc(char *delimiter);
+
 #endif
