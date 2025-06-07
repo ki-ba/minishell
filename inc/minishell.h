@@ -7,6 +7,7 @@
 # include "builtins.h"
 # include "error.h"
 # include <limits.h>
+# include <sys/wait.h>
 
 # ifdef __linux__
 #  include <readline/readline.h>
@@ -23,7 +24,7 @@
 #  define DEBUG FALSE
 # endif
 
-# ifndef HERE_DOC_LEN
+# ifndef HERE_DOC_LE
 #  define HERE_DOC_LEN 8
 # endif
 

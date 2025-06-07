@@ -5,15 +5,15 @@
 
 typedef enum bool	t_bool;
 
-// int			ft_echo(char *str, t_bool *option);
+int			ft_echo(char **cmd, t_env_lst *env);
 int			ft_cd(char **cmd, t_env_lst *env);
-int			ft_pwd(char **cmd);
-// int			ft_export(char *name, char *word);
-// int			ft_unset(char *name);
-// int			ft_env(char *name, char *value);
-// int			ft_exit(int	*gc); //garbage collector
+int			ft_pwd(char **cmd, t_env_lst *env);
+int			ft_export(char **cmd, t_env_lst *env);
+int			ft_unset(char **cmd, t_env_lst *env);
+int			ft_env(char **cmd, t_env_lst *env);
+int			ft_exit(char **cmd, t_env_lst *env);
 
 t_env_lst	*search_env_var(t_env_lst *env, char *var);
 int			builtins_call(char *line, t_env_lst *env);
-
+char			**envlist_to_arr(t_env_lst *env_lst);
 #endif
