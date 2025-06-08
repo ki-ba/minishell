@@ -10,7 +10,7 @@ char	*find_path(char *cmd, t_env_lst *env)
 	char	*path;
 	size_t	i;
 
-	paths = ft_split(get_env_val(env, "PATH"), ':');
+	paths = ft_split(get_env_val(env, "PATH", 0), ':');
 	if (!paths)
 		return (NULL);
 	i = 0;
@@ -32,16 +32,15 @@ char	*find_path(char *cmd, t_env_lst *env)
 
 t_bool	is_builtin(char **cmd)
 {
-	if (!cmd[0])
+	if (!cmd || !cmd[0])
 		return (1);
-	if (!ft_strncmp(cmd[0], "echo", 5))
-		if (!ft_strncmp(cmd[0], "cd", 3))
-			if (!ft_strncmp(cmd[0], "pwd", 4))
-				if (!ft_strncmp(cmd[0], "export", 7))
-					if (!ft_strncmp(cmd[0], "unset", 6))
-						if (!ft_strncmp(cmd[0], "exit", 5))
-							if (!ft_strncmp(cmd[0], "env", 4))
-								return (FALSE);
+	if (ft_strncmp(cmd[0], "echo", 5))
+		if (ft_strncmp(cmd[0], "cd", 3))
+			if (ft_strncmp(cmd[0], "pwd", 4))
+				if (ft_strncmp(cmd[0], "export", 7))
+					if (ft_strncmp(cmd[0], "unset", 6))
+						if (ft_strncmp(cmd[0], "exit", 5))
+							return (!ft_strncmp(cmd[0], "env", 4));
 	return (TRUE);
 }
 

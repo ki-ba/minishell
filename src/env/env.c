@@ -61,8 +61,47 @@ void	destroy_env_lst(t_env_lst *env_lst)
 	while (env_lst)
 	{
 		tmp = env_lst->next;
+		if (env_lst->name[0] == '?')
+			free(env_lst->value);
 		free(env_lst->name);
 		free(env_lst);
 		env_lst = tmp;
 	}
 }
+
+t_env_lst	*new_env_entry(char *name, char *value)
+{
+	t_env_lst	*new;
+
+	new = ft_calloc(1, sizeof(t_env_lst));
+	if (!new)
+		return (NULL);
+	new->name = ft_strdup(name);
+	new->value = ft_strdup(value);
+	new->next = NULL;
+	if (!name || !value)
+	{
+		free(new);
+		new = NULL;
+	}
+	return (new);
+}
+
+/** @param sh wether the variable to add is a shell variable (proper to zzsh) 
+* or an environment variable. */
+void	add_to_env(t_env_lst *env, char *name, char *val, t_bool sh)
+{
+	t_env_lst	*new;
+	t_env_lst	*current;
+
+	if (sh)
+		name = ft_concat(2, "?", name);
+	if (!env || !name || !val)
+		return ;
+	current = env;
+	new = new_env_entry(name, val);
+	while (current->next)
+		current = current->next;
+	current->next = new;
+}
+

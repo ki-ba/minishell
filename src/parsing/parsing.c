@@ -2,6 +2,7 @@
 #include "error.h"
 #include "libft.h"
 #include "minishell.h"
+#include <fcntl.h>
 
 /**
 * Parse the token list and create a process list with correct infiles,
@@ -61,7 +62,10 @@ static void	handle_file(t_exec_node *node, t_token *token, t_redir redir)
 			return ;
 		fd = open(node->filename[redir], node->oflags[redir], 0644);
 		if (fd < 0)
+		{
+			node->io[redir] = open("/dev/null", O_RDWR);
 			return (perror("open"));
+		}
 		node->io[redir] = fd;
 	}
 }
