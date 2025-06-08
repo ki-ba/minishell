@@ -69,9 +69,9 @@ int	readline_loop(t_env_lst *env_lst)
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
-			fatal = interpret_line(cmd, env_lst);
 			if (last_cmd)
 				free(last_cmd);
+			fatal = interpret_line(cmd, env_lst);
 			last_cmd = cmd;
 		}
 	}

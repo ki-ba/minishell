@@ -55,7 +55,11 @@ char	*get_env_val(t_env_lst *env, char name[], int sh)
 	while (current)
 	{
 		if (!ft_strncmp(name, current->name, ft_strlen(name) + 1))
+		{
+			if (sh)
+				free(name);
 			return (current->value);
+		}
 		current = current->next;
 	}
 	if (sh)

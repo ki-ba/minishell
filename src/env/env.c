@@ -100,8 +100,9 @@ void	add_to_env(t_env_lst *env, char *name, char *val, t_bool sh)
 		return ;
 	current = env;
 	new = new_env_entry(name, val);
+	if (sh)
+		free(name);
 	while (current->next)
 		current = current->next;
 	current->next = new;
 }
-
