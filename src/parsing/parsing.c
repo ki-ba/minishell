@@ -2,6 +2,7 @@
 #include "error.h"
 #include "libft.h"
 #include "minishell.h"
+#include <fcntl.h>
 
 /* handles current TOKEN_REDIRECT */
 static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
@@ -42,7 +43,12 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 		if (fd < 0)
 			(perror("open"));
 		else
-			node->io[redir] = fd;
+		{
+			node->io[redir] = open("/dev/null", O_RDWR);
+			perror("open");
+			return (ERR_FAIL);
+		}
+		node->io[redir] = fd;
 	}
 	return (SUCCESS);
 }

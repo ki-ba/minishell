@@ -1,5 +1,3 @@
-#include "error.h"
-#include "libft.h"
 #include "minishell.h"
 
 void	print_error_msg(int status)
@@ -13,7 +11,6 @@ void	print_error_msg(int status)
 	if (status == ERR_FAIL)
 		ft_putstr_fd("ERROR : unspecified issue\n", 2);
 }
-
 
 void	wait_processes(pid_t pid)
 {
@@ -55,7 +52,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 		return (ERR_ALLOC);
 	if (DEBUG)
 		print_exec(exec_lst);
-	pid = exec_pipeline(exec_lst, env_lst);
+	pid = exec_pipeline(&exec_lst, env_lst);
 	wait_processes(pid);
 	ft_lstclear(&exec_lst, del_exec_node);
 	return (0);
@@ -67,11 +64,17 @@ int	readline_loop(t_env_lst *env_lst)
 	int		hist_fd;
 	char	*last_cmd;
 	int		error;
+	char	*hist_fd_str;
 
 	error = 0;
 	last_cmd = NULL;
 	cmd = NULL;
 	hist_fd = retrieve_history(&last_cmd);
+	hist_fd_str = ft_itoa(hist_fd);
+	add_to_env(env_lst, HIST_FILE, hist_fd_str, 1);
+	if (DEBUG)
+		print_env(env_lst);
+	free(hist_fd_str);
 	while (!error || error == ERR_PARSING) // if error occured, quit program
 	{
 		cmd = readline("zinzinshell $");

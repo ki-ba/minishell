@@ -1,3 +1,4 @@
+#include "libft.h"
 #include "minishell.h"
 
 t_env_lst	*create_env_lst(char name[])
@@ -40,10 +41,14 @@ void	print_env(t_env_lst *env_lst)
 	}
 }
 
-char	*get_env_val(t_env_lst *env, char name[])
+char	*get_env_val(t_env_lst *env, char name[], int sh)
 {
 	t_env_lst	*current;
 
+	if (sh)
+		name = ft_concat(2, "?", name);
+	if (DEBUG)
+		ft_printf("looking for %s\n", name);
 	current = env;
 	if (!name)
 		return (NULL);
@@ -53,6 +58,8 @@ char	*get_env_val(t_env_lst *env, char name[])
 			return (current->value);
 		current = current->next;
 	}
+	if (sh)
+		free(name);
 	return (ft_strdup(""));
 }
 

@@ -60,7 +60,7 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	if (str[i] == '$' && must_expand(str, i) && len > 1)
 	{
 		varname = ft_substr(str, i + 1, len - 1);
-		next_chunk = ft_strdup(get_env_val(env, varname));
+		next_chunk = ft_strdup(get_env_val(env, varname, 0));
 		free(varname);
 	}
 	else
