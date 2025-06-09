@@ -1,4 +1,19 @@
+#include "error.h"
+#include "libft.h"
 #include "minishell.h"
+
+void	print_error_msg(int status)
+{
+	if (status == ERR_ARGS)
+		ft_putstr_fd("ERROR : incorrect arguments\n", 2);
+	if (status == ERR_PARSING)
+		ft_putstr_fd("ERROR : parsing failed\n", 2);
+	if (status == ERR_ALLOC)
+		ft_putstr_fd("ERROR : memory allocation failed\n", 2);
+	if (status == ERR_FAIL)
+		ft_putstr_fd("ERROR : unspecified issue\n", 2);
+}
+
 
 void	wait_processes(pid_t pid)
 {
@@ -51,26 +66,28 @@ int	readline_loop(t_env_lst *env_lst)
 	char	*cmd;
 	int		hist_fd;
 	char	*last_cmd;
-	int		fatal;
+	int		error;
 
-	fatal = 0;
+	error = 0;
 	last_cmd = NULL;
 	cmd = NULL;
 	hist_fd = retrieve_history(&last_cmd);
-	while (!fatal) // if error occured, quit program
+	while (!error || error == ERR_PARSING) // if error occured, quit program
 	{
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
-			fatal = interpret_line(cmd, env_lst);
+			error = interpret_line(cmd, env_lst);
 			if (last_cmd)
 				free(last_cmd);
 			last_cmd = cmd;
+			if (error == ERR_PARSING)
+				print_error_msg(error);
 		}
 	}
 	close(hist_fd);
-	return (fatal);
+	return (error);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -84,6 +101,8 @@ int	main(int argc, char *argv[], char *envp[])
 	env_lst = create_environment(&env_lst, envp);
 	if (env_lst)
 		exit_status = readline_loop(env_lst);
+	if (exit_status)
+		print_error_msg(exit_status);
 	destroy_env_lst(env_lst);
 	return (exit_status);
 }
