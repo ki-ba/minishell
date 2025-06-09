@@ -31,7 +31,7 @@ ENV_SRC = env.c env_utils.c
 HISTORY_SRC = history.c
 LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c token.c id_token.c quotes.c
 BUILTINS_SRC = builtins_utils.c echo.c cd.c pwd.c export.c unset.c env.c exit.c
-PARSING_SRC = parsing.c parsing_utils.c exec_node.c heredoc.c
+PARSING_SRC = parsing.c parsing_utils.c exec_node.c double_input_redir.c
 EXEC_SRC = builtins_call.c simple_cmd.c execute_pipeline.c
 
 ENV_SRC_DIR = env/
