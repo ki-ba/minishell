@@ -84,6 +84,7 @@ int	readline_loop(t_env_lst *env_lst)
 			error = interpret_line(cmd, env_lst);
 			if (last_cmd)
 				free(last_cmd);
+			error = interpret_line(cmd, env_lst);
 			last_cmd = cmd;
 			if (error == ERR_PARSING)
 				print_error_msg(error);
