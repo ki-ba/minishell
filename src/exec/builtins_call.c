@@ -42,7 +42,7 @@ int	call_cmd(t_exec_node *exe, t_env_lst *env)
 	// 	return (ft_unset(exe->cmd, env));
 	// if (!ft_strncmp(exe->cmd[0], "exit", 5))
 	// 	return (ft_exit(exe->cmd, env));
-	// if (!ft_strncmp(exe->cmd[0], "env", 4))
-	// 	return (ft_env(exe->cmd, env));
+	if (!ft_strncmp(exe->cmd[0], "env", 4))
+		return (ft_env(env));
 	return (simple_cmd(exe, env));
 }
