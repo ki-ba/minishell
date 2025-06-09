@@ -103,8 +103,8 @@ t_exec_node		*create_exec_node(void);
 t_list			*parse_tokens(t_list *tokens);
 void			print_exec(t_list	*exec_lst);
 
-/* here_doc.c */
+/* double_input_redir.c */
 
-int				here_doc(char *delimiter);
+int				read_input(char *del);
 
 #endif
