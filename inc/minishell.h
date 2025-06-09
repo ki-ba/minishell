@@ -105,8 +105,7 @@ void			print_exec(t_list	*exec_lst);
 /* parsing_utils.c */
 char			**add_to_array(char **arr, char *str);
 
-/* here_doc.c */
-
-int				here_doc(char *delimiter);
+/* double_input_redir.c */
+int				read_input(char *del);
 
 #endif

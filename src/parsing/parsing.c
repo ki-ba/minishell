@@ -30,7 +30,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 	int	fd;
 
 	if (redir == 0 && node->io[redir] > MAX_FD)
-		node->io[0] = here_doc(token->token);
+		node->io[0] = read_input(token->token);
 	else
 	{
 		node->filename[redir] = ft_strdup(token->token);

@@ -35,21 +35,21 @@ int	ft_max(int a, int b)
 	return (b);
 }
 
-static void	fill_here_doc(int hd, char del[])
+static void	fill_input(int fd, char del[])
 {
 	size_t	len;
 	size_t	dlen;
 	char	*line;
 
 	line = NULL;
-	write(1, "\nhere_doc_ish>", ft_strlen("\nhere_doc_ish> "));
+	write(1, "\ninput>", ft_strlen("\ninput> "));
 	line = get_next_line(STDIN_FILENO);
 	len = ft_strlen(line);
 	dlen = ft_strlen(del);
 	while (line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
 	{
-		write(1, "\nhere_doc_ish> ", ft_strlen("\nhere_doc_ish> "));
-		write(hd, line, ft_strlen(line));
+		write(1, "\ninput> ", ft_strlen("\ninput> "));
+		write(fd, line, ft_strlen(line));
 		free(line);
 		line = get_next_line(STDIN_FILENO);
 		len = ft_strlen(line);
@@ -57,18 +57,18 @@ static void	fill_here_doc(int hd, char del[])
 	free(line);
 }
 
-int	here_doc(char *del)
+int	read_input(char *del)
 {
-	int		hd_fd;
+	int		fd;
 	char	*filename;
 
-	hd_fd = open_random_file(&filename);
-	if (hd_fd < 0)
-		return (hd_fd);
-	fill_here_doc(hd_fd, del);
-	close (hd_fd);
-	hd_fd = open(filename, O_RDONLY);
+	fd = open_random_file(&filename);
+	if (fd < 0)
+		return (fd);
+	fill_input(fd, del);
+	close (fd);
+	fd = open(filename, O_RDONLY);
 	unlink(filename);
 	free(filename);
-	return (hd_fd);
+	return (fd);
 }
