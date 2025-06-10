@@ -23,3 +23,19 @@ int	ft_env(char **cmd, t_env_lst *env)
 	}
 	return (SUCCESS);
 }
+
+int	check_name_validity(char *name)
+{
+	int	i;
+
+	if (!isalpha(name[0]) && name[0] != '_')
+		return (ERR_ARGS);
+	i = 1;
+	while (name[i] && name[i] != '=')
+	{
+		if (!isalnum(name[i]) && name[i] != '_')
+			return (ERR_ARGS);
+		i++;
+	}
+	return (SUCCESS);
+}

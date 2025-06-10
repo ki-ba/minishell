@@ -7,8 +7,6 @@ static int	no_arg_cd(char **cmd, t_env_lst *env);
 static int	update_env(char *new_path, t_env_lst *env);
 static int	check_dir_access(char *new_path);
 
-//TODO: go bad to check if `cd ""` function properly after cmd is properly passed
-
 /** @brief if relative => check access from end to start */
 /** @param cmd[0] is the cmd (here cd) */
 /** @param cmd[1] is the new path */
