@@ -3,9 +3,11 @@
 
 # include "libft.h"
 # include "data_structures.h"
+# include "exec.h"
 # include "builtins.h"
 # include "error.h"
 # include <limits.h>
+# include <sys/wait.h>
 
 # ifdef __linux__
 #  include <readline/readline.h>
@@ -83,23 +85,27 @@ char			*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len);
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 char			**create_env_arr(t_env_lst *env_lst);
 void			destroy_env_lst(t_env_lst *env_lst);
+t_env_lst		*new_env_entry(char *name, char *value);
+void			add_to_env(t_env_lst *env, char *name, char *val, t_bool sh);
 
 /* env_utils.c */
 
 t_env_lst		*create_env_lst(char name[]);
 void			env_add_back(t_env_lst **head, t_env_lst *new);
 void			print_env(t_env_lst *env_lst);
-char			*get_env_val(t_env_lst *env, char name[]);
+char			*get_env_val(t_env_lst *env, char name[], int sh);
 size_t			get_env_size(t_env_lst *env_lst);
 
 /* parsing.c */
 
-char			**add_to_array(char **arr, char *str);
 t_exec_node		*create_exec_node(void);
 t_list			*parse_tokens(t_list *tokens);
 void			print_exec(t_list	*exec_lst);
 
-/* here_doc.c */
+/* parsing_utils.c */
+char			**add_to_array(char **arr, char *str);
 
-int				here_doc(char *delimiter);
+/* double_input_redir.c */
+int				read_input(char *del);
+
 #endif

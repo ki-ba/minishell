@@ -1,12 +1,34 @@
 #include "minishell.h"
 #include "exec.h"
 
+void	print_error_msg(int status)
+{
+	if (status == ERR_ARGS)
+		ft_putstr_fd("ERROR : incorrect arguments\n", 2);
+	if (status == ERR_PARSING)
+		ft_putstr_fd("ERROR : parsing failed\n", 2);
+	if (status == ERR_ALLOC)
+		ft_putstr_fd("ERROR : memory allocation failed\n", 2);
+	if (status == ERR_FAIL)
+		ft_putstr_fd("ERROR : unspecified issue\n", 2);
+}
+
+void	wait_processes(pid_t pid)
+{
+	int	status;
+
+	if (pid > 0)
+		waitpid(pid, &status, 0);
+	while (wait(&status) > -1)
+		;
+}
+
 int	interpret_line(char cmd[], t_env_lst *env_lst)
 {
 	t_list	*tokens;
 	char	*expanded;
 	t_list	*exec_lst;
-	int		err;
+	pid_t	pid;
 
 	tokens = NULL;
 	expanded = expand_line(env_lst, cmd);
@@ -31,10 +53,9 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 		return (ERR_ALLOC);
 	if (DEBUG)
 		print_exec(exec_lst);
-	err = call_cmd(exec_lst->content, env_lst);
+	pid = exec_pipeline(&exec_lst, env_lst);
+	wait_processes(pid);
 	ft_lstclear(&exec_lst, del_exec_node);
-	if (!ft_strncmp(cmd, "exit", ft_strlen("exit")))
-		return (ft_printf("exiting\n"));
 	return (0);
 }
 
@@ -43,26 +64,34 @@ int	readline_loop(t_env_lst *env_lst)
 	char	*cmd;
 	int		hist_fd;
 	char	*last_cmd;
-	int		status;
+	int		error;
+	char	*hist_fd_str;
 
-	status = 0;
+	error = 0;
 	last_cmd = NULL;
 	cmd = NULL;
 	hist_fd = retrieve_history(&last_cmd);
-	while (!status) // if error occured, quit program
+	hist_fd_str = ft_itoa(hist_fd);
+	add_to_env(env_lst, HIST_FILE, hist_fd_str, 1);
+	if (DEBUG)
+		print_env(env_lst);
+	free(hist_fd_str);
+	while (!error || error == ERR_PARSING) // if error occured, quit program
 	{
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
-			status = interpret_line(cmd, env_lst);
+			error = interpret_line(cmd, env_lst);
 			if (last_cmd)
 				free(last_cmd);
 			last_cmd = cmd;
+			if (error == ERR_PARSING)
+				print_error_msg(error);
 		}
 	}
 	close(hist_fd);
-	return (status);
+	return (error);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -76,6 +105,8 @@ int	main(int argc, char *argv[], char *envp[])
 	env_lst = create_environment(&env_lst, envp);
 	if (env_lst)
 		exit_status = readline_loop(env_lst);
+	if (exit_status)
+		print_error_msg(exit_status);
 	destroy_env_lst(env_lst);
 	return (exit_status);
 }
