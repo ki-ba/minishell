@@ -1,32 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_printf_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 13:11:07 by kbarru            #+#    #+#             */
-/*   Updated: 2025/06/10 13:53:08 by mlouis           ###   ########.fr       */
+/*   Created: 2025/06/10 13:53:28 by mlouis            #+#    #+#             */
+/*   Updated: 2025/06/10 14:04:13 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_putnbr_fd(int nb, int fd)
+int	ft_printf_fd(int fd, const char *format, ...)
 {
+	va_list	a_lst;
 	int		len;
-	char	cnb;
+	int		res;
 
+	if (!format)
+		return (-1);
+	va_start(a_lst, format);
 	len = 0;
-	if (nb == -2147483648)
-		return (ft_putstr_fd("-2147483648", fd));
-	if (nb < 0)
+	while (*format)
 	{
-		nb = -nb;
-		len = len + ft_putchar_fd('-', fd);
+		if (*format == '%')
+		{
+			format++;
+			res = converter_handler_fd(*format, a_lst, fd);
+			if (res == -1)
+				return (-1);
+			len += res;
+			format++;
+			continue ;
+		}
+		len = len + ft_putchar_fd(*format, fd);
+		format++;
 	}
-	cnb = nb % 10 + '0';
-	if (nb > 9)
-		len = len + ft_putnbr_fd(nb / 10, fd);
-	return (len + ft_putchar_fd(cnb, fd));
+	va_end(a_lst);
+	return (len);
 }
