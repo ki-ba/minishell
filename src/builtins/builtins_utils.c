@@ -14,7 +14,7 @@ t_env_lst	*search_env_var(t_env_lst *env, char *var)
 	{
 		if (ft_strlen(tmp->name) > max_len)
 			max_len = ft_strlen(tmp->name);
-		if (ft_strncmp(tmp->name, var, max_len) == 0)
+		if (ft_strncmp(tmp->name, var, max_len + 1) == 0)
 			return (tmp);
 		tmp = tmp->next;
 	}
