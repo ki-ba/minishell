@@ -40,37 +40,46 @@ int	ft_export(char **cmd, t_env_lst *env)
 	return (c_err);
 }
 
-// static t_env_lst	*dup_env(t_env_lst *env)
+// static t_env_lst	*dup_node(t_env_lst *node)
 // {
-// 	t_env_lst	*tmp;
-// 	size_t		*order;
-// 	size_t		i;
-// 	size_t		j;
+// 	t_env_lst	*cpy;
 
-// 	tmp = env;
-// 	order = ft_calloc(get_env_size(env), sizeof(size_t));
-// 	if (!order)
-// 		return (NULL);
-// 	i = 0;
-// 	while (tmp)
-// 	{
-// 		j = 0;
-// 		while (tmp->name[j])
-// 		{
-// 			order[i] += tmp->name[j];
-// 			j++;
-// 		}
-// 		i++;
-// 		tmp = tmp->next;	
-// 	}
-// 	return (order);
+// 	cpy = malloc(sizeof(t_env_lst));
+// 	cpy->name = ft_strdup(node->name);
+// 	cpy->value = ft_strdup(node->value);
+// 	cpy->next = NULL;
+// 	return (cpy);
 // }
 
-void	swap_adjacent(t_env_lst **head, t_env_lst *prev, t_env_lst *n1, t_env_lst *n2)
+static t_env_lst	*dup_env(t_env_lst *env)
 {
+	t_env_lst	*dup;
+	t_env_lst	*tmp;
+	t_env_lst	*cpy;
+
+	if (!env)
+		return (NULL);
+	tmp = env;
+	dup = NULL;
+	while (tmp)
+	{
+		cpy = malloc(sizeof(t_env_lst));
+		cpy->name = ft_strdup(tmp->name);
+		cpy->value = ft_strdup(tmp->value);
+		cpy->next = NULL;
+		env_add_back(&dup, cpy);
+		// env_add_back(&dup, dup_node(tmp));
+		tmp = tmp->next;
+	}
+	return (dup);
+}
+
+static void	swap_nodes(t_env_lst **head, t_env_lst *prev, t_env_lst *n1, t_env_lst *n2)
+{
+	if (!n1 || !n2)
+		return ;
 	n1->next = n2->next;
 	n2->next = n1;
-
 	if (prev)
 		prev->next = n2;
 	else
@@ -79,133 +88,41 @@ void	swap_adjacent(t_env_lst **head, t_env_lst *prev, t_env_lst *n1, t_env_lst *
 
 t_env_lst	*sort_env_var(t_env_lst *env)
 {
-	int			sorted;
+	int			is_sorted;
 	t_env_lst	*prev;
-	t_env_lst	*curr;
-	t_env_lst	*head = env;
+	t_env_lst	*tmp;
 
 	if (!env)
 		return (NULL);
-
-	sorted = 0;
-	while (!sorted)
+	is_sorted = 0;
+	while (!is_sorted)
 	{
-		sorted = 1;
+		is_sorted = 1;
+		tmp = env;
 		prev = NULL;
-		curr = head;
-
-		while (curr && curr->next)
+		while (tmp && tmp->next)
 		{
-			if (ft_strncmp(curr->name, curr->next->name, ft_strlen(curr->name)) > 0)
+			if (ft_strncmp(tmp->name, tmp->next->name, ft_strlen(tmp->name) + 1) > 0)
 			{
-				swap_adjacent(&head, prev, curr, curr->next);
-				sorted = 0;
-				if (prev == NULL)
-					curr = head;
-				else
-					curr = prev->next;
+				swap_nodes(&env, prev, tmp, tmp->next);
+				is_sorted = 0;
 			}
-			prev = curr;
-			curr = curr->next;
+			prev = tmp;
+			tmp = tmp->next;
 		}
 	}
-	return (head);
+	return (env);
 }
-
-// static void	swap_nodes(t_env_lst *n1, t_env_lst *n2, t_env_lst *prev)
-// {
-// 	t_env_lst	*swp;
-
-// 	printf("11/ n1= %s ; nn1= %s ; n2= %s ; nn2= %s ; prev= %s ; pn= %s\n", n1->name, n1->next->name, n2->name, n2->next->name, prev->name, prev->next->name);
-// 	swp = n2->next;
-// 	n2->next = n1;
-// 	n1->next = swp;
-// 	prev->next = n2;
-// 	printf("22/ n1= %s ; nn1= %s ; n2= %s ; nn2= %s ; prev= %s ; pn= %s\n", n1->name, n1->next->name, n2->name, n2->next->name, prev->name, prev->next->name);
-// }
-
-// t_env_lst	*sort_env_var(t_env_lst *env)
-// {
-// 	t_env_lst	*tmp1;
-// 	t_env_lst	*tmp2;
-// 	t_env_lst	*save;
-// 	t_env_lst	*head;
-// 	int			is_sorted;
-
-// 	if (!env)
-// 		return (NULL);
-// 	is_sorted = 0;
-// 	tmp1 = env;
-// 	head = env;
-// 	while (!is_sorted)
-// 	{
-// 		is_sorted = 1;
-// 		while (tmp1)
-// 		{
-// 			tmp2 = tmp1->next;
-// 			save = tmp1;
-// 			while (tmp2)
-// 			{
-// 				if (ft_strncmp(tmp1->name, tmp2->name, ft_strlen(tmp1->name) + 1) > 0)
-// 				{
-// 					swap_nodes(tmp1, tmp2, save);
-// 					is_sorted = 0;
-// 					break ;
-// 				}
-// 				// printf("t1= %s ; t2= %s ; sa= %s\n", tmp1->name, tmp2->name, save->name);
-// 				save = save->next;
-// 				tmp2 = tmp2->next;
-// 			}
-// 			tmp1 = tmp1->next;
-// 		}
-// 	}
-// 	return (env);
-// }
-
-
-// static void	swap_nodes(t_env_lst *n1, t_env_lst *n2)
-// {
-// 	t_env_lst	*swp;
-
-// 	swp = n2;
-// 	n1->next = swp->next;
-// 	swp->next = n1->next;
-// }
-
-// static t_env_lst	*sort_env_var(t_env_lst *env)
-// {
-// 	t_env_lst	*tmp_i;
-// 	t_env_lst	*tmp_j;
-// 	t_env_lst	*swp;
-// 	t_env_lst	*head;
-
-// 	head = env;
-// 	tmp_i = env;
-// 	while (tmp_i)
-// 	{
-// 		tmp_j = tmp_i->next;
-// 		while (tmp_j)
-// 		{
-// 			printf("1/ %s\t%s\n", tmp_i->name, tmp_j->name);
-// 			if (ft_strncmp(tmp_i->name, tmp_j->name, ft_strlen(tmp_i->name)) > 0)
-// 			{
-				
-// 			}
-// 			printf("2/ %s\t%s\n", tmp_i->name, tmp_j->name);
-// 			tmp_j = tmp_j->next;
-// 		}
-// 		tmp_i = tmp_i->next;
-// 	}
-// 	return (head);
-// }
 
 // TODO: print ascii sorted
 static int	print_export(t_env_lst *env)
 {
 	t_env_lst	*tmp;
 
-	sort_env_var(env);
-	tmp = env;
+	tmp = dup_env(env);
+	if (!tmp)
+		return (ERR_ALLOC);
+	tmp = sort_env_var(tmp);
 	while (tmp)
 	{
 		if (printf("declare -x %s", tmp->name) == -1)
@@ -219,6 +136,7 @@ static int	print_export(t_env_lst *env)
 			return (ERR_PRINT);
 		tmp = tmp->next;
 	}
+	destroy_env_lst(tmp);
 	return (SUCCESS);
 }
 
