@@ -4,7 +4,7 @@
 static int	print_export(t_env_lst *env);
 static int	create_exp_node(char *cmd, t_env_lst *env);
 static int	update_exp_node(char *cmd, t_env_lst *env);
-static int	check_name_validity(char *cmd);
+int	check_name_validity(char *cmd);
 static int	find_char(char *cmd, char c);
 
 int	ft_export(char **cmd, t_env_lst *env)
@@ -240,7 +240,7 @@ mlouis@z3r11p3:~$ export t9test=test
  * declare -x tes="t=test"
  */
 
-static int	check_name_validity(char *cmd)
+int	check_name_validity(char *cmd)
 {
 	int	i;
 
