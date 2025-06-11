@@ -24,6 +24,7 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 		env_add_back(env_lst, new);
 		++i;
 	}
+	env_add_back(env_lst, new_env_entry("?", "0"));
 	return (*env_lst);
 }
 

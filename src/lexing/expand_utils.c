@@ -19,6 +19,8 @@ size_t	varnamelen(char str[])
 	i = 1;
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		++i;
+	if (str[i] == '?' && !str[i + 1])
+		++i;
 	return (i);
 }
 
@@ -57,9 +59,13 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	char	*next_chunk;
 	char	*varname;
 
-	if (str[i] == '$' && must_expand(str, i) && len > 1)
+	if (str[i] == '$' && must_expand(str, i) &&
+		(len > 1 || (str[i + 1] == '?' && len == 1)))
 	{
-		varname = ft_substr(str, i + 1, len - 1);
+		if (len > 1)
+			varname = ft_substr(str, i + 1, len - 1);
+		else
+			varname = ft_substr(str, i + 1, len);
 		next_chunk = ft_strdup(get_env_val(env, varname, 0));
 		free(varname);
 	}
