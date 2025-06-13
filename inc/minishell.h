@@ -108,4 +108,7 @@ char			**add_to_array(char **arr, char *str);
 /* double_input_redir.c */
 int				read_input(char *del);
 
+//TODO: 
+int	check_meta_validity(char *str);
+
 #endif

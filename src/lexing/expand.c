@@ -86,3 +86,34 @@ char	*expand_line(t_env_lst *env, char str[])
 // 	arr[i] = (NULL);
 // 	return (arr);
 // }
+
+int	check_meta_validity(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != '|' && str[i] != '>' && str[i] != '<')
+		{
+			++i;
+			continue;
+		}
+		if (str[i] == '|' && ((str[i + 1] == '>' || str[i + 1] == '<')
+							|| (str[i - 1] == '>' || str[i - 1] == '<')))
+			return (ERR_PARSING);
+		if (str[i] == '>' && ((str[i + 1] == '|'|| str[i + 1] == '<')
+							|| (str[i - 1] == '|' || str[i - 1] == '<')))
+			return (ERR_PARSING);
+		if (str[i] == '<' && ((str[i + 1] == '|'|| str[i + 1] == '>')
+							|| (str[i - 1] == '|' || str[i - 1] == '>')))
+			return (ERR_PARSING);
+		if (str[i] == '<' || str[i] == '>')
+		{
+			if (str[i + 1] == str[i] && str[i + 2] == str[i])
+				return (ERR_PARSING);
+		}
+		++i;
+	}
+	return (SUCCESS);
+}

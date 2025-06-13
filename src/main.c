@@ -31,6 +31,8 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 	pid_t	pid;
 
 	tokens = NULL;
+	if (check_meta_validity(cmd))
+		return (ERR_PARSING);
 	expanded = expand_line(env_lst, cmd);
 	if (!expanded)
 		return (ERR_ALLOC);
