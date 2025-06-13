@@ -15,6 +15,8 @@ int	try_exec(char **cmd, t_env_lst *env)
 	if (!path)
 		return (ERR_ALLOC);
 	execve(path, cmd, env_arr);
+	ft_free_arr(env_arr);
+	free(path);
 	ft_putstr_fd("minishell: ", 2);
 	ft_free_arr(env_arr);
 	perror(cmd[0]);

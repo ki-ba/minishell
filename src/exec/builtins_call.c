@@ -27,6 +27,8 @@ char	*find_path(char *cmd, t_env_lst *env)
 		i++;
 	}
 	ft_free_arr(paths);
+	if (!path)
+		return (ft_strdup(""));
 	return (path);
 }
 
@@ -46,21 +48,30 @@ t_bool	is_builtin(char **cmd)
 
 int	call_cmd(char **cmd, t_env_lst *env)
 {
+	t_env_lst	*qm;
+	char		*err_c;
+	int			err;
+
+	err = 1;
 	if (!cmd[0])
-		return (SUCCESS);
-	if (!ft_strncmp(cmd[0], "echo", 5))
-		return (ft_echo(cmd, env));
-	if (!ft_strncmp(cmd[0], "cd", 3))
-		return (ft_cd(cmd, env));
-	if (!ft_strncmp(cmd[0], "pwd", 4))
-		return (ft_pwd(cmd, env));
-	if (!ft_strncmp(cmd[0], "export", 7))
-		return (ft_export(cmd, env));
-	if (!ft_strncmp(cmd[0], "unset", 6))
-		return (ft_unset(cmd, env));
-	if (!ft_strncmp(cmd[0], "exit", 5))
-		return (ft_exit(cmd, env));
-	if (!ft_strncmp(cmd[0], "env", 4))
-		return (ft_env(cmd, env));
-	return (1);
+		err = SUCCESS;
+	else if (!ft_strncmp(cmd[0], "echo", 5))
+		err = ft_echo(cmd, env);
+	else if (!ft_strncmp(cmd[0], "cd", 3))
+		err = ft_cd(cmd, env);
+	else if (!ft_strncmp(cmd[0], "pwd", 4))
+		err = ft_pwd(cmd, env);
+	else if (!ft_strncmp(cmd[0], "export", 7))
+		err = ft_export(cmd, env);
+	else if (!ft_strncmp(cmd[0], "unset", 6))
+		err = ft_unset(cmd, env);
+	else if (!ft_strncmp(cmd[0], "exit", 5))
+		err = ft_exit(cmd, env);
+	else if (!ft_strncmp(cmd[0], "env", 4))
+		err = ft_env(cmd, env);
+	qm = search_env_var(env, "?");
+	err_c = ft_itoa(err); //check
+	qm->value = ft_strdup(err_c);
+	// check
+	return (err);
 }

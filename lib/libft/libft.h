@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:06:45 by kbarru            #+#    #+#             */
-/*   Updated: 2025/03/10 12:20:26 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/06/10 14:09:58 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef enum bool
 # define HEX_BASE_LOWER "0123456789abcdef"
 # define HEX_BASE_UPPER "0123456789ABCDEF"
 # define DECIMAL_BASE "0123456789"
+
+# define LONG_OVERFLOW 4294967296
 
 # define FTPRINTF_FORMAT_SPECIFIERS "cspdiuxX"
 
@@ -89,10 +91,10 @@ char				*ft_strjoin(char const *s1, char const *s2);
 char				*ft_itoa(int n);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char				*ft_striteri(char *s, void (f)(unsigned int, char *));
-void				ft_putchar_fd(char c, int fd);
-void				ft_putstr_fd(char *s, int fd);
-void				ft_putendl_fd(char *s, int fd);
-void				ft_putnbr_fd(int nb, int fd);
+int					ft_putchar_fd(char c, int fd);
+int					ft_putstr_fd(char *s, int fd);
+int					ft_putendl_fd(char *s, int fd);
+int					ft_putnbr_fd(int nb, int fd);
 t_list				*ft_lstnew(void *content);
 void				ft_lstadd_front(t_list **lst, t_list *new);
 void				ft_lstadd_back(t_list **lst, t_list *new);
@@ -129,4 +131,12 @@ char				*ft_strchr(const char *s, int c);
 void				*ft_memmove(void *dest, const void *src, size_t n);
 char				*ft_strnjoin(char *s1, char *s2, size_t n);
 char				*ft_strncpy(char dst[], const char src[], size_t n);
+
+int					find_char(char *str, char c);
+int					ft_printf_fd(int fd, const char *format, ...);
+int					converter_handler_fd(const char format, va_list a_lst,
+						int fd);
+int					ft_putnbr_base_fd(unsigned long n, char *base, int fd);
+int					ft_putnbr_positive_fd(unsigned int n, int fd);
+
 #endif

@@ -1,12 +1,12 @@
 #include "minishell.h"
 #include <unistd.h>
 
+/** @brief create a new empty t_exec_node structure */
 t_exec_node	*create_exec_node(void)
 {
 	t_exec_node	*new;
 
 	new = ft_calloc(1, sizeof (*new));
-	// new->cmd = NULL;
 	new->cmd = ft_calloc(1, sizeof(char *));
 	new->filename[0] = NULL;
 	new->filename[1] = NULL;
@@ -15,6 +15,7 @@ t_exec_node	*create_exec_node(void)
 	return (new);
 }
 
+/** destroys given t_exec_node structure. */
 void	del_exec_node(void *node)
 {
 	t_exec_node	*nnode;

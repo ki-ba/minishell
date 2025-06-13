@@ -53,3 +53,20 @@ char	*summarize_lexing(t_list *tokens)
 	str = ft_strjoin(str, ";");
 	return (str);
 }
+
+void	print_exec(t_list	*exec_lst)
+{
+	t_exec_node	*current;
+
+	while (exec_lst)
+	{
+		current = (t_exec_node *)exec_lst->content;
+		ft_printf("========EXEC NODE=========\n\n");
+		ft_printf("IO:	[%d;%d]\n", (current->io)[0], (current->io)[1]);
+		ft_printf("infile:	%s\noutfile:	%s\n", (current->filename)[0], (current->filename)[1]);
+		ft_printf("argv:	\n");
+		ft_print_arr(current->cmd);
+		ft_printf("=================\n\n");
+		exec_lst = exec_lst->next;
+	}
+}
