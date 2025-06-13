@@ -5,6 +5,7 @@
 // 	return (c == '\'' || c == '"');
 // }
 
+// TODO: space before after spe-K
 char	*expand_line(t_env_lst *env, char str[])
 {
 	size_t	i;
@@ -21,12 +22,15 @@ char	*expand_line(t_env_lst *env, char str[])
 		part_len = get_part_len(&str[i]);
 		next_chunk = set_chunk_val(env, str, i, part_len);
 		i += part_len;
-		if (str[i] == '?')
+		if (str[i] == '?' || str[i] == '|' | str[i] == '<' || str[i] == '>')
+			++i;
+		if (str[i] == '<' || str[i] == '>')
 			++i;
 		join_in_place(&expanded, next_chunk);
 		if (!expanded)
 			return (NULL);
 	}
+	printf("expa= %s\n", expanded);
 	return (expanded);
 }
 

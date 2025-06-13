@@ -46,7 +46,7 @@ int	ft_exit(char **cmd, t_env_lst *env)
 	printf("exit\n");
 	destroy_env_lst(env);
 	// free
-	exit(ret);
+	// exit(ret);
 	return (ret);
 }
 
