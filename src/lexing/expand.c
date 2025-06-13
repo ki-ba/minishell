@@ -30,7 +30,8 @@ char	*expand_line(t_env_lst *env, char str[])
 		if (!expanded)
 			return (NULL);
 	}
-	printf("expa= %s\n", expanded);
+	if (DEBUG)
+		printf("EXPANDED= %s\n", expanded);
 	return (expanded);
 }
 
