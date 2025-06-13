@@ -12,7 +12,8 @@ static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
 		*redir = OUTFILE;
 		if (!ft_strncmp(token->token, ">", 2))
 			node->oflags[*redir] = (O_CREAT | O_TRUNC | O_WRONLY);
-		node->oflags[*redir] = (O_CREAT | O_APPEND | O_RDONLY);
+		else
+			node->oflags[*redir] = (O_CREAT | O_APPEND | O_RDONLY);
 	}
 	if (!ft_strncmp(token->token, "<", 2) || !ft_strncmp(token->token, "<<", 3))
 	{
@@ -41,11 +42,9 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 		}
 		fd = open(node->filename[redir], node->oflags[redir], 0644);
 		if (fd < 0)
-			(perror("open"));
-		else
 		{
-			node->io[redir] = open("/dev/null", O_RDWR);
 			perror("open");
+			node->io[redir] = open("/dev/null", O_RDWR);
 			return (ERR_FAIL);
 		}
 		node->io[redir] = fd;
