@@ -78,6 +78,7 @@ int	readline_loop(t_env_lst *env_lst)
 	if (DEBUG)
 		print_env(env_lst);
 	free(hist_fd_str);
+	cmd = init_signals();
 	while (!error || error == ERR_PARSING) // if error occured, quit program
 	{
 		cmd = readline("zinzinshell $");

@@ -9,13 +9,11 @@ static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
 {
 	if (!ft_strncmp(token->token, ">", 2) || !ft_strncmp(token->token, ">>", 3))
 	{
-		printf("token: [%s]\n", token->token);
 		*redir = OUTFILE;
 		if (!ft_strncmp(token->token, ">", 2))
 			node->oflags[*redir] = (O_CREAT | O_TRUNC | O_WRONLY);
 		else
 			node->oflags[*redir] = (O_CREAT | O_APPEND | O_WRONLY);
-		printf("redir= %d\n", *redir);
 	}
 	if (!ft_strncmp(token->token, "<", 2) || !ft_strncmp(token->token, "<<", 3))
 	{

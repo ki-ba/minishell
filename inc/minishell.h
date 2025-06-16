@@ -111,4 +111,7 @@ int				read_input(char *del);
 //TODO: 
 int	check_meta_validity(char *str);
 
+/* signals.c */
+char			*init_signals(void);
+
 #endif
