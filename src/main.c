@@ -92,6 +92,11 @@ int	readline_loop(t_env_lst *env_lst)
 			if (error == ERR_PARSING)
 				print_error_msg(error);
 		}
+		if (!cmd)
+		{
+			printf("exit\n");
+			break ;
+		}
 	}
 	close(hist_fd);
 	return (error);
