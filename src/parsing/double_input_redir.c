@@ -54,6 +54,11 @@ static void	fill_input(int fd, char del[])
 		line = get_next_line(STDIN_FILENO);
 		len = ft_strlen(line);
 	}
+	if (!line)
+	{
+		ft_printf_fd(2,
+			"\nminishell: warning: ended with eof instead of '%s'\n", del);
+	}
 	free(line);
 }
 

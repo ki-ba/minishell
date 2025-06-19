@@ -11,12 +11,64 @@
 *	terminates, except when the exit utility is invoked in that trap 
 *	itself, in which case the shell shall exit immediately.
 */
+/**
+ * exit -25 => $? = 231
+ * exit 256 => $? = 0
+ * exit 23d => perror letter
+ * 
+ * exit => last $?
+ */
 
 #include "minishell.h"
 
+static int	check_exit_arg(char **cmd);
+
 int	ft_exit(char **cmd, t_env_lst *env)
 {
-	(void)cmd;
-	(void)env;
-	return (ft_printf("TODO : built-in exit\n"));
+	// t_env_lst	*qm;
+	__uint8_t	ret;
+
+	if (!cmd[1])
+	{
+		// free
+		return (ft_atoi(get_env_val(env,  "?", 0)));
+	}
+	ret = check_exit_arg(cmd);
+	if (ret != SUCCESS)
+	{
+		if (ret != ERR_ARGS)
+			// free
+		return (ret);
+	}
+	ret = (__uint8_t) ft_atoi(cmd[1]);
+	// qm = search_env_var(env, "?");
+	// qm->value = ft_strdup(ft_itoa(ret));
+	printf("exit\n");
+	destroy_env_lst(env);
+	// free
+	// exit(ret);
+	return (ret);
+}
+
+static int	check_exit_arg(char **cmd)
+{
+	size_t	i;
+
+	if (cmd[2])
+	{
+		printf("exit\n");
+		ft_printf_fd(2, "minishell: exit: too many arguments\n");
+		return (ERR_ARGS);
+	}
+	i = 0;
+	if (cmd[1][i] == '-' || cmd[1][i] == '+')
+		i++;
+	while (cmd[1][i] && ft_isdigit(cmd[1][i]))
+		i++;
+	if (cmd[1][i] != '\0')
+	{
+		ft_printf_fd(2, "minishell: exit: %s: numeric argument required\n");
+		return (ERR_PARSING);
+	}
+	return (SUCCESS);
 }
