@@ -88,9 +88,16 @@ pid_t	exec_pipeline(t_list **exec_lst, t_env_lst *env)
 	t_list	*current;
 	pid_t	pid;
 	int		next_pipe_entry;
+	t_exec_node	*exe;
 
 	next_pipe_entry = 0;
 	current = *exec_lst;
+	exe = (t_exec_node *)(*exec_lst)->content;
+	if (!current->next && is_builtin(exe->cmd))
+	{
+		call_cmd(exe->cmd, env);
+		return (-1);
+	}
 	while (current)
 	{
 		pid = dup_and_fork(exec_lst, &current, env, &next_pipe_entry);

@@ -32,7 +32,7 @@ HISTORY_SRC = history.c
 LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c token.c id_token.c quotes.c
 BUILTINS_SRC = builtins_utils.c echo.c cd.c pwd.c export.c unset.c env.c exit.c export_utils.c
 PARSING_SRC = parsing.c parsing_utils.c exec_node.c double_input_redir.c
-EXEC_SRC = builtins_call.c simple_cmd.c execute_pipeline.c
+EXEC_SRC = builtins_call.c envlist_utils.c execute_pipeline.c
 SIGNALS_SRC = signals.c
 
 ENV_SRC_DIR = env/

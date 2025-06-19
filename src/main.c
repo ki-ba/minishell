@@ -13,14 +13,23 @@ void	print_error_msg(int status)
 		ft_putstr_fd("ERROR : unspecified issue\n", 2);
 }
 
-void	wait_processes(pid_t pid)
+int	wait_processes(pid_t pid, int err)
 {
 	int	status;
 
+	status = 0;
+	if (pid == -1)
+		return (-1);
 	if (pid > 0)
 		waitpid(pid, &status, 0);
+	if (err == 0 && status > 0)
+		err = status / 256;
 	while (wait(&status) > -1)
 		;
+	if (status == 2)
+		err = 130;
+	printf("err= %d ; status= %d\n", err, status);
+	return (err);
 }
 
 int	interpret_line(char cmd[], t_env_lst *env_lst)
@@ -29,7 +38,9 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 	char	*expanded;
 	t_list	*exec_lst;
 	pid_t	pid;
+	int		err;
 
+	err = 0;
 	tokens = NULL;
 	if (check_meta_validity(cmd))
 		return (ERR_PARSING);
@@ -55,12 +66,14 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 		return (ERR_ALLOC);
 	if (DEBUG)
 		print_exec(exec_lst);
+	//TODO: another function for stuff bellow to get the right err
+	// 		(either parsing/alloc from above, or from the exec after)
 	pid = exec_pipeline(&exec_lst, env_lst);
-	wait_processes(pid);
+	err = wait_processes(pid, err);
 	ft_lstclear(&exec_lst, del_exec_node);
-	return (0);
+	return (err);
 }
-
+#include <errno.h>
 int	readline_loop(t_env_lst *env_lst)
 {
 	char	*cmd;
@@ -68,6 +81,7 @@ int	readline_loop(t_env_lst *env_lst)
 	char	*last_cmd;
 	int		error;
 	char	*hist_fd_str;
+	t_env_lst	*qm_var;
 
 	error = 0;
 	last_cmd = NULL;
@@ -78,9 +92,12 @@ int	readline_loop(t_env_lst *env_lst)
 	if (DEBUG)
 		print_env(env_lst);
 	free(hist_fd_str);
-	cmd = init_signals();
-	while (!error || error == ERR_PARSING) // if error occured, quit program
+	init_signals(env_lst);
+	qm_var = search_env_var(env_lst, "?");
+	while (error != ERR_ALLOC) // if error occured, quit program
 	{
+		if (error > -1)
+			qm_var->value = ft_itoa(error);
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
 		{

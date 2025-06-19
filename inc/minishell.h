@@ -112,6 +112,6 @@ int				read_input(char *del);
 int	check_meta_validity(char *str);
 
 /* signals.c */
-char			*init_signals(void);
+char			*init_signals(t_env_lst *env);
 
 #endif
