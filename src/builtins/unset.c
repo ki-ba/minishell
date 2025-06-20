@@ -28,21 +28,11 @@ static void	del_env_node(t_env_lst *env, t_env_lst *node)
 	t_env_lst	*tmp;
 
 	tmp = env;
-	if (tmp == node)
-	{
-		env = env->next;
-		free(node->name);
-		free(node->value);
-		printf("hey\n");
-		free(node);
-	}
 	while (tmp)
 	{
 		if (tmp->next == node)
 		{
-			printf("yop: %s [%p]\n", tmp->name, tmp->next);
 			tmp->next = node->next;
-			printf("bop: %s [%p]\n", tmp->name, tmp->next);
 			free(node->name);
 			free(node->value);
 			free(node);

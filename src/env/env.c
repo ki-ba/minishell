@@ -10,6 +10,7 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 
 	*env_lst = NULL;
 	i = 0;
+	env_add_back(env_lst, new_env_entry("?", "0"));
 	while (envp[i])
 	{
 		name = ft_substr(envp[i], 0, ft_strlen_c(envp[i], '='));
@@ -24,7 +25,6 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 		env_add_back(env_lst, new);
 		++i;
 	}
-	env_add_back(env_lst, new_env_entry("?", "0"));
 	return (*env_lst);
 }
 

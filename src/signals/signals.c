@@ -7,7 +7,7 @@ void	sigint_handler(int sig, siginfo_t *info, void *context)
 	(void) sig;
 	(void) info;
 	(void) context;
-	printf("\nzinzinshell $");
+	printf("\nzinzinshell $"); //! see rl_xxxxx functions
 }
 
 char	*init_signals(t_env_lst *env)

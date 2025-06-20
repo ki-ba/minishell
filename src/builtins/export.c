@@ -14,7 +14,6 @@ int	ft_export(char **cmd, t_env_lst *env)
 
 	err = 0;
 	c_err = 0;
-	printf("exp= %p\n", &env);
 	if (!cmd[1])
 		return (print_export(env));
 	i = 1;
@@ -46,7 +45,7 @@ static int	print_export(t_env_lst *env)
 	{
 		if (check_name_validity(tmp->name) == SUCCESS)
 		{
-			if (printf("declare -x %s", tmp->name) == -1)
+			if (printf("%s", tmp->name) == -1)
 				return (ERR_PRINT);
 			if (tmp->value)
 			{

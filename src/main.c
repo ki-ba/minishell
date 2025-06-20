@@ -26,9 +26,8 @@ int	wait_processes(pid_t pid, int err)
 		err = status / 256;
 	while (wait(&status) > -1)
 		;
-	if (status == 2)
+	if (status == 2) //! not working
 		err = 130;
-	printf("err= %d ; status= %d\n", err, status);
 	return (err);
 }
 
