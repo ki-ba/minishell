@@ -113,7 +113,7 @@ int	check_meta_validity(char *str);
 
 /* signals.c */
 void	init_signals(void);
-void	update_signals(void);
+void	update_signals(int redir);
 
 extern int	g_return;
 

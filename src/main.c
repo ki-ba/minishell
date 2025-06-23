@@ -26,15 +26,6 @@ int	wait_processes(pid_t pid, int err)
 		err = status / 256;
 	while (wait(&status) > -1)
 		;
-	// if (status == 2) //! not working
-	// 	err = 130;
-	// printf("status: %d\n", status);
-	// if (g_return == 130)
-	// {
-	// 	err = 130;
-	// 	g_return = 0;
-	// }
-	// printf("err= %d\n", err);
 	return (err);
 }
 
@@ -118,6 +109,9 @@ int	readline_loop(t_env_lst *env_lst)
 		init_signals();
 		if (error > -1)
 			qm_var->value = ft_itoa(error);
+		else
+			error = ft_atoi(qm_var->value);
+
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
 		{

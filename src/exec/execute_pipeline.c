@@ -65,7 +65,8 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 		exec_child(current, env, next_pipe_entry, pipe_fd);
 	else
 	{
-		signal(SIGINT, SIG_IGN);
+		// signal(SIGINT, SIG_IGN);
+		update_signals(0);
 		if (*next_pipe_entry)
 			close(*next_pipe_entry);
 		*next_pipe_entry = pipe_fd[0];

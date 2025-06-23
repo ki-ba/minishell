@@ -54,10 +54,11 @@ static void	fill_input(int fd, char del[])
 		line = get_next_line(STDIN_FILENO);
 		len = ft_strlen(line);
 	}
-	if (!line)
+	if (!line && g_return != 130)
 	{
 		ft_printf_fd(2,
-			"\nminishell: warning: ended with eof instead of '%s'\n", del);
+			"\nminishell: warning: ended with end of file instead of '%s'\n",
+			 del);
 	}
 	free(line);
 }
@@ -67,10 +68,12 @@ int	read_input(char *del)
 	int		fd;
 	char	*filename;
 
+	update_signals(1);
 	fd = open_random_file(&filename);
 	if (fd < 0)
 		return (fd);
-	fill_input(fd, del);
+	if (g_return != 130)
+		fill_input(fd, del);
 	close (fd);
 	fd = open(filename, O_RDONLY);
 	unlink(filename);
