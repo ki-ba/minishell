@@ -28,26 +28,32 @@ int	ft_exit(char **cmd, t_env_lst *env)
 	// t_env_lst	*qm;
 	__uint8_t	ret;
 
+
+	printf("exit\n");
 	if (!cmd[1])
 	{
 		// free
-		return (ft_atoi(get_env_val(env,  "?", 0)));
+		ret = ft_atoi(get_env_val(env,  "?", 0));
 	}
-	ret = check_exit_arg(cmd);
-	if (ret != SUCCESS)
+	else
 	{
-		if (ret != ERR_ARGS)
-			// free
-		return (ret);
+		ret = check_exit_arg(cmd);
+		if (ret != SUCCESS)
+		{
+			if (ret != ERR_ARGS)
+				// free
+			return (ret);
+		}
+		ret = (__uint8_t) ft_atoi(cmd[1]);
 	}
-	ret = (__uint8_t) ft_atoi(cmd[1]);
 	// qm = search_env_var(env, "?");
 	// qm->value = ft_strdup(ft_itoa(ret));
-	printf("exit\n");
 	destroy_env_lst(env);
+	ft_free_arr(cmd);
 	// free
 	// exit(ret);
-	return (ret);
+	// printf("ret= %d\n", ret);
+	exit (ret);
 }
 
 static int	check_exit_arg(char **cmd)

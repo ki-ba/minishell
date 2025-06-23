@@ -26,20 +26,34 @@ int	wait_processes(pid_t pid, int err)
 		err = status / 256;
 	while (wait(&status) > -1)
 		;
-	if (status == 2) //! not working
-		err = 130;
+	// if (status == 2) //! not working
+	// 	err = 130;
+	// printf("status: %d\n", status);
+	// if (g_return == 130)
+	// {
+	// 	err = 130;
+	// 	g_return = 0;
+	// }
+	// printf("err= %d\n", err);
 	return (err);
 }
 
-int	interpret_line(char cmd[], t_env_lst *env_lst)
+int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 {
 	t_list	*tokens;
 	char	*expanded;
 	t_list	*exec_lst;
 	pid_t	pid;
 	int		err;
+	t_env_lst	*qm;
 
 	err = 0;
+	if (g_return == 130)
+	{
+		qm = search_env_var(env_lst, "?");
+		qm->value = ft_itoa(130);
+		g_return = 0;
+	}
 	tokens = NULL;
 	if (check_meta_validity(cmd))
 		return (ERR_PARSING);
@@ -65,6 +79,11 @@ int	interpret_line(char cmd[], t_env_lst *env_lst)
 		return (ERR_ALLOC);
 	if (DEBUG)
 		print_exec(exec_lst);
+	//exit
+	t_exec_node	*node;
+	node = (t_exec_node *) exec_lst->content;
+	if (!exec_lst->next && !ft_strncmp(node->cmd[0], "exit", 5))
+		*is_exit = 1;
 	//TODO: another function for stuff bellow to get the right err
 	// 		(either parsing/alloc from above, or from the exec after)
 	pid = exec_pipeline(&exec_lst, env_lst);
@@ -91,17 +110,19 @@ int	readline_loop(t_env_lst *env_lst)
 	if (DEBUG)
 		print_env(env_lst);
 	free(hist_fd_str);
-	init_signals(env_lst);
 	qm_var = search_env_var(env_lst, "?");
-	while (error != ERR_ALLOC) // if error occured, quit program
+	t_bool is_exit;
+	is_exit = FALSE;
+	while (error != ERR_ALLOC && !is_exit) // if error occured, quit program
 	{
+		init_signals();
 		if (error > -1)
 			qm_var->value = ft_itoa(error);
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
-			error = interpret_line(cmd, env_lst);
+			error = interpret_line(cmd, env_lst, &is_exit);
 			if (last_cmd)
 				free(last_cmd);
 			last_cmd = cmd;
@@ -110,6 +131,8 @@ int	readline_loop(t_env_lst *env_lst)
 		}
 		if (!cmd)
 		{
+			if (g_return == 130)
+				error = 130;
 			printf("exit\n");
 			break ;
 		}

@@ -4,7 +4,6 @@
 
 static void	del_env_node(t_env_lst *env, t_env_lst *node);
 
-//! check that doesn't start with "?"
 int	ft_unset(char **cmd, t_env_lst *env)
 {
 	size_t		i;

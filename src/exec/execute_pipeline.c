@@ -21,12 +21,13 @@ int	try_exec(char **cmd, t_env_lst *env)
 	perror(cmd[0]);
 	exit(127);
 }
-
+#include <signal.h>
 void	exec_child(t_list **exe_ls, t_env_lst *env, int *next_pipe, int pipe[2])
 {
 	t_exec_node	*exe;
 	char		**cmd;
 
+	signal(SIGQUIT, SIG_DFL);
 	close(ft_atoi(get_env_val(env, HIST_FILE, 1)));
 	exe = (t_exec_node *)(*exe_ls)->content;
 	close(pipe[0]);
@@ -64,6 +65,7 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 		exec_child(current, env, next_pipe_entry, pipe_fd);
 	else
 	{
+		signal(SIGINT, SIG_IGN);
 		if (*next_pipe_entry)
 			close(*next_pipe_entry);
 		*next_pipe_entry = pipe_fd[0];
