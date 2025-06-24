@@ -1,12 +1,12 @@
 #include "minishell.h"
 
-int	try_exec(char **cmd, t_env_lst *env)
+int	try_exec(char **cmd, t_env_lst *env, t_exec_node *exe)
 {
 	char	*path;
 	char	**env_arr;
 
 	if (is_builtin(cmd))
-		return (call_cmd(cmd, env));
+		return (call_cmd(cmd, env, exe));
 	env_arr = envlist_to_arr(env);
 	if (ft_strnstr(cmd[0], "/", ft_strlen(cmd[0])))
 		path = ft_strdup(cmd[0]);
@@ -50,7 +50,7 @@ void	exec_child(t_list **exe_ls, t_env_lst *env, int *next_pipe, int pipe[2])
 		close(*next_pipe);
 	cmd = duplicate_arr(exe->cmd);
 	ft_lstclear(exe_ls, del_exec_node);
-	try_exec(cmd, env);
+	try_exec(cmd, env, exe);
 }
 
 /** creates a separate process for each command, 
@@ -102,7 +102,7 @@ pid_t	exec_pipeline(t_list **exec_lst, t_env_lst *env)
 	exe = (t_exec_node *)(*exec_lst)->content;
 	if (!current->next && is_builtin(exe->cmd))
 	{
-		call_cmd(exe->cmd, env);
+		call_cmd(exe->cmd, env, exe);
 		return (-1);
 	}
 	while (current)

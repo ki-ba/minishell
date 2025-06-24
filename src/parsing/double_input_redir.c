@@ -35,20 +35,20 @@ int	ft_max(int a, int b)
 	return (b);
 }
 
-static void	fill_input(int fd, char del[])
+static void	fill_input(int fd, char del[], char *prompt)
 {
 	size_t	len;
 	size_t	dlen;
 	char	*line;
 
 	line = NULL;
-	write(1, "\ninput> ", ft_strlen("\ninput> "));
+	write(1, prompt, ft_strlen(prompt));
 	line = get_next_line(STDIN_FILENO);
 	len = ft_strlen(line);
 	dlen = ft_strlen(del);
 	while (line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
 	{
-		write(1, "\ninput> ", ft_strlen("\ninput> "));
+		write(1, prompt, ft_strlen(prompt));
 		write(fd, line, ft_strlen(line));
 		free(line);
 		line = get_next_line(STDIN_FILENO);
@@ -73,7 +73,7 @@ int	read_input(char *del)
 	if (fd < 0)
 		return (fd);
 	if (g_return != 130)
-		fill_input(fd, del);
+		fill_input(fd, del, "input> ");
 	close (fd);
 	if (g_return != 130)
 		fd = open(filename, O_RDONLY);

@@ -39,9 +39,9 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	t_env_lst	*qm;
 
 	err = 0;
+	qm = search_env_var(env_lst, "?");
 	if (g_return == 130)
 	{
-		qm = search_env_var(env_lst, "?");
 		qm->value = ft_itoa(130);
 		g_return = 0;
 	}
@@ -51,6 +51,12 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	expanded = expand_line(env_lst, cmd);
 	if (!expanded)
 		return (ERR_ALLOC);
+	expanded = ft_strtrim(expanded, " \t\n\r\v");
+	if (!ft_strncmp(expanded, "", 2))
+	{
+		free (expanded);
+		return (ft_atoi(qm->value));
+	}
 	if (check_quotes(expanded))
 		return (ERR_PARSING);
 	if (tokenize(&tokens, expanded) != 0)

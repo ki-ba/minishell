@@ -46,7 +46,7 @@ t_bool	is_builtin(char **cmd)
 	return (TRUE);
 }
 
-int	call_cmd(char **cmd, t_env_lst *env)
+int	call_cmd(char **cmd, t_env_lst *env, t_exec_node *exe)
 {
 	t_env_lst	*qm;
 	char		*err_c;
@@ -56,7 +56,7 @@ int	call_cmd(char **cmd, t_env_lst *env)
 	if (!cmd[0])
 		err = SUCCESS;
 	else if (!ft_strncmp(cmd[0], "echo", 5))
-		err = ft_echo(cmd, env);
+		err = ft_echo(cmd, env, exe);
 	else if (!ft_strncmp(cmd[0], "cd", 3))
 		err = ft_cd(cmd, env);
 	else if (!ft_strncmp(cmd[0], "pwd", 4))

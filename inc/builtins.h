@@ -5,7 +5,7 @@
 
 typedef enum bool	t_bool;
 
-int			ft_echo(char **cmd, t_env_lst *env);
+int			ft_echo(char **cmd, t_env_lst *env, t_exec_node *exe);
 int			ft_cd(char **cmd, t_env_lst *env);
 int			ft_pwd(char **cmd, t_env_lst *env);
 int			ft_export(char **cmd, t_env_lst *env);

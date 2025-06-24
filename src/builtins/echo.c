@@ -39,7 +39,8 @@ size_t	has_option(char **cmd, char opt)
 	return (i);
 }
 
-int	ft_echo(char **cmd, t_env_lst *env)
+// TODO: ft_printf_fd to print into > or STDIN
+int	ft_echo(char **cmd, t_env_lst *env, t_exec_node *exe)
 {
 	size_t	i;
 	size_t	opt;
@@ -49,13 +50,13 @@ int	ft_echo(char **cmd, t_env_lst *env)
 	i = opt;
 	while (i && cmd[i])
 	{
-		ft_printf("%s", cmd[i]);
+		ft_printf_fd(exe->io[1], "%s", cmd[i]);
 		if (cmd[i] && cmd[i + 1])
-			ft_printf(" ");
+			ft_printf_fd(exe->io[1], " ");
 		++i;
 	}
 	if (opt == 1)
-		ft_printf("\n");
+		ft_printf_fd(exe->io[1], "\n");
 	// destroy_env_lst(env);
 	return (SUCCESS);
 }
