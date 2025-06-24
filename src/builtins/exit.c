@@ -29,7 +29,7 @@ int	ft_exit(char **cmd, t_env_lst *env)
 	__uint8_t	ret;
 
 
-	printf("exit\n");
+	// printf("exit\n");
 	if (!cmd[1])
 	{
 		// free
@@ -62,7 +62,7 @@ static int	check_exit_arg(char **cmd)
 
 	if (cmd[2])
 	{
-		printf("exit\n");
+		// printf("exit\n");
 		ft_printf_fd(2, "minishell: exit: too many arguments\n");
 		return (ERR_ARGS);
 	}

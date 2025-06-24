@@ -23,7 +23,7 @@ size_t	has_option(char **cmd, char opt)
 	size_t	j;
 
 	i = 1;
-	if (cmd[i][0] != '-')
+	if (!cmd[i] || cmd[i][0] != '-')
 		return (1);
 	while (cmd[i])
 	{

@@ -111,7 +111,6 @@ int	readline_loop(t_env_lst *env_lst)
 			qm_var->value = ft_itoa(error);
 		else
 			error = ft_atoi(qm_var->value);
-
 		cmd = readline("zinzinshell $");
 		if (cmd && cmd[0])
 		{
@@ -127,7 +126,7 @@ int	readline_loop(t_env_lst *env_lst)
 		{
 			if (g_return == 130)
 				error = 130;
-			printf("exit\n");
+			// printf("exit\n");
 			break ;
 		}
 	}
@@ -149,5 +148,6 @@ int	main(int argc, char *argv[], char *envp[])
 	if (exit_status)
 		print_error_msg(exit_status);
 	destroy_env_lst(env_lst);
+	printf("exit\n");
 	return (exit_status);
 }
