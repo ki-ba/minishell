@@ -11,7 +11,7 @@ t_env_lst	*create_env_lst(char name[])
 	if (!new)
 		return (NULL);
 	new->name = name;
-	new->value = getenv(name);
+	new->value = ft_strdup(getenv(name));
 	new->next = NULL;
 	return (new);
 }

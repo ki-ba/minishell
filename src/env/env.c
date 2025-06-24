@@ -9,6 +9,7 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 	t_env_lst	*new;
 
 	*env_lst = NULL;
+	env_add_back(env_lst, new_env_entry("?", "0"));
 	i = 0;
 	while (envp[i])
 	{
@@ -61,8 +62,8 @@ void	destroy_env_lst(t_env_lst *env_lst)
 	while (env_lst)
 	{
 		tmp = env_lst->next;
-		if (env_lst->name[0] == '?')
-			free(env_lst->value);
+		// if (env_lst->name[0] == '?')
+		free(env_lst->value);
 		free(env_lst->name);
 		free(env_lst);
 		env_lst = tmp;
