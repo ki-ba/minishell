@@ -40,6 +40,8 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 			ft_lstclear(exec_lst, del_exec_node);
 			return (ERR_ALLOC);
 		}
+		if (node->io[0] != STDIN_FILENO && access(node->filename[1], F_OK))
+			node->file_exist = TRUE;
 		fd = open(node->filename[redir], node->oflags[redir], 0644);
 		if (fd < 0)
 		{

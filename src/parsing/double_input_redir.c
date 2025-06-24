@@ -42,7 +42,7 @@ static void	fill_input(int fd, char del[])
 	char	*line;
 
 	line = NULL;
-	write(1, "\ninput>", ft_strlen("\ninput> "));
+	write(1, "\ninput> ", ft_strlen("\ninput> "));
 	line = get_next_line(STDIN_FILENO);
 	len = ft_strlen(line);
 	dlen = ft_strlen(del);
@@ -75,7 +75,10 @@ int	read_input(char *del)
 	if (g_return != 130)
 		fill_input(fd, del);
 	close (fd);
-	fd = open(filename, O_RDONLY);
+	if (g_return != 130)
+		fd = open(filename, O_RDONLY);
+	else
+		fd = open(filename, O_RDWR | O_TRUNC);
 	unlink(filename);
 	free(filename);
 	return (fd);

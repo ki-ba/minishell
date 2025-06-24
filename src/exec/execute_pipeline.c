@@ -40,7 +40,11 @@ void	exec_child(t_list **exe_ls, t_env_lst *env, int *next_pipe, int pipe[2])
 		close(exe->io[1]);
 	dup2(exe->io[0], STDIN_FILENO);
 	if (exe->io[0] != STDIN_FILENO)
+	{
+		if (g_return == 130 && exe->file_exist) //check file existed before command
+			unlink(exe->filename[1]);
 		close(exe->io[0]);
+	}
 	close(pipe[1]);
 	if (*next_pipe)
 		close(*next_pipe);
