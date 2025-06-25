@@ -41,7 +41,7 @@ void	exec_child(t_list **exe_ls, t_env_lst *env, int *next_pipe, int pipe[2])
 	dup2(exe->io[0], STDIN_FILENO);
 	if (exe->io[0] != STDIN_FILENO)
 	{
-		if (g_return == 130 && exe->file_exist) //check file existed before command
+		if (g_signal == 2 && exe->file_exist) //check file existed before command
 			unlink(exe->filename[1]);
 		close(exe->io[0]);
 	}
@@ -69,8 +69,7 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 		exec_child(current, env, next_pipe_entry, pipe_fd);
 	else
 	{
-		// signal(SIGINT, SIG_IGN);
-		update_signals(0);
+		update_signals(1);
 		if (*next_pipe_entry)
 			close(*next_pipe_entry);
 		*next_pipe_entry = pipe_fd[0];

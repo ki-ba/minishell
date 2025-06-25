@@ -115,6 +115,6 @@ int	check_meta_validity(char *str);
 void	init_signals(void);
 void	update_signals(int redir);
 
-extern int	g_return; // sig_atomic_t
+extern int	g_signal; // sig_atomic_t
 
 #endif

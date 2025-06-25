@@ -22,6 +22,16 @@ int	wait_processes(pid_t pid, int err)
 		return (-1);
 	if (pid > 0)
 		waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) || g_signal != 0)
+	{
+		if (WIFSIGNALED(status))
+			err = WTERMSIG(status) + 128;
+		else
+			err = g_signal + 128;
+		if (err == 131)
+			printf("(core dumped)");
+		printf("\n");
+	}
 	if (err == 0 && status > 0)
 		err = status / 256;
 	while (wait(&status) > -1)
@@ -40,10 +50,10 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 
 	err = 0;
 	qm = search_env_var(env_lst, "?");
-	if (g_return == 130)
+	if (g_signal == 2)
 	{
 		qm->value = ft_itoa(130);
-		g_return = 0;
+		g_signal = 0;
 	}
 	tokens = NULL;
 	if (check_meta_validity(cmd))
@@ -112,6 +122,7 @@ int	readline_loop(t_env_lst *env_lst)
 	is_exit = FALSE;
 	while (error != ERR_ALLOC && !is_exit) // if error occured, quit program
 	{
+		g_signal = 0;
 		init_signals();
 		if (error > -1)
 			qm_var->value = ft_itoa(error);
@@ -130,7 +141,7 @@ int	readline_loop(t_env_lst *env_lst)
 		}
 		if (!cmd)
 		{
-			if (g_return == 130)
+			if (g_signal == 2)
 				error = 130;
 			// printf("exit\n");
 			break ;
