@@ -9,10 +9,8 @@ char	**extract_path(t_env_lst *env);
 
 /* exec.c */
 
-char	*find_bin(char **path);
-int		try_exec(char **cmd, t_env_lst *env, t_exec_node *exe);
-int		simple_cmd(t_exec_node *exe, t_env_lst *env);
-int		call_cmd(char **cmd, t_env_lst *env, t_exec_node *exe);
+int		try_exec(char **cmd, t_env_lst *env);
+int		call_cmd(char **cmd, t_env_lst *env);
 
 char	*find_path(char *cmd, t_env_lst *env);
 t_bool	is_builtin(char **cmd); //, t_exec_node *exe);

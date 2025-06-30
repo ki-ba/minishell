@@ -115,6 +115,9 @@ int	check_meta_validity(char *str);
 void	init_signals(void);
 void	update_signals(int redir);
 
+/* expand.c*/
+t_bool	is_inquote(char *str, size_t pos);
+
 extern int	g_signal; // sig_atomic_t
 
 #endif

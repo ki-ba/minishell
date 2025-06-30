@@ -88,7 +88,7 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 		next_chunk = ft_concat(3, "\"", ft_strdup(get_env_val(env, varname, 0)), "\"");
 		free(varname);
 	}
-	else if (i > 0 && must_expand(str, i - 1) &&
+	else if (i > 0 && !is_inquote(str, i - 1) &&
 		(str[i - 1] == '|' || str[i - 1] == '<' || str[i - 1] == '>'))
 	{
 		--i;

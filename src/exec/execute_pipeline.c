@@ -1,12 +1,12 @@
 #include "minishell.h"
 
-int	try_exec(char **cmd, t_env_lst *env, t_exec_node *exe)
+int	try_exec(char **cmd, t_env_lst *env)
 {
 	char	*path;
 	char	**env_arr;
 
 	if (is_builtin(cmd))
-		return (call_cmd(cmd, env, exe));
+		exit(call_cmd(cmd, env));
 	env_arr = envlist_to_arr(env);
 	if (ft_strnstr(cmd[0], "/", ft_strlen(cmd[0])))
 		path = ft_strdup(cmd[0]);
@@ -41,7 +41,7 @@ void	exec_child(t_list **exe_ls, t_env_lst *env, int *next_pipe, int pipe[2])
 	dup2(exe->io[0], STDIN_FILENO);
 	if (exe->io[0] != STDIN_FILENO)
 	{
-		if (g_signal == 2 && exe->file_exist) //check file existed before command
+		if (g_signal == 2 && exe->file_exist)
 			unlink(exe->filename[1]);
 		close(exe->io[0]);
 	}
@@ -50,7 +50,7 @@ void	exec_child(t_list **exe_ls, t_env_lst *env, int *next_pipe, int pipe[2])
 		close(*next_pipe);
 	cmd = duplicate_arr(exe->cmd);
 	ft_lstclear(exe_ls, del_exec_node);
-	try_exec(cmd, env, exe);
+	try_exec(cmd, env);
 }
 
 /** creates a separate process for each command, 
@@ -99,11 +99,6 @@ pid_t	exec_pipeline(t_list **exec_lst, t_env_lst *env)
 	next_pipe_entry = 0;
 	current = *exec_lst;
 	exe = (t_exec_node *)(*exec_lst)->content;
-	if (!current->next && is_builtin(exe->cmd))
-	{
-		call_cmd(exe->cmd, env, exe);
-		return (-1);
-	}
 	while (current)
 	{
 		pid = dup_and_fork(exec_lst, &current, env, &next_pipe_entry);
