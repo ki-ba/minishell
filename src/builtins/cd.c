@@ -89,11 +89,17 @@ static int	update_env(char *new_path, t_env_lst *env)
 	}
 	tmp2 = search_env_var(env, "PWD");
 	if (tmp2)
+	{
+		free(tmp2->value);
 		tmp2->value = ft_strdup(tmp1->value);
+	}
 	tmp1 = search_env_var(env, "?OLDPWD");
 	tmp2 = search_env_var(env, "OLDPWD");
 	if (tmp2)
+	{
+		free(tmp2->value);
 		tmp2->value = ft_strdup(tmp1->value);
+	}
 	return (SUCCESS);
 }
 
@@ -116,5 +122,6 @@ static int	no_arg_cd(char **cmd, t_env_lst *env)
 	}
 	cmd[2] = NULL;
 	ft_cd(cmd, env);
+	free(cmd[1]);
 	return (0);
 }
