@@ -99,6 +99,20 @@ pid_t	exec_pipeline(t_list **exec_lst, t_env_lst *env)
 	next_pipe_entry = 0;
 	current = *exec_lst;
 	exe = (t_exec_node *)(*exec_lst)->content;
+	if (!current->next && is_builtin(exe->cmd))
+	{
+		int	saved = dup(STDOUT_FILENO);
+		if (exe->filename[1])
+		{
+			dup2(exe->io[1], STDOUT_FILENO);
+			if (exe->io[1] != STDOUT_FILENO)
+				close(exe->io[1]);
+		}
+		call_cmd(exe->cmd, env);
+		if (exe->filename[1])
+			dup2(saved, STDOUT_FILENO);
+		return (0);
+	}
 	while (current)
 	{
 		pid = dup_and_fork(exec_lst, &current, env, &next_pipe_entry);
