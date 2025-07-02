@@ -41,6 +41,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 	size_t	dlen;
 	char	*line;
 	struct termios	termi;
+
 	line = NULL;
 	write(1, prompt, ft_strlen(prompt));
 	line = get_next_line(STDIN_FILENO);
@@ -52,8 +53,8 @@ static void	fill_input(int fd, char del[], char *prompt)
 		write(fd, line, ft_strlen(line));
 		free(line);
 		line = get_next_line(STDIN_FILENO);
+		len = ft_strlen(line);
 	}
-	len = ft_strlen(line);
 	tcgetattr(STDIN_FILENO, &termi);
 	termi.c_lflag |= ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSANOW, &termi);

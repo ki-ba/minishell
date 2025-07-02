@@ -111,4 +111,3 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	}
 	return (next_chunk);
 }
-
