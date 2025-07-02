@@ -17,8 +17,7 @@ int	try_exec(char **cmd, t_env_lst *env)
 	execve(path, cmd, env_arr);
 	ft_free_arr(env_arr);
 	free(path);
-	ft_putstr_fd("minishell: ", 2);
-	perror(cmd[0]);
+	ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	exit(127);
 }
 #include <signal.h>

@@ -67,7 +67,6 @@ int	call_cmd(char **cmd, t_env_lst *env)
 		err = ft_unset(cmd, env);
 	else if (!ft_strncmp(cmd[0], "exit", 5))
 		err = ft_exit(cmd, env);
-		// exit(ft_exit(cmd, env));
 	else if (!ft_strncmp(cmd[0], "env", 4))
 		err = ft_env(cmd, env);
 	qm = search_env_var(env, "?");

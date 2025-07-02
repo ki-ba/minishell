@@ -75,6 +75,9 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 		return (ERR_ALLOC);
 	}
 	free(expanded);
+	t_token	*token = (t_token*) tokens->content;
+	if (!tokens->next && (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
+		return (ERR_PARSING);
 	ft_lstiter(tokens, remove_quotes);
 	if (DEBUG)
 		print_token_list(tokens);
@@ -89,7 +92,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	//exit
 	t_exec_node	*node;
 	node = (t_exec_node *) exec_lst->content;
-	if (!exec_lst->next && !ft_strncmp(node->cmd[0], "exit", 5))
+	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		*is_exit = 1;
 	//TODO: another function for stuff bellow to get the right err
 	// 		(either parsing/alloc from above, or from the exec after)
@@ -147,6 +150,8 @@ int	readline_loop(t_env_lst *env_lst)
 			break ;
 		}
 	}
+	if (is_exit)
+		error = ft_atoi(qm_var->value);
 	close(hist_fd);
 	return (error);
 }

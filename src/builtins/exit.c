@@ -48,12 +48,12 @@ int	ft_exit(char **cmd, t_env_lst *env)
 	}
 	// qm = search_env_var(env, "?");
 	// qm->value = ft_strdup(ft_itoa(ret));
-	destroy_env_lst(env);
-	ft_free_arr(cmd);
+	// destroy_env_lst(env);
+	// ft_free_arr(cmd);
 	// free
 	// exit(ret);
 	// printf("ret= %d\n", ret);
-	exit (ret);
+	return (ret);
 }
 
 static int	check_exit_arg(char **cmd)
