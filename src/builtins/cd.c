@@ -34,7 +34,7 @@ int	ft_cd(char **cmd, t_env_lst *env)
 	err = chdir(cmd[1]);
 	if (err != 0)
 	{
-		perror("minishell: cd");
+		// perror("minishell: cd");
 		return (ERR_ARGS);
 	}
 	err = update_env(getcwd(path, PATH_MAX), env);

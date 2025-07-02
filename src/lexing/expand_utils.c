@@ -88,7 +88,7 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 		next_chunk = ft_concat(3, "\"", ft_strdup(get_env_val(env, varname, 0)), "\"");
 		free(varname);
 	}
-	else if (i > 0 && !is_inquote(str, i - 1) &&
+	else if (i > 0 &&
 		(str[i - 1] == '|' || str[i - 1] == '<' || str[i - 1] == '>'))
 	{
 		--i;
@@ -97,7 +97,10 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 		meta[0] = str[i];
 		if (str[i] != '|' && str[i] == str[i - 1])
 			meta[1] = meta[0];
-		next_chunk = ft_concat(4, " ", meta, " ", varname);
+		if (is_inquote(str, i))
+			next_chunk = ft_concat(2, meta, varname);
+		else
+			next_chunk = ft_concat(4, " ", meta, " ", varname);
 		free(varname);
 	}
 	else
