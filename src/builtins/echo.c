@@ -27,7 +27,7 @@ size_t	has_option(char **cmd, char opt)
 		return (1);
 	while (cmd[i])
 	{
-		j = 1;
+		j = 0;
 		while (cmd[i][j])
 		{
 			if (cmd[i][j] != opt)

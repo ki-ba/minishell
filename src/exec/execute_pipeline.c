@@ -4,21 +4,30 @@ int	try_exec(char **cmd, t_env_lst *env)
 {
 	char	*path;
 	char	**env_arr;
+	int		err;
 
+	err = 127;
 	if (is_builtin(cmd))
-		exit(call_cmd(cmd, env));
-	env_arr = envlist_to_arr(env);
-	if (ft_strnstr(cmd[0], "/", ft_strlen(cmd[0])))
-		path = ft_strdup(cmd[0]);
-	else
-		path = find_path(cmd[0], env);
-	if (!path)
-		return (ERR_ALLOC);
-	execve(path, cmd, env_arr);
-	ft_free_arr(env_arr);
-	free(path);
-	ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
-	exit(127);
+	{
+		err = call_cmd(cmd, env);
+	}
+	else 
+	{
+		env_arr = envlist_to_arr(env);
+		if (ft_strnstr(cmd[0], "/", ft_strlen(cmd[0])))
+			path = ft_strdup(cmd[0]);
+		else
+			path = find_path(cmd[0], env);
+		if (!path)
+			return (ERR_ALLOC);
+		execve(path, cmd, env_arr);
+		ft_free_arr(env_arr);
+		free(path);
+		ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
+	}
+	ft_free_arr(cmd);
+	destroy_env_lst(env);
+	exit(err);
 }
 #include <signal.h>
 void	exec_child(t_list **exe_ls, t_env_lst *env, int *next_pipe, int pipe[2])

@@ -17,9 +17,12 @@ size_t	varnamelen(char str[])
 	if (str[0] != '$')
 		return (0);
 	i = 1;
+	// if (str[i] == '?' && !str[i + 1])
+	// {
+	// 	printf("qwqw\n");
+	// 	++i;
+	// }
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-		++i;
-	if (str[i] == '?' && !str[i + 1])
 		++i;
 	return (i);
 }
@@ -83,8 +86,7 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 		if ((str[i] == '|' || str[i] == '<' || str[i] == '>'))
 			++i;
 	}
-	if (str[i] == '$' && must_expand(str, i) &&
-		(len > 1 || (str[i + 1] == '?' && len == 1)))
+	if (str[i] == '$' && must_expand(str, i))// && (len > 1 || (str[i + 1] == '?' && len == 1)))
 	{
 		if (len > 1)
 			varname = ft_substr(str, i + 1, len - 1);

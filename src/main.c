@@ -131,7 +131,7 @@ int	readline_loop(t_env_lst *env_lst)
 			qm_var->value = ft_itoa(error);
 		else
 			error = ft_atoi(qm_var->value);
-		cmd = readline("zinzinshell $");
+		cmd = readline("zinzinshell$ ");
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
