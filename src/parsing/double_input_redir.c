@@ -38,10 +38,7 @@ int	ft_max(int a, int b)
 int	rl_help(void)
 {
 	if (g_signal == 2)
-	{
 		rl_done = 1;
-		rl_on_new_line();
-	}
 	return 0;
 }
 
@@ -60,6 +57,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 	while (g_signal != 2 && line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
 	{
 		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 		free(line);
 		line = readline(prompt);
 		len = ft_strlen(line);

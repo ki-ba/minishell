@@ -113,6 +113,7 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 			next_chunk = ft_concat(2, meta, varname);
 		else
 			next_chunk = ft_concat(4, " ", meta, " ", varname);
+		free(meta);
 		free(varname);
 	}
 	else

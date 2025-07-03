@@ -18,6 +18,7 @@ void	sigint_handler(int sig)
 void	sig_handler_cmd(int sig)
 {
 	g_signal = sig;
+	rl_on_new_line();
 }
 
 void	update_signals(int cmd)

@@ -64,10 +64,12 @@ void	destroy_env_lst(t_env_lst *env_lst)
 	while (env_lst)
 	{
 		tmp = env_lst->next;
-		// if (env_lst->name[0] == '?')
 		free(env_lst->value);
+		env_lst->value = NULL;
 		free(env_lst->name);
+		env_lst->name = NULL;
 		free(env_lst);
+		env_lst = NULL;
 		env_lst = tmp;
 	}
 }

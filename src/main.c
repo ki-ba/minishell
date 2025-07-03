@@ -43,6 +43,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 {
 	t_list	*tokens;
 	char	*expanded;
+	char	*to_trim;
 	t_list	*exec_lst;
 	pid_t	pid;
 	int		err;
@@ -61,7 +62,9 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	expanded = expand_line(env_lst, cmd);
 	if (!expanded)
 		return (ERR_ALLOC);
-	expanded = ft_strtrim(expanded, " \t\n\r\v");
+	to_trim = expanded;
+	expanded = ft_strtrim(to_trim, " \t\n\r\v");
+	free(to_trim);
 	if (!ft_strncmp(expanded, "", 2))
 	{
 		free (expanded);
@@ -128,7 +131,10 @@ int	readline_loop(t_env_lst *env_lst)
 		g_signal = 0;
 		init_signals();
 		if (error > -1)
+		{
+			free(qm_var->value);
 			qm_var->value = ft_itoa(error);
+		}
 		else
 			error = ft_atoi(qm_var->value);
 		cmd = readline("zinzinshell$ ");

@@ -71,7 +71,9 @@ int	call_cmd(char **cmd, t_env_lst *env)
 		err = ft_env(cmd, env);
 	qm = search_env_var(env, "?");
 	err_c = ft_itoa(err); //check
+	free(qm->value);
 	qm->value = ft_strdup(err_c);
+	free(err_c);
 	// check
 	return (err);
 }
