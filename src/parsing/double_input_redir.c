@@ -34,34 +34,42 @@ int	ft_max(int a, int b)
 		return (a);
 	return (b);
 }
+
+int	rl_help(void)
+{
+	if (g_signal == 2)
+	{
+		rl_done = 1;
+		rl_on_new_line();
+	}
+	return 0;
+}
+
 #include <termios.h>
 static void	fill_input(int fd, char del[], char *prompt)
 {
 	size_t	len;
 	size_t	dlen;
 	char	*line;
-	struct termios	termi;
 
 	line = NULL;
-	write(1, prompt, ft_strlen(prompt));
-	line = get_next_line(STDIN_FILENO);
+	rl_event_hook = rl_help;
+	line = readline(prompt);
 	len = ft_strlen(line);
 	dlen = ft_strlen(del);
-	while (line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
+	while (g_signal != 2 && line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
 	{
-		write(1, prompt, ft_strlen(prompt));
 		write(fd, line, ft_strlen(line));
 		free(line);
-		line = get_next_line(STDIN_FILENO);
+		line = readline(prompt);
 		len = ft_strlen(line);
 	}
-	tcgetattr(STDIN_FILENO, &termi);
-	termi.c_lflag |= ECHOCTL;
-	tcsetattr(STDIN_FILENO, TCSANOW, &termi);
+	rl_done = 0;
+	rl_event_hook = NULL;
 	if (!line && g_signal != 2)
 	{
 		ft_printf_fd(2,
-			"\nminishell: warning: ended with end of file instead of '%s'\n",
+			"minishell: warning: ended with end of file instead of '%s'\n",
 			 del);
 	}
 	free(line);

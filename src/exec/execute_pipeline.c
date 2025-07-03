@@ -24,9 +24,9 @@ int	try_exec(char **cmd, t_env_lst *env)
 		ft_free_arr(env_arr);
 		free(path);
 		ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
+		destroy_env_lst(env);
 	}
 	ft_free_arr(cmd);
-	destroy_env_lst(env);
 	exit(err);
 }
 #include <signal.h>
@@ -86,6 +86,7 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 			close(exe->io[0]);
 		if (exe->io[1] != STDOUT_FILENO)
 			close(exe->io[1]);
+		// destroy_env_lst(env);
 	}
 	if (!(*current)->next)
 		close(pipe_fd[0]);
@@ -119,6 +120,7 @@ pid_t	exec_pipeline(t_list **exec_lst, t_env_lst *env)
 		call_cmd(exe->cmd, env);
 		if (exe->filename[1])
 			dup2(saved, STDOUT_FILENO);
+		close (saved);
 		return (0);
 	}
 	while (current)
@@ -126,5 +128,6 @@ pid_t	exec_pipeline(t_list **exec_lst, t_env_lst *env)
 		pid = dup_and_fork(exec_lst, &current, env, &next_pipe_entry);
 		current = current->next;
 	}
+	// destroy_env_lst(env);
 	return (pid);
 }

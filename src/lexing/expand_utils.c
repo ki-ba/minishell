@@ -83,8 +83,13 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	if (i == 0 && (str[i] == '|' || str[i] == '<' || str[i] == '>'))
 	{
 		++i;
-		if ((str[i] == '|' || str[i] == '<' || str[i] == '>'))
+		--len;
+		if (str[i] == '<' || str[i] == '>')
+		{
 			++i;
+			--len;
+		}
+		
 	}
 	if (str[i] == '$' && must_expand(str, i))// && (len > 1 || (str[i + 1] == '?' && len == 1)))
 	{
