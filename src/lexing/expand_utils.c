@@ -17,9 +17,12 @@ size_t	varnamelen(char str[])
 	if (str[0] != '$')
 		return (0);
 	i = 1;
+	// if (str[i] == '?' && !str[i + 1])
+	// {
+	// 	printf("qwqw\n");
+	// 	++i;
+	// }
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-		++i;
-	if (str[i] == '?' && !str[i + 1])
 		++i;
 	return (i);
 }
@@ -77,8 +80,18 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	char	*varname;
 	char	*meta;
 
-	if (str[i] == '$' && must_expand(str, i) &&
-		(len > 1 || (str[i + 1] == '?' && len == 1)))
+	if (i == 0 && (str[i] == '|' || str[i] == '<' || str[i] == '>'))
+	{
+		++i;
+		--len;
+		if (str[i] == '<' || str[i] == '>')
+		{
+			++i;
+			--len;
+		}
+		
+	}
+	if (str[i] == '$' && must_expand(str, i))// && (len > 1 || (str[i + 1] == '?' && len == 1)))
 	{
 		if (len > 1)
 			varname = ft_substr(str, i + 1, len - 1);
@@ -88,16 +101,19 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 		next_chunk = ft_concat(3, "\"", ft_strdup(get_env_val(env, varname, 0)), "\"");
 		free(varname);
 	}
-	else if (i > 0 && must_expand(str, i - 1) &&
-		(str[i - 1] == '|' || str[i - 1] == '<' || str[i - 1] == '>'))
+	else if (i > 0 && (str[i - 1] == '|' || str[i - 1] == '<' || str[i - 1] == '>'))
 	{
 		--i;
 		varname = ft_substr(str, i + 1, len);
 		meta = ft_calloc(3, sizeof (char));
 		meta[0] = str[i];
-		if (str[i] != '|' && str[i] == str[i - 1])
+		if (str[i] != '|' && (i > 0 && str[i] == str[i - 1]))
 			meta[1] = meta[0];
-		next_chunk = ft_concat(4, " ", meta, " ", varname);
+		if (is_inquote(str, i))
+			next_chunk = ft_concat(2, meta, varname);
+		else
+			next_chunk = ft_concat(4, " ", meta, " ", varname);
+		free(meta);
 		free(varname);
 	}
 	else
@@ -108,4 +124,3 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	}
 	return (next_chunk);
 }
-

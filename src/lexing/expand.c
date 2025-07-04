@@ -22,7 +22,7 @@ char	*expand_line(t_env_lst *env, char str[])
 		part_len = get_part_len(&str[i]);
 		next_chunk = set_chunk_val(env, str, i, part_len);
 		i += part_len;
-		if (str[i] == '?' || str[i] == '|' | str[i] == '<' || str[i] == '>')
+		if ((str[i] == '?' && i > 0 && str[i - 1] == '$') || str[i] == '|' | str[i] == '<' || str[i] == '>')
 			++i;
 		if (str[i] == '<' || str[i] == '>')
 			++i;
@@ -88,6 +88,26 @@ char	*expand_line(t_env_lst *env, char str[])
 // 	return (arr);
 // }
 
+t_bool	is_inquote(char *str, size_t pos)
+{
+	size_t	i;
+	int		sq;
+	int		dq;
+
+	i = 0;
+	sq = 0;
+	dq = 0;
+	while (i < pos)
+	{
+		if (str[i] == '\'')
+			++sq;
+		if (str[i] == '"')
+			++dq;
+		++i;
+	}
+	return ((sq % 2) + (dq % 2) % 2);
+}
+
 int	check_meta_validity(char *str)
 {
 	size_t	i;
@@ -95,24 +115,27 @@ int	check_meta_validity(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] != '|' && str[i] != '>' && str[i] != '<')
+		if ((str[i] == '|' || str[i] == '>' || str[i] == '<') && !is_inquote(str, i))
 		{
-			++i;
-			continue;
-		}
-		if (str[i] == '|' && ((str[i + 1] == '>' || str[i + 1] == '<')
-							|| (str[i - 1] == '>' || str[i - 1] == '<')))
-			return (ERR_PARSING);
-		if (str[i] == '>' && ((str[i + 1] == '|'|| str[i + 1] == '<')
-							|| (str[i - 1] == '|' || str[i - 1] == '<')))
-			return (ERR_PARSING);
-		if (str[i] == '<' && ((str[i + 1] == '|'|| str[i + 1] == '>')
-							|| (str[i - 1] == '|' || str[i - 1] == '>')))
-			return (ERR_PARSING);
-		if (str[i] == '<' || str[i] == '>')
-		{
-			if (str[i + 1] == str[i] && str[i + 2] == str[i])
+			if (str[i] != '|' && str[i] != '>' && str[i] != '<')
+			{
+				++i;
+				continue;
+			}
+			if (str[i] == '|' && ((str[i + 1] == '>' || str[i + 1] == '<')
+								|| (str[i - 1] == '>' || str[i - 1] == '<')))
 				return (ERR_PARSING);
+			if (str[i] == '>' && ((str[i + 1] == '|'|| str[i + 1] == '<')
+								|| (str[i - 1] == '|' || str[i - 1] == '<')))
+				return (ERR_PARSING);
+			if (str[i] == '<' && ((str[i + 1] == '|'|| str[i + 1] == '>')
+								|| (str[i - 1] == '|' || str[i - 1] == '>')))
+				return (ERR_PARSING);
+			if (str[i] == '<' || str[i] == '>')
+			{
+				if (str[i + 1] == str[i] && str[i + 2] == str[i])
+					return (ERR_PARSING);
+			}
 		}
 		++i;
 	}

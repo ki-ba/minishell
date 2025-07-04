@@ -22,6 +22,16 @@ int	wait_processes(pid_t pid, int err)
 		return (-1);
 	if (pid > 0)
 		waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) || g_signal != 0)
+	{
+		if (WIFSIGNALED(status))
+			err = WTERMSIG(status) + 128;
+		else
+			err = g_signal + 128;
+		if (err == 131)
+			printf("(core dumped)");
+		printf("\n");
+	}
 	if (err == 0 && status > 0)
 		err = status / 256;
 	while (wait(&status) > -1)
@@ -33,17 +43,18 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 {
 	t_list	*tokens;
 	char	*expanded;
+	char	*to_trim;
 	t_list	*exec_lst;
 	pid_t	pid;
 	int		err;
 	t_env_lst	*qm;
 
 	err = 0;
-	if (g_return == 130)
+	qm = search_env_var(env_lst, "?");
+	if (g_signal == 2)
 	{
-		qm = search_env_var(env_lst, "?");
 		qm->value = ft_itoa(130);
-		g_return = 0;
+		g_signal = 0;
 	}
 	tokens = NULL;
 	if (check_meta_validity(cmd))
@@ -51,6 +62,14 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	expanded = expand_line(env_lst, cmd);
 	if (!expanded)
 		return (ERR_ALLOC);
+	to_trim = expanded;
+	expanded = ft_strtrim(to_trim, " \t\n\r\v");
+	free(to_trim);
+	if (!ft_strncmp(expanded, "", 2))
+	{
+		free (expanded);
+		return (ft_atoi(qm->value));
+	}
 	if (check_quotes(expanded))
 		return (ERR_PARSING);
 	if (tokenize(&tokens, expanded) != 0)
@@ -59,6 +78,9 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 		return (ERR_ALLOC);
 	}
 	free(expanded);
+	t_token	*token = (t_token*) tokens->content;
+	if (!tokens->next && (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
+		return (ERR_PARSING);
 	ft_lstiter(tokens, remove_quotes);
 	if (DEBUG)
 		print_token_list(tokens);
@@ -73,7 +95,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	//exit
 	t_exec_node	*node;
 	node = (t_exec_node *) exec_lst->content;
-	if (!exec_lst->next && !ft_strncmp(node->cmd[0], "exit", 5))
+	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		*is_exit = 1;
 	//TODO: another function for stuff bellow to get the right err
 	// 		(either parsing/alloc from above, or from the exec after)
@@ -106,13 +128,16 @@ int	readline_loop(t_env_lst *env_lst)
 	is_exit = FALSE;
 	while (error != ERR_ALLOC && !is_exit) // if error occured, quit program
 	{
+		g_signal = 0;
 		init_signals();
 		if (error > -1)
+		{
+			free(qm_var->value);
 			qm_var->value = ft_itoa(error);
+		}
 		else
 			error = ft_atoi(qm_var->value);
-
-		cmd = readline("zinzinshell $");
+		cmd = readline("zinzinshell$ ");
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
@@ -125,12 +150,14 @@ int	readline_loop(t_env_lst *env_lst)
 		}
 		if (!cmd)
 		{
-			if (g_return == 130)
+			if (g_signal == 2)
 				error = 130;
-			printf("exit\n");
+			// printf("exit\n");
 			break ;
 		}
 	}
+	if (is_exit)
+		error = ft_atoi(qm_var->value);
 	close(hist_fd);
 	return (error);
 }
@@ -149,5 +176,6 @@ int	main(int argc, char *argv[], char *envp[])
 	if (exit_status)
 		print_error_msg(exit_status);
 	destroy_env_lst(env_lst);
+	printf("exit\n");
 	return (exit_status);
 }

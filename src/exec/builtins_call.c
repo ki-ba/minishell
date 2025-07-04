@@ -67,12 +67,13 @@ int	call_cmd(char **cmd, t_env_lst *env)
 		err = ft_unset(cmd, env);
 	else if (!ft_strncmp(cmd[0], "exit", 5))
 		err = ft_exit(cmd, env);
-		// exit(ft_exit(cmd, env));
 	else if (!ft_strncmp(cmd[0], "env", 4))
 		err = ft_env(cmd, env);
 	qm = search_env_var(env, "?");
 	err_c = ft_itoa(err); //check
+	free(qm->value);
 	qm->value = ft_strdup(err_c);
+	free(err_c);
 	// check
 	return (err);
 }

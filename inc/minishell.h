@@ -29,7 +29,6 @@
 # endif
 
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
-t_env_lst		*create_env_lst(char name[]);
 size_t			ft_strlen_c(char str[], char c);
 void			env_add_back(t_env_lst **head, t_env_lst *new);
 void			print_env(t_env_lst *env_lst);
@@ -115,6 +114,9 @@ int	check_meta_validity(char *str);
 void	init_signals(void);
 void	update_signals(int redir);
 
-extern int	g_return;
+/* expand.c*/
+t_bool	is_inquote(char *str, size_t pos);
+
+extern int	g_signal; // sig_atomic_t
 
 #endif

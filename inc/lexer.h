@@ -15,7 +15,4 @@ typedef	struct s_token
 	char	*value;
 }	t_token;
 
-char	*get_variable(char *var);
-
-
 #endif

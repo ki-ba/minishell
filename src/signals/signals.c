@@ -1,10 +1,8 @@
 #include "minishell.h"
 #include <signal.h>
-#include <termios.h>
 
-int g_return = 0;
+int g_signal;
 
-// TODO: return (130)
 void	sigint_handler(int sig)
 {
 	if (sig == SIGINT)
@@ -14,30 +12,33 @@ void	sigint_handler(int sig)
 		rl_on_new_line();
 		rl_redisplay();
 	}
-	g_return = 130;
+	g_signal = sig;
 }
 
-void	sig_handler_redir(int sig)
+void	sig_handler_cmd(int sig)
 {
-	(void) sig;
-	printf("\n");
-	rl_replace_line("", 0);
-	g_return = 130;
+	g_signal = sig;
+	rl_on_new_line();
 }
 
-void	update_signals(int redir)
+void	update_signals(int cmd)
 {
 	struct sigaction	s_sa;
+	struct sigaction	s_si;
 
-	sigemptyset(&s_sa.sa_mask); 
-	sigaddset(&s_sa.sa_mask, SIGQUIT);
-	s_sa.sa_flags = SA_SIGINFO;
-	if (redir)
-		s_sa.sa_handler = &sig_handler_redir;
-	else
-		s_sa.sa_handler = SIG_IGN;
-	sigaction(SIGINT, &s_sa, NULL);
-	sigaction(SIGQUIT, &s_sa, NULL);
+    sigemptyset(&s_sa.sa_mask); 
+    sigemptyset(&s_si.sa_mask); 
+    sigaddset(&s_sa.sa_mask, SIGINT); 
+    sigaddset(&s_si.sa_mask, SIGQUIT);
+    s_sa.sa_flags = SA_SIGINFO;
+    s_si.sa_flags = SA_SIGINFO;
+	s_sa.sa_handler = &sig_handler_cmd;
+    if (cmd)
+		s_si.sa_handler = &sig_handler_cmd;
+    else
+		s_si.sa_handler = SIG_IGN;
+    sigaction(SIGINT, &s_sa, NULL);
+	sigaction(SIGQUIT, &s_si, NULL);
 }
 
 void	init_signals(void)
@@ -50,6 +51,7 @@ void	init_signals(void)
 	sigaddset(&s_sa.sa_mask, SIGINT); 
 	sigaddset(&s_si.sa_mask, SIGQUIT);
 	s_sa.sa_flags = SA_SIGINFO;
+    s_si.sa_flags = SA_SIGINFO;
 	s_sa.sa_handler = &sigint_handler;
 	s_si.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &s_sa, NULL);

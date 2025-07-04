@@ -11,6 +11,4 @@ enum e_error
 	ERR_FAIL
 };
 
-void	error_exit(int err);
-
 #endif

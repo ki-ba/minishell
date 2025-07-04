@@ -23,11 +23,11 @@ size_t	has_option(char **cmd, char opt)
 	size_t	j;
 
 	i = 1;
-	if (cmd[i][0] != '-')
+	if (!cmd[i] || cmd[i][0] != '-')
 		return (1);
 	while (cmd[i])
 	{
-		j = 1;
+		j = 0;
 		while (cmd[i][j])
 		{
 			if (cmd[i][j] != opt)
@@ -39,6 +39,7 @@ size_t	has_option(char **cmd, char opt)
 	return (i);
 }
 
+// TODO: ft_printf_fd to print into > or STDIN
 int	ft_echo(char **cmd, t_env_lst *env)
 {
 	size_t	i;
@@ -49,13 +50,13 @@ int	ft_echo(char **cmd, t_env_lst *env)
 	i = opt;
 	while (i && cmd[i])
 	{
-		ft_printf("%s", cmd[i]);
+		printf("%s", cmd[i]);
 		if (cmd[i] && cmd[i + 1])
-			ft_printf(" ");
+			printf(" ");
 		++i;
 	}
 	if (opt == 1)
-		ft_printf("\n");
+		printf("\n");
 	// destroy_env_lst(env);
 	return (SUCCESS);
 }
