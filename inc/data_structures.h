@@ -6,7 +6,7 @@
 /*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:08:47 by kbarru            #+#    #+#             */
-/*   Updated: 2025/05/17 15:19:25 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/06/24 14:37:30 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_exec_node
 	char				*(filename[2]); // each can be NULL or a filename
 	int					io[2]; // both can be either 0, 1, 2, or 3 (for file)
 	int					oflags[2];
+	int					file_exist; //check if file existed before > or >>
 }						t_exec_node;
 
 /* storing env as a linked list is simplifies the implementation

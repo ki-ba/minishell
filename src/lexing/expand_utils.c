@@ -19,18 +19,31 @@ size_t	varnamelen(char str[])
 	i = 1;
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		++i;
+	if (str[i] == '?' && !str[i + 1])
+		++i;
 	return (i);
 }
 
+// TODO: space before after spe-K
 size_t	get_part_len(char str[])
 {
 	size_t	i;
+	size_t	tmp;
 
 	i = 0;
 	if (str[0] == '$')
 		i = varnamelen(str);
 	else
 		i = ft_strlen_c(str, '$');
+	tmp = ft_strlen_c(str, '|');
+	if (i > tmp && tmp > 0)
+		i = tmp;
+	tmp = ft_strlen_c(str, '<');
+	if (i > tmp && tmp > 0)
+		i = tmp;
+	tmp = ft_strlen_c(str, '>');
+	if (i > tmp && tmp > 0)
+		i = tmp;
 	return (i);
 }
 
@@ -52,15 +65,39 @@ t_bool	must_expand(char str[], size_t pos)
 	return (quote != '\'');
 }
 
+// char	*expand_meta_char(char *str, size_t i, size_t len)
+// {
+
+// }
+
+// TODO: space before after spe-K
 char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 {
 	char	*next_chunk;
 	char	*varname;
+	char	*meta;
 
-	if (str[i] == '$' && must_expand(str, i) && len > 1)
+	if (str[i] == '$' && must_expand(str, i) &&
+		(len > 1 || (str[i + 1] == '?' && len == 1)))
 	{
-		varname = ft_substr(str, i + 1, len - 1);
-		next_chunk = ft_strdup(get_env_val(env, varname, 0));
+		if (len > 1)
+			varname = ft_substr(str, i + 1, len - 1);
+		else
+			varname = ft_substr(str, i + 1, len);
+		// next_chunk = ft_strdup(get_env_val(env, varname, 0));
+		next_chunk = ft_concat(3, "\"", ft_strdup(get_env_val(env, varname, 0)), "\"");
+		free(varname);
+	}
+	else if (i > 0 && must_expand(str, i - 1) &&
+		(str[i - 1] == '|' || str[i - 1] == '<' || str[i - 1] == '>'))
+	{
+		--i;
+		varname = ft_substr(str, i + 1, len);
+		meta = ft_calloc(3, sizeof (char));
+		meta[0] = str[i];
+		if (str[i] != '|' && str[i] == str[i - 1])
+			meta[1] = meta[0];
+		next_chunk = ft_concat(4, " ", meta, " ", varname);
 		free(varname);
 	}
 	else

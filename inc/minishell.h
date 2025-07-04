@@ -98,13 +98,23 @@ size_t			get_env_size(t_env_lst *env_lst);
 
 /* parsing.c */
 
-char			**add_to_array(char **arr, char *str);
 t_exec_node		*create_exec_node(void);
 t_list			*parse_tokens(t_list *tokens);
 void			print_exec(t_list	*exec_lst);
 
-/* double_input_redir.c */
+/* parsing_utils.c */
+char			**add_to_array(char **arr, char *str);
 
+/* double_input_redir.c */
 int				read_input(char *del);
+
+//TODO: 
+int	check_meta_validity(char *str);
+
+/* signals.c */
+void	init_signals(void);
+void	update_signals(int redir);
+
+extern int	g_return;
 
 #endif

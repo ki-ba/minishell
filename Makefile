@@ -30,9 +30,10 @@ TEST_DIR = test/
 ENV_SRC = env.c env_utils.c
 HISTORY_SRC = history.c
 LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c token.c id_token.c quotes.c
-BUILTINS_SRC = builtins_utils.c echo.c cd.c pwd.c export.c unset.c env.c exit.c
-PARSING_SRC = parsing.c exec_node.c double_input_redir.c
-EXEC_SRC = builtins_call.c simple_cmd.c execute_pipeline.c
+BUILTINS_SRC = builtins_utils.c echo.c cd.c pwd.c export.c unset.c env.c exit.c export_utils.c
+PARSING_SRC = parsing.c parsing_utils.c exec_node.c double_input_redir.c
+EXEC_SRC = builtins_call.c envlist_utils.c execute_pipeline.c
+SIGNALS_SRC = signals.c
 
 ENV_SRC_DIR = env/
 HISTORY_SRC_DIR = history/
@@ -40,6 +41,7 @@ LEXING_SRC_DIR = lexing/
 BUILTINS_SRC_DIR = builtins/
 PARSING_SRC_DIR = parsing/
 EXEC_SRC_DIR = exec/
+SIGNALS_DIR = signals/
 LIB_DIR = lib/libft/
 
 P_ENV = $(addprefix $(ENV_SRC_DIR), $(ENV_SRC))
@@ -48,8 +50,9 @@ P_LEXING = $(addprefix $(LEXING_SRC_DIR), $(LEXING_SRC))
 P_BUILTINS = $(addprefix $(BUILTINS_SRC_DIR), $(BUILTINS_SRC))
 P_PARSING = $(addprefix $(PARSING_SRC_DIR), $(PARSING_SRC))
 P_EXEC = $(addprefix $(EXEC_SRC_DIR), $(EXEC_SRC))
+P_SIGNALS = $(addprefix $(SIGNALS_DIR), $(SIGNALS_SRC))
 
-SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) $(P_EXEC) main.c debug.c
+SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) $(P_EXEC) $(P_SIGNALS) main.c debug.c
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 INCLUDES = $(INC_DIR)minishell.h
@@ -77,6 +80,7 @@ $(OBJ_DIR) :
 	mkdir -p $(OBJ_DIR)$(BUILTINS_SRC_DIR)
 	mkdir -p $(OBJ_DIR)$(PARSING_SRC_DIR)
 	mkdir -p $(OBJ_DIR)$(EXEC_SRC_DIR)
+	mkdir -p $(OBJ_DIR)$(SIGNALS_DIR)
 
 $(UNITY_OBJ_DIR) :
 	mkdir -p $(UNITY_OBJ_DIR)
