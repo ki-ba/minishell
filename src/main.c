@@ -65,6 +65,11 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	to_trim = expanded;
 	expanded = ft_strtrim(to_trim, " \t\n\r\v");
 	free(to_trim);
+	if (expanded[0] == '|')
+	{
+		free(expanded);
+		return (ERR_PARSING);
+	}
 	if (!ft_strncmp(expanded, "", 2))
 	{
 		free (expanded);

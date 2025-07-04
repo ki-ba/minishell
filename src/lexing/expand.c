@@ -19,6 +19,10 @@ char	*expand_line(t_env_lst *env, char str[])
 		return (NULL);
 	while (str[i])
 	{
+		if (str[i] == '<' || str[i] == '>')
+			++i;
+		if (str[i] == '<' || str[i] == '>')
+			++i;
 		part_len = get_part_len(&str[i]);
 		next_chunk = set_chunk_val(env, str, i, part_len);
 		i += part_len;
@@ -122,14 +126,14 @@ int	check_meta_validity(char *str)
 				++i;
 				continue;
 			}
-			if (str[i] == '|' && ((str[i + 1] == '>' || str[i + 1] == '<')
-								|| (str[i - 1] == '>' || str[i - 1] == '<')))
+			if (str[i] == '|' && ((str[i + 1] == '>' || str[i + 1] == '<')) )
+								// || (i > 0 && (str[i - 1] == '>' || str[i - 1] == '<'))))
 				return (ERR_PARSING);
-			if (str[i] == '>' && ((str[i + 1] == '|'|| str[i + 1] == '<')
-								|| (str[i - 1] == '|' || str[i - 1] == '<')))
+			if (str[i] == '>' && ((str[i + 1] == '|'|| str[i + 1] == '<')) )
+								// || (i > 0 && (str[i - 1] == '|' || str[i - 1] == '<'))))
 				return (ERR_PARSING);
-			if (str[i] == '<' && ((str[i + 1] == '|'|| str[i + 1] == '>')
-								|| (str[i - 1] == '|' || str[i - 1] == '>')))
+			if (str[i] == '<' && ((str[i + 1] == '|'|| str[i + 1] == '>')) )
+								// || (i > 0 && (str[i - 1] == '|' || str[i - 1] == '>'))))
 				return (ERR_PARSING);
 			if (str[i] == '<' || str[i] == '>')
 			{

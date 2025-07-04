@@ -18,8 +18,12 @@ static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
 	if (!ft_strncmp(token->token, "<", 2) || !ft_strncmp(token->token, "<<", 3))
 	{
 		*redir = INFILE;
-		if (!ft_strncmp(token->token, "<<", 2))
+		if (!ft_strncmp(token->token, "<<", 3))
+		{
+			if (node->io[0] <= MAX_FD && node->io[0] > 0)
+				close(node->io[0]);
 			node->io[0] = MAX_FD + 1;
+		}
 		node->oflags[*redir] = (O_RDONLY);
 	}
 	return (0);
@@ -31,7 +35,9 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 	int	fd;
 
 	if (redir == 0 && node->io[redir] > MAX_FD)
+	{
 		node->io[0] = read_input(token->token);
+	}
 	else
 	{
 		node->filename[redir] = ft_strdup(token->token);

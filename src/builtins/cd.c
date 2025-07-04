@@ -122,6 +122,5 @@ static int	no_arg_cd(char **cmd, t_env_lst *env)
 	}
 	cmd[2] = NULL;
 	ft_cd(cmd, env);
-	free(cmd[1]);
 	return (0);
 }

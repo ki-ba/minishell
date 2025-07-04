@@ -14,12 +14,8 @@ int	ft_pwd(char **cmd, t_env_lst *env)
 	char	*path;
 
 	(void)env;
+	(void)cmd;
 	path = ft_calloc(PATH_MAX, sizeof(char));
-	if (cmd[1])
-	{
-		ft_putendl_fd("minishell: pwd: too many arguments", 2);
-		return (1);
-	}
 	getcwd(path, PATH_MAX);
 	if (!path)
 	{
