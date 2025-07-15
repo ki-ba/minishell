@@ -10,6 +10,7 @@ int	try_exec(char **cmd, t_env_lst *env)
 	if (is_builtin(cmd))
 	{
 		err = call_cmd(cmd, env);
+		destroy_env_lst(env);
 	}
 	else 
 	{

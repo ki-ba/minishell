@@ -23,12 +23,12 @@ size_t	has_option(char **cmd, char opt)
 	size_t	j;
 
 	i = 1;
-	if (!cmd[i] || cmd[i][0] != '-')
+	if (!cmd[i] || cmd[i][0] != '-' || (cmd[i][0] == '-' && cmd[i][1] != 'n'))
 		return (1);
 	while (cmd[i])
 	{
-		j = 0;
-		while (cmd[i][j])
+		j = 1;
+		while (cmd[i][j - 1] && cmd[i][j])
 		{
 			if (cmd[i][j] != opt)
 				return (i);
@@ -57,6 +57,5 @@ int	ft_echo(char **cmd, t_env_lst *env)
 	}
 	if (opt == 1)
 		printf("\n");
-	// destroy_env_lst(env);
 	return (SUCCESS);
 }

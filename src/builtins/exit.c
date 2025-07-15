@@ -73,7 +73,7 @@ static int	check_exit_arg(char **cmd)
 		i++;
 	if (cmd[1][i] != '\0')
 	{
-		ft_printf_fd(2, "minishell: exit: %s: numeric argument required\n");
+		ft_printf_fd(2, "minishell: exit: %s: numeric argument required\n", cmd[1]);
 		return (ERR_PARSING);
 	}
 	return (SUCCESS);

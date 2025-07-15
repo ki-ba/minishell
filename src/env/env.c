@@ -64,8 +64,11 @@ void	destroy_env_lst(t_env_lst *env_lst)
 	while (env_lst)
 	{
 		tmp = env_lst->next;
-		free(env_lst->value);
-		env_lst->value = NULL;
+		if (env_lst->value)
+		{
+			free(env_lst->value);
+			env_lst->value = NULL;
+		}
 		free(env_lst->name);
 		env_lst->name = NULL;
 		free(env_lst);
@@ -82,7 +85,10 @@ t_env_lst	*new_env_entry(char *name, char *value)
 	if (!new)
 		return (NULL);
 	new->name = ft_strdup(name);
-	new->value = ft_strdup(value);
+	if (value)
+		new->value = ft_strdup(value);
+	else
+		new->value = NULL;
 	new->next = NULL;
 	if (!name || !value)
 	{

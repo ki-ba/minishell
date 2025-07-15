@@ -39,7 +39,7 @@ void			print_token_list(t_list *tokens);
 char			*summarize_lexing(t_list *tokens);
 /* history.c */
 
-void			ft_add_history(int hist_fd, char entry[], char last_cmd[]);
+void			ft_add_history(int hist_fd, char entry[], char *last_cmd);
 int				retrieve_history(char *last_cmd[]);
 
 /* lexing.c */

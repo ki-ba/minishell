@@ -36,11 +36,13 @@ int	ft_export(char **cmd, t_env_lst *env)
 static int	print_export(t_env_lst *env)
 {
 	t_env_lst	*tmp;
+	t_env_lst	*head;
 
 	tmp = dup_env(env);
 	if (!tmp)
 		return (ERR_ALLOC);
-	tmp = sort_env_var(tmp);
+	sort_env_var(tmp);
+	head = tmp;
 	while (tmp)
 	{
 		if (check_name_validity(tmp->name) == SUCCESS)
@@ -57,7 +59,7 @@ static int	print_export(t_env_lst *env)
 		}
 		tmp = tmp->next;
 	}
-	destroy_env_lst(tmp);
+	destroy_env_lst(head);
 	return (SUCCESS);
 }
 
@@ -123,10 +125,15 @@ static int	update_exp_node(char *cmd, t_env_lst **env)
 	if (i > 0)
 	{
 		node = search_env_var(*env, name);
+		free(name);
+		name = NULL;
+		free(node->value);
 		node->value = ft_substr(cmd, i + 1, ft_strlen(cmd));
 		if (!node->value)
 			return (ERR_ALLOC);
 	}
+	if (name)
+		free(name);
 	return (SUCCESS);
 }
 

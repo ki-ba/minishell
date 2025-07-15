@@ -43,7 +43,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 {
 	t_list	*tokens;
 	char	*expanded;
-	char	*to_trim;
+	char	*trim;
 	t_list	*exec_lst;
 	pid_t	pid;
 	int		err;
@@ -59,24 +59,40 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	tokens = NULL;
 	if (check_meta_validity(cmd))
 		return (ERR_PARSING);
-	expanded = expand_line(env_lst, cmd);
-	if (!expanded)
-		return (ERR_ALLOC);
-	to_trim = expanded;
-	expanded = ft_strtrim(to_trim, " \t\n\r\v");
-	free(to_trim);
-	if (expanded[0] == '|')
+	//? new trim
+	trim = ft_strtrim(cmd, " \t\n\r\v");
+	if (trim[0] == '|' || 
+		trim[ft_strlen(trim) - 1] == '|' || trim[ft_strlen(trim) - 1] == '<'  || trim[ft_strlen(trim) - 1] == '>')
 	{
-		free(expanded);
+		free(trim);
+		// free(cmd);
 		return (ERR_PARSING);
 	}
-	if (!ft_strncmp(expanded, "", 2))
+	//? endtrim
+	expanded = expand_line(env_lst, trim);
+	free(trim);
+	if (!expanded)
+		return (ERR_ALLOC);
+	// to_trim = expanded;
+	// expanded = ft_strtrim(to_trim, " \t\n\r\v");
+	// free(to_trim);
+	// printf("exp= [%s] len-1[%c]\n", expanded, expanded[ft_strlen(expanded) - 1]);
+	// if (expanded[0] == '|' || 
+	// 	expanded[ft_strlen(expanded) - 1] == '|' || expanded[ft_strlen(expanded) - 1] == '<'  || expanded[ft_strlen(expanded) - 1] == '>')
+	// {
+	// 	free(expanded);
+	// 	return (ERR_PARSING);
+	// }
+	if (!ft_strncmp(expanded, "\0", 1))
 	{
 		free (expanded);
 		return (ft_atoi(qm->value));
 	}
 	if (check_quotes(expanded))
+	{
+		free(expanded);
 		return (ERR_PARSING);
+	}
 	if (tokenize(&tokens, expanded) != 0)
 	{
 		free(expanded);
@@ -147,8 +163,6 @@ int	readline_loop(t_env_lst *env_lst)
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
 			error = interpret_line(cmd, env_lst, &is_exit);
-			if (last_cmd)
-				free(last_cmd);
 			last_cmd = cmd;
 			if (error == ERR_PARSING)
 				print_error_msg(error);
@@ -163,6 +177,8 @@ int	readline_loop(t_env_lst *env_lst)
 	}
 	if (is_exit)
 		error = ft_atoi(qm_var->value);
+	if (last_cmd)
+		free(last_cmd);
 	close(hist_fd);
 	return (error);
 }

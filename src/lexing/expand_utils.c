@@ -97,8 +97,11 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 			varname = ft_substr(str, i + 1, len - 1);
 		else
 			varname = ft_substr(str, i + 1, len);
-		// next_chunk = ft_strdup(get_env_val(env, varname, 0));
-		next_chunk = ft_concat(3, "\"", ft_strdup(get_env_val(env, varname, 0)), "\"");
+		char *tmp = get_env_val(env, varname, 0);
+		// char *tmp2 = get_env_val(env, varname, 0);
+		// next_chunk = ft_concat(3, "\"", ft_strdup(get_env_val(env, varname, 0)), "\"");
+		next_chunk = ft_concat(3, "\"", tmp, "\"");
+		// free (tmp);
 		free(varname);
 	}
 	else if (i > 0 && (str[i - 1] == '|' || str[i - 1] == '<' || str[i - 1] == '>'))
