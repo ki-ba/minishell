@@ -105,6 +105,7 @@ int exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 {
 	t_exec_node	*exe;
 	int			saved;
+	int			err;
 
 	exe = (t_exec_node *)(*exec_lst)->content;
 	if (exe->io[0] == -1 || exe->io[1] == -1)
@@ -118,11 +119,11 @@ int exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 		if (exe->io[1] != STDOUT_FILENO)
 			close(exe->io[1]);
 	}
-	call_cmd(exe->cmd, env);
+	err = call_cmd(exe->cmd, env);
 	if (exe->filename[1])
 		dup2(saved, STDOUT_FILENO);
 	close (saved);
-	return (0);
+	return (err);
 }
 /**
 * entry point of the execution part of the program.
