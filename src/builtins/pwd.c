@@ -3,6 +3,7 @@
 #include "builtins.h"
 #include "error.h"
 #include <limits.h>
+#include <sys/stat.h>
 
 /**
  * @brief print the current directory
@@ -13,16 +14,17 @@ int	ft_pwd(char **cmd, t_env_lst *env)
 {
 	char	*path;
 
-	(void)env;
+	// (void)env;
 	(void)cmd;
-	path = ft_calloc(PATH_MAX, sizeof(char));
-	getcwd(path, PATH_MAX);
-	if (!path)
-	{
-		ft_putendl_fd("minishell: pwd: couldn't get the path", 2);
-		return (ERR_ALLOC);
-	}
+	// path = ft_calloc(PATH_MAX, sizeof(char));
+	// getcwd(path, PATH_MAX);
+	path = get_env_val(env, "PWD", 1);
+	// if (!path)
+	// {
+	// 	ft_putendl_fd("minishell: pwd: couldn't get the path", 2);
+	// 	return (ERR_ALLOC);
+	// }
 	ft_printf("%s\n", path);
-	free(path);
+	// free(path);
 	return (SUCCESS);
 }
