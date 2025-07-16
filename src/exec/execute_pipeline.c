@@ -1,4 +1,6 @@
+#include "builtins.h"
 #include "minishell.h"
+#include <signal.h>
 
 int	try_exec(char **cmd, t_env_lst *env)
 {
@@ -12,7 +14,7 @@ int	try_exec(char **cmd, t_env_lst *env)
 		err = call_cmd(cmd, env);
 		destroy_env_lst(env);
 	}
-	else 
+	else
 	{
 		env_arr = envlist_to_arr(env);
 		if (ft_strnstr(cmd[0], "/", ft_strlen(cmd[0])))
@@ -30,7 +32,7 @@ int	try_exec(char **cmd, t_env_lst *env)
 	ft_free_arr(cmd);
 	exit(err);
 }
-#include <signal.h>
+
 void	exec_child(t_list **exe_ls, t_env_lst *env, int *next_pipe, int pipe[2])
 {
 	t_exec_node	*exe;
@@ -70,19 +72,23 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 	int			pipe_fd[2];
 	t_exec_node	*exe;
 
+	exe = (t_exec_node *)(*current)->content;
 	if (pipe(pipe_fd) < 0)
 		return (-1);
 	pid = fork();
 	(void)exec_list;
 	if (pid == 0)
+	{
+		if (exe->io[0] == -1 || exe->io[1] == -1)
+			exit(1);
 		exec_child(current, env, next_pipe_entry, pipe_fd);
+	}
 	else
 	{
 		update_signals(1);
 		if (*next_pipe_entry)
 			close(*next_pipe_entry);
 		*next_pipe_entry = pipe_fd[0];
-		exe = (t_exec_node *)(*current)->content;
 		if (exe->io[0] != STDIN_FILENO)
 			close(exe->io[0]);
 		if (exe->io[1] != STDOUT_FILENO)
@@ -95,40 +101,45 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 	return (pid);
 }
 
+int exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
+{
+	t_exec_node	*exe;
+	int			saved;
+
+	exe = (t_exec_node *)(*exec_lst)->content;
+	if (exe->io[0] == -1 || exe->io[1] == -1)
+	{
+		return (1);
+	}
+	saved = dup(STDOUT_FILENO);
+	if (exe->filename[1])
+	{
+		dup2(exe->io[1], STDOUT_FILENO);
+		if (exe->io[1] != STDOUT_FILENO)
+			close(exe->io[1]);
+	}
+	call_cmd(exe->cmd, env);
+	if (exe->filename[1])
+		dup2(saved, STDOUT_FILENO);
+	close (saved);
+	return (0);
+}
 /**
 * entry point of the execution part of the program.
 * takes an exec_list and the environment and executes it.
 */
 pid_t	exec_pipeline(t_list **exec_lst, t_env_lst *env)
 {
-	t_list	*current;
-	pid_t	pid;
-	int		next_pipe_entry;
-	t_exec_node	*exe;
+	t_list		*current;
+	pid_t		pid;
+	int			next_pipe_entry;
 
 	next_pipe_entry = 0;
 	current = *exec_lst;
-	exe = (t_exec_node *)(*exec_lst)->content;
-	if (!current->next && is_builtin(exe->cmd))
-	{
-		int	saved = dup(STDOUT_FILENO);
-		if (exe->filename[1])
-		{
-			dup2(exe->io[1], STDOUT_FILENO);
-			if (exe->io[1] != STDOUT_FILENO)
-				close(exe->io[1]);
-		}
-		call_cmd(exe->cmd, env);
-		if (exe->filename[1])
-			dup2(saved, STDOUT_FILENO);
-		close (saved);
-		return (0);
-	}
 	while (current)
 	{
 		pid = dup_and_fork(exec_lst, &current, env, &next_pipe_entry);
 		current = current->next;
 	}
-	// destroy_env_lst(env);
 	return (pid);
 }

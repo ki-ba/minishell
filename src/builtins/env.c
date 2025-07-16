@@ -16,7 +16,7 @@ int	ft_env(char **cmd, t_env_lst *env)
 	{
 		if (tmp->value && check_name_validity(tmp->name) == SUCCESS)
 		{
-			if (printf("%s=\"%s\"\n", tmp->name, tmp->value) == -1)
+			if (printf("%s=%s\n", tmp->name, tmp->value) == -1)
 				return (ERR_PRINT);
 		}
 		tmp = tmp->next;
