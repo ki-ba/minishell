@@ -1,4 +1,6 @@
+#include "libft.h"
 #include "minishell.h"
+#include <ctype.h>
 
 void	join_in_place(char **s1, char *s2)
 {
@@ -79,6 +81,7 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	char	*next_chunk;
 	char	*varname;
 	char	*meta;
+	char	*tmp;
 
 	if (i == 0 && (str[i] == '|' || str[i] == '<' || str[i] == '>'))
 	{
@@ -89,18 +92,19 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 			++i;
 			--len;
 		}
-		
 	}
-	if (str[i] == '$' && must_expand(str, i))// && (len > 1 || (str[i + 1] == '?' && len == 1)))
+	if (str[i] == '$' && must_expand(str, i))
 	{
-		if (len > 1)
-			varname = ft_substr(str, i + 1, len - 1);
+		varname = ft_substr(str, i + 1, len - (len > 1));
+		if (ft_isalnum(str[i + 1]) || str[i + 1] == '?')
+		{
+			tmp = get_env_val(env, varname, 0);
+			next_chunk = ft_concat(3, "\"", tmp, "\"");
+		}
 		else
-			varname = ft_substr(str, i + 1, len);
-		char *tmp = get_env_val(env, varname, 0);
+			next_chunk = ft_strdup("$");
 		// char *tmp2 = get_env_val(env, varname, 0);
 		// next_chunk = ft_concat(3, "\"", ft_strdup(get_env_val(env, varname, 0)), "\"");
-		next_chunk = ft_concat(3, "\"", tmp, "\"");
 		// free (tmp);
 		free(varname);
 	}

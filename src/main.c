@@ -4,8 +4,8 @@
 
 void	print_error_msg(int status)
 {
-	if (status == ERR_ARGS)
-		ft_putstr_fd("ERROR : incorrect arguments\n", 2);
+	// if (status == ERR_ARGS)
+	// 	ft_putstr_fd("ERROR : incorrect arguments\n", 2);
 	if (status == ERR_PARSING)
 		ft_putstr_fd("ERROR : parsing failed\n", 2);
 	if (status == ERR_ALLOC)
