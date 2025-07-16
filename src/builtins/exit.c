@@ -25,34 +25,17 @@ static int	check_exit_arg(char **cmd);
 
 int	ft_exit(char **cmd, t_env_lst *env)
 {
-	// t_env_lst	*qm;
 	__uint8_t	ret;
 
-
-	// printf("exit\n");
 	if (!cmd[1])
-	{
-		// free
 		ret = ft_atoi(get_env_val(env,  "?", 0));
-	}
 	else
 	{
 		ret = check_exit_arg(cmd);
 		if (ret != SUCCESS)
-		{
-			if (ret != ERR_ARGS)
-				// free
 			return (ret);
-		}
 		ret = (__uint8_t) ft_atoi(cmd[1]);
 	}
-	// qm = search_env_var(env, "?");
-	// qm->value = ft_strdup(ft_itoa(ret));
-	// destroy_env_lst(env);
-	// ft_free_arr(cmd);
-	// free
-	// exit(ret);
-	// printf("ret= %d\n", ret);
 	return (ret);
 }
 
@@ -62,7 +45,7 @@ static int	check_exit_arg(char **cmd)
 
 	if (cmd[2])
 	{
-		// printf("exit\n");
+		printf("exit\n");
 		ft_printf_fd(2, "minishell: exit: too many arguments\n");
 		return (ERR_ARGS);
 	}

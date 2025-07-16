@@ -117,7 +117,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	//exit
 	t_exec_node	*node;
 	node = (t_exec_node *) exec_lst->content;
-	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
+	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5) && !node->cmd[2])
 		*is_exit = 1;
 	if (!exec_lst->next && is_builtin(node->cmd))
 		err = exec_unique_cmd(&exec_lst, env_lst);
