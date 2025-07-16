@@ -1,3 +1,4 @@
+#include "data_structures.h"
 #include "minishell.h"
 #include "exec.h"
 
@@ -118,13 +119,19 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	node = (t_exec_node *) exec_lst->content;
 	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		*is_exit = 1;
+	if (!exec_lst->next && is_builtin(node->cmd))
+		err = exec_unique_cmd(&exec_lst, env_lst);
+	else // if there is more than 1 command
+	{
+		pid = exec_pipeline(&exec_lst, env_lst);
+		err = wait_processes(pid, err);
+	}
 	//TODO: another function for stuff bellow to get the right err
 	// 		(either parsing/alloc from above, or from the exec after)
-	pid = exec_pipeline(&exec_lst, env_lst);
-	err = wait_processes(pid, err);
 	ft_lstclear(&exec_lst, del_exec_node);
 	return (err);
 }
+
 #include <errno.h>
 int	readline_loop(t_env_lst *env_lst)
 {

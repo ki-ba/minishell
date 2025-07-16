@@ -28,6 +28,7 @@
 #  define HERE_DOC_LEN 8
 # endif
 
+int			exec_unique_cmd(t_list **exec_lst, t_env_lst *env);
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 size_t			ft_strlen_c(char str[], char c);
 void			env_add_back(t_env_lst **head, t_env_lst *new);

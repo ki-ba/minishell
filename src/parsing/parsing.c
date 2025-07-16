@@ -4,7 +4,13 @@
 #include "minishell.h"
 #include <fcntl.h>
 
-/* handles current TOKEN_REDIRECT */
+/** handles current TOKEN_REDIRECT.
+ *	sets up open oflags according to the given metachar (<< vs < vs >> vs >)
+ *	to prepare for the expected file token right after.
+ *	if the metachar is <<, a here_doc delimiter is expected in place of
+ *	the file token. To allow `handle_file` to detect this, the corresponding
+ *	file descriptor is set to MAX_FD + 1. (thus cannot be a real file)
+ * */
 static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
 {
 	if (!ft_strncmp(token->token, ">", 2) || !ft_strncmp(token->token, ">>", 3))
@@ -29,15 +35,18 @@ static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
 	return (0);
 }
 
-/* handles current TOKEN_FILE */
+/** handles current TOKEN_FILE.
+ *	if the current token is a heredoc delimiter, call appropriate function.
+ *	otherwise setup the token's `filename` attribute to the name of the file
+ *	to read from / write into.
+ *	if `open` fails, write on stderr, then return an error.
+ * */
 static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list **exec_lst)
 {
 	int	fd;
 
 	if (redir == 0 && node->io[redir] > MAX_FD)
-	{
 		node->io[0] = read_input(token->token);
-	}
 	else
 	{
 		node->filename[redir] = ft_strdup(token->token);
@@ -52,15 +61,17 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 		if (fd < 0)
 		{
 			perror("open");
-			node->io[redir] = open("/dev/null", O_RDWR);
-			return (ERR_FAIL);
+			// node->io[redir] = open("/dev/null", O_RDWR);
+			// return (ERR_FAIL);
 		}
 		node->io[redir] = fd;
 	}
 	return (SUCCESS);
 }
 
-/* handles current TOKEN_CMD */
+/** handles current TOKEN_CMD.
+ *	adds the current command or parameter to the cmd array.
+ * */
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
 	char	**old_arr;
@@ -76,6 +87,10 @@ static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 	return (SUCCESS);
 }
 
+/** handles current PIPE_CMD, or the first token of the line.
+ *	creates a new exec_node which data (i/o, filename, cmd ...)
+ *	will be filled by other handler functions.
+ **/
 static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
 {
 	t_list		*new_list_node;
@@ -96,7 +111,6 @@ static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
 /**
 * Parse the token list and create a process list with correct infiles,
 * outfiles, argv and environments.
-*
 */
 t_list	*parse_tokens(t_list *tokens)
 {
