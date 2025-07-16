@@ -1,12 +1,17 @@
 #include "builtins.h"
 #include "minishell.h"
 #include <signal.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 int	try_exec(char **cmd, t_env_lst *env)
 {
 	char	*path;
 	char	**env_arr;
 	int		err;
+	struct stat info;
+
+   
 
 	err = 127;
 	if (is_builtin(cmd))
@@ -23,6 +28,12 @@ int	try_exec(char **cmd, t_env_lst *env)
 			path = find_path(cmd[0], env);
 		if (!path)
 			return (ERR_ALLOC);
+		if (access(path, F_OK) == 0)
+		{
+			stat(path, &info);
+			if (access(path, X_OK) != 0 || S_ISDIR(info.st_mode))
+				err = 126;
+		}
 		execve(path, cmd, env_arr);
 		ft_free_arr(env_arr);
 		free(path);
