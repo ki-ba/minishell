@@ -12,7 +12,6 @@ void	ft_add_history(int hist_fd, char entry[], char *last_cmd)
 		}
 	}
 	free(last_cmd);
-	last_cmd = NULL;
 	write(hist_fd, entry, ft_strlen(entry));
 	write(hist_fd, "\n", 1);
 	add_history(entry);
