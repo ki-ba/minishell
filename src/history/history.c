@@ -17,10 +17,11 @@ void	ft_add_history(int hist_fd, char entry[], char *last_cmd)
 	add_history(entry);
 }
 
-int	retrieve_history(char *last_cmd[])
+int	retrieve_history(t_env_lst *env, char *last_cmd[])
 {
 	int		hist_fd;
 	char	*hist_entry;
+	char	*hist_fd_str;
 
 	hist_fd = open(HIST_FILE, O_RDWR | O_APPEND | O_CREAT, 0644);
 	if (hist_fd < 0)
@@ -35,5 +36,8 @@ int	retrieve_history(char *last_cmd[])
 		free(hist_entry);
 		hist_entry = get_next_line(hist_fd);
 	}
+	hist_fd_str = ft_itoa(hist_fd);
+	add_to_env(env, HIST_FILE, hist_fd_str, 1);
+	free(hist_fd_str);
 	return (hist_fd);
 }

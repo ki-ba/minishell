@@ -1,8 +1,4 @@
-#include "data_structures.h"
-#include "error.h"
-#include <errno.h>
 #include "minishell.h"
-#include "exec.h"
 
 void	print_error_msg(int status)
 {
@@ -57,7 +53,6 @@ char	*trim_cmd(char cmd[])
 	char	*trim;
 
 	trim = ft_strtrim(cmd, " \t\n\r\v");
-	// free(cmd);
 	if (trim[0] == '|' || trim[ft_strlen(trim) - 1] == '|')
 		return (NULL);
 	if (trim[ft_strlen(trim) - 1] == '<' || trim[ft_strlen(trim) - 1] == '>')
@@ -132,22 +127,22 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	return (err);
 }
 
+// start_interpreter(t_env_lst *env)
+// {
+//
+// }
 int	readline_loop(t_env_lst *env_lst)
 {
-	char	*cmd;
-	int		hist_fd;
-	char	*last_cmd;
-	int		error;
-	t_bool	is_exit;
-	char	*hist_fd_str;
+	char		*cmd;
+	int			hist_fd;
+	char		*last_cmd;
+	int			error;
+	t_bool		is_exit;
 	t_env_lst	*qm_var;
 
 	error = 0;
 	last_cmd = NULL;
-	hist_fd = retrieve_history(&last_cmd);
-	hist_fd_str = ft_itoa(hist_fd);
-	add_to_env(env_lst, HIST_FILE, hist_fd_str, 1);
-	free(hist_fd_str);
+	hist_fd = retrieve_history(env_lst, &last_cmd);
 	qm_var = search_env_var(env_lst, "?");
 	is_exit = FALSE;
 	while (error != ERR_ALLOC && !is_exit)
@@ -179,8 +174,6 @@ int	readline_loop(t_env_lst *env_lst)
 	}
 	if (is_exit)
 		error = ft_atoi(qm_var->value);
-	// if (last_cmd)
-	// 	free(last_cmd);
 	close(hist_fd);
 	return (error);
 }
