@@ -57,6 +57,7 @@ char	*trim_cmd(char cmd[])
 		return (NULL);
 	if (trim[ft_strlen(trim) - 1] == '<' || trim[ft_strlen(trim) - 1] == '>')
 		return (NULL);
+	free(cmd);
 	return (trim);
 }
 
@@ -66,9 +67,9 @@ char	*format_cmd(t_env_lst *env, char cmd[])
 
 	if (check_meta_validity(cmd))
 		return (NULL);
-	cmd = trim_cmd(cmd);
 	expanded = expand_line(env, cmd);
-	free(cmd);
+	expanded = trim_cmd(expanded);
+	// free(cmd);
 	if (check_parsing(expanded))
 		return (NULL);
 	return (expanded);
@@ -118,7 +119,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	free(cmd);
 	if (process_tokens(tokens))
 		return (ERR_PARSING);
-	exec_lst = parse_tokens(tokens);
+	exec_lst = parse_tokens(tokens, env_lst);
 	ft_lstclear(&tokens, deltoken);
 	if (!exec_lst)
 		return (ERR_ALLOC);

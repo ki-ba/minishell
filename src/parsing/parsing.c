@@ -1,3 +1,4 @@
+#include "builtins.h"
 #include "data_structures.h"
 #include "error.h"
 #include "libft.h"
@@ -45,6 +46,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 {
 	int	fd;
 
+	fd = 0;
 	if (redir == 0 && node->io[redir] > MAX_FD)
 		node->io[0] = read_input(token->token);
 	else
@@ -66,7 +68,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 		}
 		node->io[redir] = fd;
 	}
-	return (SUCCESS);
+	return (fd < 0);
 }
 
 /** handles current TOKEN_CMD.
@@ -108,11 +110,23 @@ static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
 	return (SUCCESS);
 }
 
+void	update_qm(t_env_lst *env, int status)
+{
+	t_env_lst	*qm;
+
+	qm = search_env_var(env, "?");
+	if (status > ft_atoi(qm->value))
+	{
+		free(qm->value);
+		qm->value = ft_itoa(status);
+	}
+}
+
 /**
 * Parse the token list and create a process list with correct infiles,
 * outfiles, argv and environments.
 */
-t_list	*parse_tokens(t_list *tokens)
+t_list	*parse_tokens(t_list *tokens, t_env_lst *env)
 {
 	t_list		*exec_lst;
 	t_token		*token;
@@ -135,6 +149,7 @@ t_list	*parse_tokens(t_list *tokens)
 		else if (token->type == TOKEN_FILE)
 			status = handle_file(node, token, redir_type, &exec_lst);
 		tokens = tokens->next;
+		update_qm(env, status);
 	}
 	return (exec_lst);
 }

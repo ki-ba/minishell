@@ -99,7 +99,7 @@ size_t			get_env_size(t_env_lst *env_lst);
 /* parsing.c */
 
 t_exec_node		*create_exec_node(void);
-t_list			*parse_tokens(t_list *tokens);
+t_list			*parse_tokens(t_list *tokens, t_env_lst *env);
 void			print_exec(t_list	*exec_lst);
 
 /* parsing_utils.c */
