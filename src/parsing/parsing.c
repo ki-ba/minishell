@@ -63,8 +63,6 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 		if (fd < 0)
 		{
 			perror("open");
-			// node->io[redir] = open("/dev/null", O_RDWR);
-			// return (ERR_FAIL);
 		}
 		node->io[redir] = fd;
 	}
@@ -121,6 +119,23 @@ void	update_qm(t_env_lst *env, int status, int conditionnal)
 	qm->value = ft_itoa(status);
 }
 
+void	advance_tokens(t_list **tokens, int status)
+{
+	t_token	*token;
+
+	if (status)
+	{
+		while (*tokens && token && token->type != TOKEN_PIPE)
+		{
+			*tokens = (*tokens)->next;
+			if (*tokens)
+				token = (t_token *)(*tokens)->content;
+		}
+	}
+	else
+		*tokens = (*tokens)->next;
+}
+
 /**
 * Parse the token list and create a process list with correct infiles,
 * outfiles, argv and environments.
@@ -149,17 +164,7 @@ t_list	*parse_tokens(t_list *tokens)
 			status = handle_file(node, token, redir_type, &exec_lst);
 		if (status != 0 || node->status == 0)
 			node->status = status;
-		if (status)
-		{
-			while (tokens && token && token->type != TOKEN_PIPE)
-			{
-				tokens = tokens->next;
-				if (tokens)
-					token = (t_token *)(tokens)->content;
-			}
-		}
-		else
-			tokens = tokens->next;
+		advance_tokens(&tokens, status);
 	}
 	return (exec_lst);
 }

@@ -98,7 +98,6 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 			close(exe->io[0]);
 		if (exe->io[1] != STDOUT_FILENO)
 			close(exe->io[1]);
-		// destroy_env_lst(env);
 	}
 	if (!(*current)->next)
 		close(pipe_fd[0]);
