@@ -110,23 +110,22 @@ static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
 	return (SUCCESS);
 }
 
-void	update_qm(t_env_lst *env, int status)
+void	update_qm(t_env_lst *env, int status, int conditionnal)
 {
 	t_env_lst	*qm;
 
 	qm = search_env_var(env, "?");
-	if (status > ft_atoi(qm->value))
-	{
-		free(qm->value);
-		qm->value = ft_itoa(status);
-	}
+	if (conditionnal && (status == 0 || ft_atoi(qm->value) > 0))
+		return ;
+	free(qm->value);
+	qm->value = ft_itoa(status);
 }
 
 /**
 * Parse the token list and create a process list with correct infiles,
 * outfiles, argv and environments.
 */
-t_list	*parse_tokens(t_list *tokens, t_env_lst *env)
+t_list	*parse_tokens(t_list *tokens)
 {
 	t_list		*exec_lst;
 	t_token		*token;
@@ -137,7 +136,7 @@ t_list	*parse_tokens(t_list *tokens, t_env_lst *env)
 	status = 0;
 	node = NULL;
 	exec_lst = NULL;
-	while (tokens && !status)
+	while (tokens)
 	{
 		token = (t_token *)(tokens)->content;
 		if (!node || token->type == TOKEN_PIPE)
@@ -148,8 +147,19 @@ t_list	*parse_tokens(t_list *tokens, t_env_lst *env)
 			status = handle_redir(node, token, &redir_type);
 		else if (token->type == TOKEN_FILE)
 			status = handle_file(node, token, redir_type, &exec_lst);
-		tokens = tokens->next;
-		update_qm(env, status);
+		if (status != 0 || node->status == 0)
+			node->status = status;
+		if (status)
+		{
+			while (tokens && token && token->type != TOKEN_PIPE)
+			{
+				tokens = tokens->next;
+				if (tokens)
+					token = (t_token *)(tokens)->content;
+			}
+		}
+		else
+			tokens = tokens->next;
 	}
 	return (exec_lst);
 }

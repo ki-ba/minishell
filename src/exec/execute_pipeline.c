@@ -84,7 +84,7 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 	(void)exec_list;
 	if (pid == 0)
 	{
-		if (exe->io[0] == -1 || exe->io[1] == -1)
+		if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
 			exit(1);
 		exec_child(current, env, next_pipe_entry, pipe_fd);
 	}
@@ -113,10 +113,8 @@ int exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 	int			err;
 
 	exe = (t_exec_node *)(*exec_lst)->content;
-	if (exe->io[0] == -1 || exe->io[1] == -1)
-	{
+	if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
 		return (1);
-	}
 	saved = dup(STDOUT_FILENO);
 	if (exe->filename[1])
 	{

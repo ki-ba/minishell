@@ -33,6 +33,7 @@ t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 size_t			ft_strlen_c(char str[], char c);
 void			env_add_back(t_env_lst **head, t_env_lst *new);
 void			print_env(t_env_lst *env_lst);
+void			update_qm(t_env_lst *env, int status, int conditionnal);
 
 /* debug.c */
 void			display_token(t_token *token);
@@ -99,7 +100,7 @@ size_t			get_env_size(t_env_lst *env_lst);
 /* parsing.c */
 
 t_exec_node		*create_exec_node(void);
-t_list			*parse_tokens(t_list *tokens, t_env_lst *env);
+t_list			*parse_tokens(t_list *tokens);
 void			print_exec(t_list	*exec_lst);
 
 /* parsing_utils.c */
