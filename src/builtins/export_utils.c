@@ -18,10 +18,6 @@ t_env_lst	*dup_env(t_env_lst *env)
 		if (tmp->name && tmp->value)
 		{
 			cpy = new_env_entry(tmp->name, tmp->value);
-			// cpy = malloc(sizeof(t_env_lst));
-			// cpy->name = ft_strdup(tmp->name);
-			// cpy->value = ft_strdup(tmp->value);
-			// cpy->next = NULL;
 			env_add_back(&dup, cpy);
 		}
 		tmp = tmp->next;

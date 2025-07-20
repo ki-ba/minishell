@@ -38,7 +38,7 @@ static int	print_export(t_env_lst *env)
 	t_env_lst	*tmp;
 	t_env_lst	*head;
 
-	tmp = dup_env(env);
+	tmp = dup_env(env); //TODO: test leak if null
 	if (!tmp)
 		return (ERR_ALLOC);
 	sort_env_var(tmp);
@@ -47,15 +47,10 @@ static int	print_export(t_env_lst *env)
 	{
 		if (check_name_validity(tmp->name) == SUCCESS)
 		{
-			if (printf("%s", tmp->name) == -1)
-				return (ERR_PRINT);
+			printf("%s", tmp->name);
 			if (tmp->value)
-			{
-				if (printf("=\"%s\"", tmp->value) == -1)
-					return (ERR_PRINT);
-			}
-			if (printf("\n") == -1)
-				return (ERR_PRINT);
+				printf("=\"%s\"", tmp->value);
+			printf("\n");
 		}
 		tmp = tmp->next;
 	}
@@ -63,19 +58,10 @@ static int	print_export(t_env_lst *env)
 	return (SUCCESS);
 }
 
-//TODO: check name doesn't alreayd exist
-// if name exist and val null => replace that val with new val
-// if name exist and val too => check new val not null and if so replace
-static int	create_exp_node(char *cmd, t_env_lst **env)
+static int	init_exp_node(char *cmd, t_env_lst *new)
 {
 	int			i;
-	t_env_lst	*new;
 
-	if (check_name_validity(cmd) == ERR_ARGS)
-		return (ERR_ARGS);
-	new = malloc(sizeof(t_env_lst));
-	if (!new)
-		return (ERR_ALLOC);
 	i = find_char(cmd, '=');
 	if (i == -1)
 		new->name = ft_strdup(cmd);
@@ -85,12 +71,6 @@ static int	create_exp_node(char *cmd, t_env_lst **env)
 	{
 		free(new);
 		return (ERR_ALLOC);
-	}
-	if (search_env_var(*env, new->name) != NULL)
-	{
-		free(new->name);
-		free(new);
-		return (update_exp_node(cmd, env));
 	}
 	if (i >= 0)
 	{
@@ -104,6 +84,26 @@ static int	create_exp_node(char *cmd, t_env_lst **env)
 	}
 	else if (i == -1)
 		new->value = NULL;
+	return (SUCCESS);
+}
+
+static int	create_exp_node(char *cmd, t_env_lst **env)
+{
+	t_env_lst	*new;
+
+	if (check_name_validity(cmd) == ERR_ARGS)
+		return (ERR_ARGS);
+	new = malloc(sizeof(t_env_lst *));
+	if (!new)
+		return (ERR_ALLOC);
+	init_exp_node(cmd, new);
+	if (search_env_var(*env, new->name) != NULL)
+	{
+		free(new->name);
+		free(new->value);
+		free(new);
+		return (update_exp_node(cmd, env));
+	}
 	new->next = NULL;
 	env_add_back(env, new);
 	return (SUCCESS);
@@ -136,33 +136,3 @@ static int	update_exp_node(char *cmd, t_env_lst **env)
 		free(name);
 	return (SUCCESS);
 }
-
-/** mlouis@z3r11p3:~$ export test=7 =hello hello="yoyoyoyo"
- * bash: export: `=hello': not a valid identifier
- * mlouis@z3r11p3:~$ export | grep hello
- * declare -x hello="yoyoyoyo"
- */
-
-/**
- * $> export *test=test hello=opittr
- * bash: export: `*test=test': not a valid identifier
- * 
- * mlouis@z3r11p3:~$ export | grep hello
- * declare -x hello="opittr"
- */
-
-/**
- * mlouis@z3r11p3:~$ export tes.t=test
- * bash: export: `tes.t=test': not a valid identifier
-mlouis@z3r11p3:~$ export tes/t=test
-bash: export: `tes/t=test': not a valid identifier
-mlouis@z3r11p3:~$ export 9test=test
-bash: export: `9test=test': not a valid identifier
-mlouis@z3r11p3:~$ export t9test=test
- */
-
-/**
- * export tes=t=test
- * mlouis@z3r11p3:~$ export
- * declare -x tes="t=test"
- */
