@@ -6,19 +6,14 @@
 
 int	try_exec(char **cmd, t_env_lst *env)
 {
-	char	*path;
-	char	**env_arr;
-	int		err;
-	struct stat info;
-
-   
+	char		*path;
+	char		**env_arr;
+	int			err;
+	struct stat	info;
 
 	err = 127;
 	if (is_builtin(cmd))
-	{
 		err = call_cmd(cmd, env);
-		destroy_env_lst(env);
-	}
 	else
 	{
 		env_arr = envlist_to_arr(env);
@@ -26,20 +21,19 @@ int	try_exec(char **cmd, t_env_lst *env)
 			path = ft_strdup(cmd[0]);
 		else
 			path = find_path(cmd[0], env);
-		if (!path)
-			return (ERR_ALLOC);
-		if (access(path, F_OK) == 0)
+		if (path && access(path, F_OK) == 0)
 		{
 			stat(path, &info);
 			if (access(path, X_OK) != 0 || S_ISDIR(info.st_mode))
 				err = 126;
 		}
-		execve(path, cmd, env_arr);
+		if (path)
+			execve(path, cmd, env_arr);
 		ft_free_arr(env_arr);
 		free(path);
 		ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
-		destroy_env_lst(env);
 	}
+	destroy_env_lst(env);
 	ft_free_arr(cmd);
 	exit(err);
 }
@@ -90,7 +84,7 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 	(void)exec_list;
 	if (pid == 0)
 	{
-		if (exe->io[0] == -1 || exe->io[1] == -1)
+		if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
 			exit(1);
 		exec_child(current, env, next_pipe_entry, pipe_fd);
 	}
@@ -104,7 +98,6 @@ pid_t	dup_and_fork(t_list **exec_list, t_list **current, t_env_lst *env, int *ne
 			close(exe->io[0]);
 		if (exe->io[1] != STDOUT_FILENO)
 			close(exe->io[1]);
-		// destroy_env_lst(env);
 	}
 	if (!(*current)->next)
 		close(pipe_fd[0]);
@@ -119,10 +112,8 @@ int exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 	int			err;
 
 	exe = (t_exec_node *)(*exec_lst)->content;
-	if (exe->io[0] == -1 || exe->io[1] == -1)
-	{
+	if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
 		return (1);
-	}
 	saved = dup(STDOUT_FILENO);
 	if (exe->filename[1])
 	{

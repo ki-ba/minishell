@@ -28,11 +28,12 @@
 #  define HERE_DOC_LEN 8
 # endif
 
-int			exec_unique_cmd(t_list **exec_lst, t_env_lst *env);
+int				exec_unique_cmd(t_list **exec_lst, t_env_lst *env);
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 size_t			ft_strlen_c(char str[], char c);
 void			env_add_back(t_env_lst **head, t_env_lst *new);
 void			print_env(t_env_lst *env_lst);
+void			update_qm(t_env_lst *env, int status, int conditionnal);
 
 /* debug.c */
 void			display_token(t_token *token);
@@ -41,7 +42,7 @@ char			*summarize_lexing(t_list *tokens);
 /* history.c */
 
 void			ft_add_history(int hist_fd, char entry[], char *last_cmd);
-int				retrieve_history(char *last_cmd[]);
+int				retrieve_history(t_env_lst *env, char *last_cmd[]);
 
 /* lexing.c */
 
@@ -109,14 +110,14 @@ char			**add_to_array(char **arr, char *str);
 int				read_input(char *del);
 
 //TODO: 
-int	check_meta_validity(char *str);
+int				check_meta_validity(char *str);
 
 /* signals.c */
-void	init_signals(void);
-void	update_signals(int redir);
+void			init_signals(void);
+void			update_signals(int redir);
 
 /* expand.c*/
-t_bool	is_inquote(char *str, size_t pos);
+t_bool			is_inquote(char *str, size_t pos);
 
 extern int	g_signal; // sig_atomic_t
 

@@ -12,6 +12,7 @@ t_exec_node	*create_exec_node(void)
 	new->filename[1] = NULL;
 	new->io[0] = STDIN_FILENO;
 	new->io[1] = STDOUT_FILENO;
+	new->status = 0;
 	new->file_exist = FALSE;
 	return (new);
 }

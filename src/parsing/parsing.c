@@ -1,3 +1,4 @@
+#include "builtins.h"
 #include "data_structures.h"
 #include "error.h"
 #include "libft.h"
@@ -45,6 +46,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 {
 	int	fd;
 
+	fd = 0;
 	if (redir == 0 && node->io[redir] > MAX_FD)
 		node->io[0] = read_input(token->token);
 	else
@@ -61,12 +63,10 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 		if (fd < 0)
 		{
 			perror("open");
-			// node->io[redir] = open("/dev/null", O_RDWR);
-			// return (ERR_FAIL);
 		}
 		node->io[redir] = fd;
 	}
-	return (SUCCESS);
+	return (fd < 0);
 }
 
 /** handles current TOKEN_CMD.
@@ -108,6 +108,34 @@ static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
 	return (SUCCESS);
 }
 
+void	update_qm(t_env_lst *env, int status, int conditionnal)
+{
+	t_env_lst	*qm;
+
+	qm = search_env_var(env, "?");
+	if (conditionnal && (status == 0 || ft_atoi(qm->value) > 0))
+		return ;
+	free(qm->value);
+	qm->value = ft_itoa(status);
+}
+
+void	advance_tokens(t_list **tokens, int status)
+{
+	t_token	*token;
+
+	if (status)
+	{
+		while (*tokens && token && token->type != TOKEN_PIPE)
+		{
+			*tokens = (*tokens)->next;
+			if (*tokens)
+				token = (t_token *)(*tokens)->content;
+		}
+	}
+	else
+		*tokens = (*tokens)->next;
+}
+
 /**
 * Parse the token list and create a process list with correct infiles,
 * outfiles, argv and environments.
@@ -123,7 +151,7 @@ t_list	*parse_tokens(t_list *tokens)
 	status = 0;
 	node = NULL;
 	exec_lst = NULL;
-	while (tokens && !status)
+	while (tokens)
 	{
 		token = (t_token *)(tokens)->content;
 		if (!node || token->type == TOKEN_PIPE)
@@ -134,7 +162,9 @@ t_list	*parse_tokens(t_list *tokens)
 			status = handle_redir(node, token, &redir_type);
 		else if (token->type == TOKEN_FILE)
 			status = handle_file(node, token, redir_type, &exec_lst);
-		tokens = tokens->next;
+		if (status != 0 || node->status == 0)
+			node->status = status;
+		advance_tokens(&tokens, status);
 	}
 	return (exec_lst);
 }

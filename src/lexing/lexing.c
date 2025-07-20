@@ -63,7 +63,6 @@ int	tokenize(t_list **tokens, char *line)
 		if (!cur_token || !new)
 		{
 			ft_lstclear(tokens, deltoken);
-			// deltoken(cur_token);
 			return (ERR_ALLOC);
 		}
 		ft_lstadd_back(tokens, new);

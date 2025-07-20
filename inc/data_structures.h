@@ -56,6 +56,7 @@ typedef struct s_exec_node
 	int					io[2]; // both can be either 0, 1, 2, or 3 (for file)
 	int					oflags[2];
 	int					file_exist; //check if file existed before > or >>
+	int					status;
 }						t_exec_node;
 
 /* storing env as a linked list is simplifies the implementation

@@ -1,11 +1,11 @@
+#include "builtins.h"
 #include "data_structures.h"
 #include "minishell.h"
-#include "exec.h"
 
 void	print_error_msg(int status)
 {
-	if (status == ERR_ARGS)
-		ft_putstr_fd("ERROR : incorrect arguments\n", 2);
+	// if (status == ERR_ARGS)
+	// 	ft_putstr_fd("ERROR : incorrect arguments\n", 2);
 	if (status == ERR_PARSING)
 		ft_putstr_fd("ERROR : parsing failed\n", 2);
 	if (status == ERR_ALLOC)
@@ -40,17 +40,77 @@ int	wait_processes(pid_t pid, int err)
 	return (err);
 }
 
-int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
+int	check_parsing(char str[])
 {
-	t_list	*tokens;
-	char	*expanded;
+	if (!str || !ft_strncmp(str, "\0", 1) || check_quotes(str))
+	{
+		free (str);
+		return (1);
+	}
+	return (0);
+}
+
+char	*trim_cmd(char cmd[])
+{
 	char	*trim;
-	t_list	*exec_lst;
-	pid_t	pid;
-	int		err;
+
+	trim = ft_strtrim(cmd, " \t\n\r\v");
+	if (trim[0] == '|' || trim[ft_strlen(trim) - 1] == '|')
+		return (NULL);
+	if (trim[ft_strlen(trim) - 1] == '<' || trim[ft_strlen(trim) - 1] == '>')
+		return (NULL);
+	free(cmd);
+	return (trim);
+}
+
+char	*format_cmd(t_env_lst *env, char cmd[])
+{
+	char	*expanded;
+
+	if (check_meta_validity(cmd))
+		return (NULL);
+	expanded = expand_line(env, cmd);
+	expanded = trim_cmd(expanded);
+	// free(cmd);
+	if (check_parsing(expanded))
+		return (NULL);
+	return (expanded);
+}
+
+int	process_tokens(t_list *tokens)
+{
+	t_token	*token;
+
+	token = (t_token *) tokens->content;
+	if (!tokens->next && (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
+		return (ERR_PARSING);
+	ft_lstiter(tokens, remove_quotes);
+	return (0);
+}
+
+int	start_execution(t_list *exec, t_env_lst *env, t_bool *is_exit)
+{
+	t_exec_node	*node;
 	t_env_lst	*qm;
 
-	err = 0;
+	qm = search_env_var(env, "?");
+	node = (t_exec_node *) exec->content;
+	if (!exec->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
+		*is_exit = 1;
+	if (!exec->next && is_builtin(node->cmd))
+		update_qm(env, exec_unique_cmd(&exec, env), 1);
+	else
+		update_qm(env, wait_processes(exec_pipeline(&exec, env), 0), 0);
+	return (ft_atoi(qm->value));
+}
+
+int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
+{
+	t_list		*tokens;
+	t_list		*exec_lst;
+	int			err;
+	t_env_lst	*qm;
+
 	qm = search_env_var(env_lst, "?");
 	if (g_signal == 2)
 	{
@@ -58,110 +118,48 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 		g_signal = 0;
 	}
 	tokens = NULL;
-	if (check_meta_validity(cmd))
-		return (ERR_PARSING);
-	//? new trim
-	trim = ft_strtrim(cmd, " \t\n\r\v");
-	if (trim[0] == '|' || 
-		trim[ft_strlen(trim) - 1] == '|' || trim[ft_strlen(trim) - 1] == '<'  || trim[ft_strlen(trim) - 1] == '>')
-	{
-		free(trim);
-		// free(cmd);
-		return (ERR_PARSING);
-	}
-	//? endtrim
-	expanded = expand_line(env_lst, trim);
-	free(trim);
-	if (!expanded)
+	cmd = format_cmd(env_lst, cmd);
+	if (tokenize(&tokens, cmd) != 0)
 		return (ERR_ALLOC);
-	// to_trim = expanded;
-	// expanded = ft_strtrim(to_trim, " \t\n\r\v");
-	// free(to_trim);
-	// printf("exp= [%s] len-1[%c]\n", expanded, expanded[ft_strlen(expanded) - 1]);
-	// if (expanded[0] == '|' || 
-	// 	expanded[ft_strlen(expanded) - 1] == '|' || expanded[ft_strlen(expanded) - 1] == '<'  || expanded[ft_strlen(expanded) - 1] == '>')
-	// {
-	// 	free(expanded);
-	// 	return (ERR_PARSING);
-	// }
-	if (!ft_strncmp(expanded, "\0", 1))
-	{
-		free (expanded);
-		return (ft_atoi(qm->value));
-	}
-	if (check_quotes(expanded))
-	{
-		free(expanded);
+	free(cmd);
+	if (process_tokens(tokens))
 		return (ERR_PARSING);
-	}
-	if (tokenize(&tokens, expanded) != 0)
-	{
-		free(expanded);
-		return (ERR_ALLOC);
-	}
-	free(expanded);
-	t_token	*token = (t_token*) tokens->content;
-	if (!tokens->next && (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
-		return (ERR_PARSING);
-	ft_lstiter(tokens, remove_quotes);
-	if (DEBUG)
-		print_token_list(tokens);
-	if (!tokens)
-		return (ERR_ALLOC);
 	exec_lst = parse_tokens(tokens);
 	ft_lstclear(&tokens, deltoken);
 	if (!exec_lst)
 		return (ERR_ALLOC);
-	if (DEBUG)
-		print_exec(exec_lst);
-	//exit
-	t_exec_node	*node;
-	node = (t_exec_node *) exec_lst->content;
-	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5) && !node->cmd[2])
-		*is_exit = 1;
-	if (!exec_lst->next && is_builtin(node->cmd))
-		err = exec_unique_cmd(&exec_lst, env_lst);
-	else // if there is more than 1 command
-	{
-		pid = exec_pipeline(&exec_lst, env_lst);
-		err = wait_processes(pid, err);
-	}
-	//TODO: another function for stuff bellow to get the right err
-	// 		(either parsing/alloc from above, or from the exec after)
+	err = start_execution(exec_lst, env_lst, is_exit);
 	ft_lstclear(&exec_lst, del_exec_node);
 	return (err);
 }
 
-#include <errno.h>
+// start_interpreter(t_env_lst *env)
+// {
+//
+// }
 int	readline_loop(t_env_lst *env_lst)
 {
-	char	*cmd;
-	int		hist_fd;
-	char	*last_cmd;
-	int		error;
-	char	*hist_fd_str;
+	char		*cmd;
+	int			hist_fd;
+	char		*last_cmd;
+	int			error;
+	t_bool		is_exit;
 	t_env_lst	*qm_var;
 
 	error = 0;
 	last_cmd = NULL;
-	cmd = NULL;
-	hist_fd = retrieve_history(&last_cmd);
-	hist_fd_str = ft_itoa(hist_fd);
-	add_to_env(env_lst, HIST_FILE, hist_fd_str, 1);
-	if (DEBUG)
-		print_env(env_lst);
-	free(hist_fd_str);
+	hist_fd = retrieve_history(env_lst, &last_cmd);
 	qm_var = search_env_var(env_lst, "?");
-	t_bool is_exit;
 	is_exit = FALSE;
-	while (error != ERR_ALLOC && !is_exit) // if error occured, quit program
+	while (error != ERR_ALLOC && !is_exit)
 	{
 		g_signal = 0;
 		init_signals();
 		if (error > -1)
 		{
-			free(qm_var->value);
-			qm_var->value = ft_itoa(error);
+			// free(qm_var->value);
+			// qm_var->value = ft_itoa(error);
+			update_qm(env_lst, error, 0);
 		}
 		else
 			error = ft_atoi(qm_var->value);
@@ -178,14 +176,12 @@ int	readline_loop(t_env_lst *env_lst)
 		{
 			if (g_signal == 2)
 				error = 130;
-			// printf("exit\n");
 			break ;
 		}
+		update_qm(env_lst, error, 0);
 	}
 	if (is_exit)
 		error = ft_atoi(qm_var->value);
-	if (last_cmd)
-		free(last_cmd);
 	close(hist_fd);
 	return (error);
 }
