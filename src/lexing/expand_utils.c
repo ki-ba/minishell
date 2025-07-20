@@ -19,17 +19,16 @@ size_t	varnamelen(char str[])
 	if (str[0] != '$')
 		return (0);
 	i = 1;
-	// if (str[i] == '?' && !str[i + 1])
-	// {
-	// 	printf("qwqw\n");
-	// 	++i;
-	// }
+	if (str[i] == '?')
+	{
+		++i;
+		return (i);
+	}
 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
 		++i;
 	return (i);
 }
 
-// TODO: space before after spe-K
 size_t	get_part_len(char str[])
 {
 	size_t	i;
@@ -41,13 +40,13 @@ size_t	get_part_len(char str[])
 	else
 		i = ft_strlen_c(str, '$');
 	tmp = ft_strlen_c(str, '|');
-	if (i > tmp && tmp > 0)
+	if (!is_inquote(str, tmp) && i > tmp && tmp > 0)
 		i = tmp;
 	tmp = ft_strlen_c(str, '<');
-	if (i > tmp && tmp > 0)
+	if (!is_inquote(str, tmp) && i > tmp && tmp > 0)
 		i = tmp;
 	tmp = ft_strlen_c(str, '>');
-	if (i > tmp && tmp > 0)
+	if (!is_inquote(str, tmp) && i > tmp && tmp > 0)
 		i = tmp;
 	return (i);
 }
@@ -110,7 +109,8 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	}
 	else if (i > 0 && (str[i - 1] == '|' || str[i - 1] == '<' || str[i - 1] == '>'))
 	{
-		--i;
+		if (!is_inquote(str, i))
+			--i;
 		varname = ft_substr(str, i + 1, len);
 		meta = ft_calloc(3, sizeof (char));
 		meta[0] = str[i];

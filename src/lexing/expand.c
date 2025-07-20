@@ -14,16 +14,16 @@ char	*expand_line(t_env_lst *env, char str[])
 		return (NULL);
 	while (str[i])
 	{
-		if (str[i] == '<' || str[i] == '>')
-			++i;
-		if (str[i] == '<' || str[i] == '>')
-			++i;
+		// if (str[i] == '<' || str[i] == '>')
+		// 	++i;
+		// if (str[i] == '<' || str[i] == '>')
+		// 	++i;
 		part_len = get_part_len(&str[i]);
 		next_chunk = set_chunk_val(env, str, i, part_len);
 		i += part_len;
-		if ((str[i] == '?' && i > 0 && str[i - 1] == '$') || str[i] == '|' || str[i] == '<' || str[i] == '>')
+		if (!is_inquote(str, i) && (str[i] == '|' || str[i] == '<' || str[i] == '>'))
 			++i;
-		if (str[i] == '<' || str[i] == '>')
+		if (!is_inquote(str, i) && (str[i] == '<' || str[i] == '>'))
 			++i;
 		join_in_place(&expanded, next_chunk);
 		if (!expanded)

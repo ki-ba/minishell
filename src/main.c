@@ -54,7 +54,7 @@ char	*trim_cmd(char cmd[])
 {
 	char	*trim;
 
-	trim = ft_strtrim(cmd, " \t\n\r\v");
+	trim = ft_strtrim(cmd, " \t\n\r\v\f");
 	if (trim[0] == '|' || trim[ft_strlen(trim) - 1] == '|')
 		return (NULL);
 	if (trim[ft_strlen(trim) - 1] == '<' || trim[ft_strlen(trim) - 1] == '>')
@@ -144,12 +144,12 @@ int	readline_loop(t_env_lst *env_lst)
 	char		*last_cmd;
 	int			error;
 	t_bool		is_exit;
-	t_env_lst	*qm_var;
+	// t_env_lst	*qm_var;
 
 	error = 0;
 	last_cmd = NULL;
 	hist_fd = retrieve_history(env_lst, &last_cmd);
-	qm_var = search_env_var(env_lst, "?");
+	// qm_var = search_env_var(env_lst, "?");
 	is_exit = FALSE;
 	while (error != ERR_ALLOC && !is_exit)
 	{
@@ -162,8 +162,10 @@ int	readline_loop(t_env_lst *env_lst)
 			update_qm(env_lst, error, 0);
 		}
 		else
-			error = ft_atoi(qm_var->value);
+			error = ft_atoi(get_env_val(env_lst, "?", 0)); // ft_atoi(qm_var->value);
 		cmd = readline("zinzinshell$ ");
+		if (cmd)
+			cmd = trim_cmd(cmd);
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
@@ -181,7 +183,7 @@ int	readline_loop(t_env_lst *env_lst)
 		update_qm(env_lst, error, 0);
 	}
 	if (is_exit)
-		error = ft_atoi(qm_var->value);
+		error = ft_atoi(get_env_val(env_lst, "?", 0)); //ft_atoi(qm_var->value);
 	close(hist_fd);
 	return (error);
 }
