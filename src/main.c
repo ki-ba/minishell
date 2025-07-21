@@ -1,5 +1,7 @@
 #include "builtins.h"
 #include "data_structures.h"
+#include "error.h"
+#include "libft.h"
 #include "minishell.h"
 
 void	print_error_msg(int status)
@@ -95,6 +97,11 @@ int	start_execution(t_list *exec, t_env_lst *env, t_bool *is_exit)
 
 	qm = search_env_var(env, "?");
 	node = (t_exec_node *) exec->content;
+	if (ft_strlen(node->cmd[0]) == 0)
+	{
+		update_qm(env, 0, 0);
+		return (0);
+	}
 	if (!exec->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		*is_exit = 1;
 	if (!exec->next && is_builtin(node->cmd))
@@ -133,10 +140,6 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	return (err);
 }
 
-// start_interpreter(t_env_lst *env)
-// {
-//
-// }
 int	readline_loop(t_env_lst *env_lst)
 {
 	char		*cmd;
@@ -144,25 +147,19 @@ int	readline_loop(t_env_lst *env_lst)
 	char		*last_cmd;
 	int			error;
 	t_bool		is_exit;
-	// t_env_lst	*qm_var;
 
 	error = 0;
 	last_cmd = NULL;
 	hist_fd = retrieve_history(env_lst, &last_cmd);
-	// qm_var = search_env_var(env_lst, "?");
 	is_exit = FALSE;
 	while (error != ERR_ALLOC && !is_exit)
 	{
 		g_signal = 0;
 		init_signals();
 		if (error > -1)
-		{
-			// free(qm_var->value);
-			// qm_var->value = ft_itoa(error);
 			update_qm(env_lst, error, 0);
-		}
 		else
-			error = ft_atoi(get_env_val(env_lst, "?", 0)); // ft_atoi(qm_var->value);
+			error = ft_atoi(get_env_val(env_lst, "?", 0));
 		cmd = readline("zinzinshell$ ");
 		if (cmd)
 			cmd = trim_cmd(cmd);
@@ -183,16 +180,23 @@ int	readline_loop(t_env_lst *env_lst)
 		update_qm(env_lst, error, 0);
 	}
 	if (is_exit)
-		error = ft_atoi(get_env_val(env_lst, "?", 0)); //ft_atoi(qm_var->value);
+		error = ft_atoi(get_env_val(env_lst, "?", 0));
 	close(hist_fd);
 	return (error);
 }
 
+// TODO uncomment isatty part before submitting project
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_env_lst	*env_lst;
 	int			exit_status;
 
+	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
+	// {
+	// 	if (!isatty(STDIN_FILENO))
+	// 		ft_putstr_fd("error : funny business detected\n", 2);
+	// 	exit(1);
+	// }
 	exit_status = 1;
 	(void)argc;
 	(void)argv;

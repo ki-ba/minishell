@@ -7,9 +7,9 @@ enum e_token_type
 	TOKEN_STR,
 	TOKEN_REDIRECT,
 	TOKEN_FILE
-}
+};
 
-typedef	struct s_token
+typedef struct s_token
 {
 	int		type;
 	char	*value;

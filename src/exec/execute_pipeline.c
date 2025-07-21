@@ -4,12 +4,39 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+static char	*path_to_cmd(char *cmd[], t_env_lst *env)
+{
+	char	*path;
+
+	if (ft_strnstr(cmd[0], "/", ft_strlen(cmd[0])))
+		path = ft_strdup(cmd[0]);
+	else
+		path = find_path(cmd[0], env);
+	return (path);
+}
+
+int	define_error(char path[], t_env_lst *env)
+{
+	int			err;
+	struct stat	fi;
+
+	(void)env;
+	stat(path, &fi);
+	if (access(path, F_OK))
+		err = 127;
+	else if (S_ISDIR(fi.st_mode))
+		err = 126;
+	else if (access(path, X_OK))
+		err = 126;
+	else
+		err = 0;
+	return (err);
+}
 int	try_exec(char **cmd, t_env_lst *env)
 {
 	char		*path;
 	char		**env_arr;
 	int			err;
-	struct stat	info;
 
 	err = 127;
 	if (is_builtin(cmd))
@@ -17,17 +44,9 @@ int	try_exec(char **cmd, t_env_lst *env)
 	else
 	{
 		env_arr = envlist_to_arr(env);
-		if (ft_strnstr(cmd[0], "/", ft_strlen(cmd[0])))
-			path = ft_strdup(cmd[0]);
-		else
-			path = find_path(cmd[0], env);
-		if (path && access(path, F_OK) == 0)
-		{
-			stat(path, &info);
-			if (access(path, X_OK) != 0 || S_ISDIR(info.st_mode))
-				err = 126;
-		}
-		if (path)
+		path = path_to_cmd(cmd, env);
+		err = define_error(path, env);
+		if (path && env_arr)
 			execve(path, cmd, env_arr);
 		ft_free_arr(env_arr);
 		free(path);
