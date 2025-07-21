@@ -1,5 +1,3 @@
-#include "data_structures.h"
-#include "libft.h"
 #include "minishell.h"
 
 t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])

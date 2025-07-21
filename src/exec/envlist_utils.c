@@ -1,3 +1,4 @@
+#include "libft.h"
 #include "minishell.h"
 
 size_t	envlist_len(t_env_lst *env)
@@ -27,6 +28,12 @@ char	**envlist_to_arr(t_env_lst *env_lst)
 	while (tmp->next)
 	{
 		env[i] = ft_concat(3, tmp->name, "=", tmp->value);
+		if (!env[i])
+		{
+			ft_putstr_fd("error converting env to array", 2);
+			ft_free_arr(env);
+			break ;
+		}
 		tmp = tmp->next;
 		i++;
 	}

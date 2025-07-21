@@ -1,5 +1,7 @@
 #include "builtins.h"
 #include "data_structures.h"
+#include "error.h"
+#include "libft.h"
 #include "minishell.h"
 
 void	print_error_msg(int status)
@@ -103,6 +105,11 @@ int	start_execution(t_list *exec, t_env_lst *env, t_bool *is_exit)
 
 	qm = search_env_var(env, "?");
 	node = (t_exec_node *) exec->content;
+	if (ft_strlen(node->cmd[0]) == 0)
+	{
+		update_qm(env, 0, 0);
+		return (0);
+	}
 	if (!exec->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		*is_exit = 1;
 	if (!exec->next && is_builtin(node->cmd))
@@ -141,10 +148,6 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	return (err);
 }
 
-// start_interpreter(t_env_lst *env)
-// {
-//
-// }
 int	readline_loop(t_env_lst *env_lst)
 {
 	char		*cmd;
@@ -199,11 +202,18 @@ int	readline_loop(t_env_lst *env_lst)
 	return (error);
 }
 
+// TODO uncomment isatty part before submitting project
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_env_lst	*env_lst;
 	int			exit_status;
 
+	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
+	// {
+	// 	if (!isatty(STDIN_FILENO))
+	// 		ft_putstr_fd("error : funny business detected\n", 2);
+	// 	exit(1);
+	// }
 	exit_status = 1;
 	(void)argc;
 	(void)argv;

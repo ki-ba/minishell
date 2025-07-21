@@ -1,6 +1,4 @@
-#include "libft.h"
 #include "minishell.h"
-#include <ctype.h>
 
 void	join_in_place(char **s1, char *s2)
 {
@@ -74,6 +72,10 @@ t_bool	must_expand(char str[], size_t pos)
 
 // }
 
+static int	is_metachar(char c)
+{
+	return (c == '<' || c == '>' || c == '|');
+}
 // TODO: space before after spe-K
 char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 {
@@ -82,7 +84,7 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 	char	*meta;
 	char	*tmp;
 
-	if (i == 0 && (str[i] == '|' || str[i] == '<' || str[i] == '>'))
+	if (i == 0 && is_metachar(str[i]))
 	{
 		++i;
 		--len;
@@ -102,12 +104,9 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 		}
 		else
 			next_chunk = ft_strdup("$");
-		// char *tmp2 = get_env_val(env, varname, 0);
-		// next_chunk = ft_concat(3, "\"", ft_strdup(get_env_val(env, varname, 0)), "\"");
-		// free (tmp);
 		free(varname);
 	}
-	else if (must_expand(str, i) && i > 0 && (str[i - 1] == '|' || str[i - 1] == '<' || str[i - 1] == '>'))
+	else if (i > 0 && is_metachar(str[i - 1]))
 	{
 		if (!is_inquote(str, i))
 			--i;
