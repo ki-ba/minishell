@@ -4,7 +4,7 @@ void	ft_add_history(int hist_fd, char entry[], char *last_cmd)
 {
 	if (last_cmd)
 	{
-		if (!entry[0] || !ft_strncmp(entry, last_cmd, ft_strlen(entry) + 1))
+		if (!entry || !entry[0] || !ft_strncmp(entry, last_cmd, ft_strlen(entry) + 1))
 		{
 			free(last_cmd);
 			last_cmd = NULL;

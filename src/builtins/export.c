@@ -28,7 +28,7 @@ int	ft_export(char **cmd, t_env_lst *env)
 		}
 		else if (err == ERR_ALLOC)
 			return (err);
-		i++;
+		++i;
 	}
 	return (c_err);
 }
@@ -60,20 +60,17 @@ static int	print_export(t_env_lst *env)
 
 static int	init_exp_node(char *cmd, t_env_lst *new)
 {
-	int			i;
+	int	i;
 
 	i = find_char(cmd, '=');
 	if (i == -1)
+	{
 		new->name = ft_strdup(cmd);
-	else
-		new->name = ft_substr(cmd, 0, i);
-	if (!new->name)
-	{
-		free(new);
-		return (ERR_ALLOC);
+		new->value = NULL;
 	}
-	if (i >= 0)
+	else
 	{
+		new->name = ft_substr(cmd, 0, i);
 		new->value = ft_substr(cmd, i + 1, ft_strlen(cmd));
 		if (!new->value)
 		{
@@ -82,8 +79,13 @@ static int	init_exp_node(char *cmd, t_env_lst *new)
 			return (ERR_ALLOC);
 		}
 	}
-	else if (i == -1)
-		new->value = NULL;
+	if (!new->name)
+	{
+		if (new->value)
+			free(new->value);
+		free(new);
+		return (ERR_ALLOC);
+	}		
 	return (SUCCESS);
 }
 
@@ -93,7 +95,7 @@ static int	create_exp_node(char *cmd, t_env_lst **env)
 
 	if (check_name_validity(cmd) == ERR_ARGS)
 		return (ERR_ARGS);
-	new = malloc(sizeof(t_env_lst *));
+	new = malloc(sizeof(t_env_lst));
 	if (!new)
 		return (ERR_ALLOC);
 	init_exp_node(cmd, new);

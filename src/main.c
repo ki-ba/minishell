@@ -50,16 +50,24 @@ int	check_parsing(char str[])
 	return (0);
 }
 
-char	*trim_cmd(char cmd[])
+char	*trim_cmd(char *cmd)
 {
 	char	*trim;
 
 	trim = ft_strtrim(cmd, " \t\n\r\v\f");
-	if (trim[0] == '|' || trim[ft_strlen(trim) - 1] == '|')
-		return (NULL);
-	if (trim[ft_strlen(trim) - 1] == '<' || trim[ft_strlen(trim) - 1] == '>')
-		return (NULL);
 	free(cmd);
+	if (!trim)
+		return (NULL);
+	if (trim[0] && (trim[0] == '|' || trim[ft_strlen(trim) - 1] == '|'))
+	{
+		free(trim);
+		return (NULL);
+	}
+	if (trim[0] && (trim[ft_strlen(trim) - 1] == '<' || trim[ft_strlen(trim) - 1] == '>'))
+	{
+		free(trim);
+		return (NULL);
+	}
 	return (trim);
 }
 
@@ -140,37 +148,37 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 int	readline_loop(t_env_lst *env_lst)
 {
 	char		*cmd;
+	char		*tmp;
 	int			hist_fd;
 	char		*last_cmd;
 	int			error;
 	t_bool		is_exit;
-	// t_env_lst	*qm_var;
 
 	error = 0;
 	last_cmd = NULL;
 	hist_fd = retrieve_history(env_lst, &last_cmd);
-	// qm_var = search_env_var(env_lst, "?");
 	is_exit = FALSE;
 	while (error != ERR_ALLOC && !is_exit)
 	{
 		g_signal = 0;
 		init_signals();
 		if (error > -1)
-		{
-			// free(qm_var->value);
-			// qm_var->value = ft_itoa(error);
 			update_qm(env_lst, error, 0);
-		}
 		else
-			error = ft_atoi(get_env_val(env_lst, "?", 0)); // ft_atoi(qm_var->value);
+			error = ft_atoi(get_env_val(env_lst, "?", 0));
 		cmd = readline("zinzinshell$ ");
-		if (cmd)
-			cmd = trim_cmd(cmd);
+		tmp = NULL;
 		if (cmd && cmd[0])
 		{
 			ft_add_history(hist_fd, cmd, last_cmd);
-			error = interpret_line(cmd, env_lst, &is_exit);
 			last_cmd = cmd;
+			tmp = ft_strtrim(cmd, " \t\n\r\v\f");
+			cmd = ft_strdup(tmp);
+			free(tmp);
+		}
+		if (cmd && cmd[0])
+		{
+			error = interpret_line(cmd, env_lst, &is_exit);
 			if (error == ERR_PARSING)
 				print_error_msg(error);
 		}
@@ -180,11 +188,14 @@ int	readline_loop(t_env_lst *env_lst)
 				error = 130;
 			break ;
 		}
+		free(cmd);
 		update_qm(env_lst, error, 0);
 	}
 	if (is_exit)
-		error = ft_atoi(get_env_val(env_lst, "?", 0)); //ft_atoi(qm_var->value);
+		error = ft_atoi(get_env_val(env_lst, "?", 0));
 	close(hist_fd);
+	if (last_cmd)
+		free(last_cmd);
 	return (error);
 }
 
