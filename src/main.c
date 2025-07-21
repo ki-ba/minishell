@@ -135,7 +135,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	tokens = NULL;
 	cmd = format_cmd(env_lst, cmd);
 	if (tokenize(&tokens, cmd) != 0)
-		return (ERR_ALLOC);
+		return (tokenize(&tokens, cmd));
 	free(cmd);
 	if (process_tokens(tokens))
 		return (ERR_PARSING);

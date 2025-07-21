@@ -70,5 +70,5 @@ int	tokenize(t_list **tokens, char *line)
 		while (ft_iswhitespace(line[i]))
 			++i;
 	}
-	return (!line);
+	return (!line * 2);
 }

@@ -106,7 +106,7 @@ char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 			next_chunk = ft_strdup("$");
 		free(varname);
 	}
-	else if (i > 0 && is_metachar(str[i - 1]))
+	else if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
 	{
 		if (!is_inquote(str, i))
 			--i;
