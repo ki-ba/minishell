@@ -61,7 +61,10 @@ TOBJ = $(filter-out $(OBJ_DIR)main.o, $(OBJ))
 
 .PHONY = all clean fclean re lib test
 
-all : $(NAME)
+all : libft $(NAME)
+
+libft :
+	$(MAKE) -C $(LIB_DIR)
 
 $(NAME) : $(OBJ) $(LIB_DIR)libft.a
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $@

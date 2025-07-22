@@ -69,6 +69,8 @@ int	call_cmd(char **cmd, t_env_lst *env)
 		err = ft_exit(cmd, env);
 	else if (!ft_strncmp(cmd[0], "env", 4))
 		err = ft_env(cmd, env);
+	if (err > 300 && err != ERR_ALLOC)
+		err -= 300;
 	qm = search_env_var(env, "?");
 	err_c = ft_itoa(err); //check
 	free(qm->value);

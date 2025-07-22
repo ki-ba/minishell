@@ -4,7 +4,7 @@
 enum e_error
 {
 	SUCCESS = 0,
-	ERR_ARGS,
+	ERR_ARGS = 301,
 	ERR_PARSING,
 	ERR_ALLOC,
 	ERR_PRINT,

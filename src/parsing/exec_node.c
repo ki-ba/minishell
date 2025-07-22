@@ -23,12 +23,16 @@ void	del_exec_node(void *node)
 	t_exec_node	*nnode;
 
 	nnode = (t_exec_node *) node;
-	free(nnode->filename[0]);
-	free(nnode->filename[1]);
-	ft_free_arr(nnode->cmd);
-	if (nnode->io[0] != STDIN_FILENO)
+	if (nnode->filename[0])
+		free(nnode->filename[0]);
+	if (nnode->filename[1])
+		free(nnode->filename[1]);
+	if (nnode->cmd)
+		ft_free_arr(nnode->cmd);
+	if (nnode->io[0] != STDIN_FILENO && nnode->io[0] > 0)
 		close(nnode->io[0]);
-	if (nnode->io[1] != STDOUT_FILENO)
+	if (nnode->io[1] != STDOUT_FILENO && nnode->io[1] > 0)
 		close(nnode->io[1]);
-	free(nnode);
+	if (nnode)
+		free(nnode);
 }

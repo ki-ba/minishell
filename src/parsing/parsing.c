@@ -79,8 +79,9 @@ static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 	old_arr = node->cmd;
 	node->cmd = add_to_array(node->cmd, token->token);
 	if (!node->cmd)
-	{
-		ft_free_arr(old_arr);
+	{	
+		if(old_arr)
+			ft_free_arr(old_arr);
 		ft_lstclear(exec_list, del_exec_node);
 		return (ERR_ALLOC);
 	}
@@ -123,6 +124,7 @@ void	advance_tokens(t_list **tokens, int status)
 {
 	t_token	*token;
 
+	token = (t_token *)(*tokens)->content;
 	if (status)
 	{
 		while (*tokens && token && token->type != TOKEN_PIPE)
@@ -166,5 +168,6 @@ t_list	*parse_tokens(t_list *tokens)
 			node->status = status;
 		advance_tokens(&tokens, status);
 	}
+	// ft_lstclear(&tokens, deltoken);
 	return (exec_lst);
 }

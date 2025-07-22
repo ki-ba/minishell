@@ -2,6 +2,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <signal.h>
 
 /**
 * @brief creates a random string starting with tmp_ and creates
@@ -37,7 +38,7 @@ int	ft_max(int a, int b)
 
 int	rl_help(void)
 {
-	if (g_signal == 2)
+	if (g_signal == SIGINT)
 		rl_done = 1;
 	return 0;
 }
@@ -72,7 +73,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 	}
 	free(line);
 }
-#include <signal.h>
+
 int	read_input(char *del)
 {
 	int		fd;
@@ -84,7 +85,8 @@ int	read_input(char *del)
 		return (fd);
 	if (g_signal != 2)
 		fill_input(fd, del, "input> ");
-	close (fd);
+	if (fd > 0)
+		close (fd);
 	if (g_signal != 2)
 		fd = open(filename, O_RDONLY);
 	else

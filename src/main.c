@@ -6,8 +6,8 @@
 
 void	print_error_msg(int status)
 {
-	// if (status == ERR_ARGS)
-	// 	ft_putstr_fd("ERROR : incorrect arguments\n", 2);
+	if (status == ERR_ARGS)
+		ft_putstr_fd("ERROR : incorrect arguments\n", 2);
 	if (status == ERR_PARSING)
 		ft_putstr_fd("ERROR : parsing failed\n", 2);
 	if (status == ERR_ALLOC)
@@ -73,15 +73,15 @@ char	*trim_cmd(char *cmd)
 	return (trim);
 }
 
-char	*format_cmd(t_env_lst *env, char cmd[])
+char	*format_cmd(t_env_lst *env, char *cmd)
 {
 	char	*expanded;
 
 	if (check_meta_validity(cmd))
 		return (NULL);
 	expanded = expand_line(env, cmd);
+	free(cmd);
 	expanded = trim_cmd(expanded);
-	// free(cmd);
 	if (check_parsing(expanded))
 		return (NULL);
 	return (expanded);
@@ -119,7 +119,7 @@ int	start_execution(t_list *exec, t_env_lst *env, t_bool *is_exit)
 	return (ft_atoi(qm->value));
 }
 
-int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
+int	interpret_line(char *cmd, t_env_lst *env_lst, t_bool *is_exit)
 {
 	t_list		*tokens;
 	t_list		*exec_lst;
@@ -147,7 +147,7 @@ int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
 	ft_lstclear(&exec_lst, del_exec_node);
 	return (err);
 }
-
+#include <errno.h>
 int	readline_loop(t_env_lst *env_lst)
 {
 	char		*cmd;
@@ -169,7 +169,10 @@ int	readline_loop(t_env_lst *env_lst)
 			update_qm(env_lst, error, 0);
 		else
 			error = ft_atoi(get_env_val(env_lst, "?", 0));
+		errno = 0;
 		cmd = readline("zinzinshell$ ");
+		if (errno != 0)
+			;
 		tmp = NULL;
 		if (cmd && cmd[0])
 		{
@@ -182,8 +185,11 @@ int	readline_loop(t_env_lst *env_lst)
 		if (cmd && cmd[0])
 		{
 			error = interpret_line(cmd, env_lst, &is_exit);
-			if (error == ERR_PARSING)
+			if (error > 300)
+			{
 				print_error_msg(error);
+				error -= 300;
+			}
 		}
 		if (!cmd)
 		{
@@ -191,12 +197,12 @@ int	readline_loop(t_env_lst *env_lst)
 				error = 130;
 			break ;
 		}
-		free(cmd);
 		update_qm(env_lst, error, 0);
 	}
 	if (is_exit)
 		error = ft_atoi(get_env_val(env_lst, "?", 0));
-	close(hist_fd);
+	if (hist_fd > 0)
+		close(hist_fd);
 	if (last_cmd)
 		free(last_cmd);
 	return (error);

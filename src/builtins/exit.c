@@ -19,13 +19,14 @@
  * exit => last $?
  */
 
+#include <stdint.h>
 #include "minishell.h"
 
 static int	check_exit_arg(char **cmd);
 
 int	ft_exit(char **cmd, t_env_lst *env)
 {
-	__uint8_t	ret;
+	unsigned int	ret;
 
 	if (!cmd[1])
 		ret = ft_atoi(get_env_val(env,  "?", 0));
@@ -34,7 +35,7 @@ int	ft_exit(char **cmd, t_env_lst *env)
 		ret = check_exit_arg(cmd);
 		if (ret != SUCCESS)
 			return (ret);
-		ret = (__uint8_t) ft_atoi(cmd[1]);
+		ret = ft_atoi(cmd[1]) % 256;
 	}
 	return (ret);
 }

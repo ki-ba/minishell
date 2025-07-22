@@ -6,7 +6,7 @@
 
 /* exec.c */
 
-int		try_exec(char **cmd, t_env_lst *env);
+int		try_exec(t_list **exec, char **cmd, t_env_lst *env);
 int		call_cmd(char **cmd, t_env_lst *env);
 
 char	*find_path(char *cmd, t_env_lst *env);
