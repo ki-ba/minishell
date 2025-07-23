@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 20:42:36 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/23 20:43:40 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include "builtins.h"
 #include "error.h"
@@ -85,7 +97,7 @@ static int	init_exp_node(char *cmd, t_env_lst *new)
 			free(new->value);
 		free(new);
 		return (ERR_ALLOC);
-	}		
+	}	
 	return (SUCCESS);
 }
 

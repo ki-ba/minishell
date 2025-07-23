@@ -18,4 +18,11 @@ char			**envlist_to_arr(t_env_lst *env_lst);
 int			check_name_validity(char *name);
 t_env_lst	*dup_env(t_env_lst *env);
 t_env_lst	*sort_env_var(t_env_lst *env);
+
+int			getsymlink_helper(char **path_parts, char *cmd, size_t len);
+int			setup_path_parts(char **path_parts, char *cmd, t_env_lst *env);
+int			check_dir_access(char *new_path);
+int			update_env(char *new_path, t_env_lst *env);
+
+
 #endif

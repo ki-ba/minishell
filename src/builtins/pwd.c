@@ -1,9 +1,16 @@
-#include "data_structures.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 10:33:19 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/23 10:42:41 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include "builtins.h"
-#include "error.h"
-#include <limits.h>
-#include <sys/stat.h>
 
 /**
  * @brief print the current directory

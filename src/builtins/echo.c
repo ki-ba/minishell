@@ -1,23 +1,6 @@
-#include "data_structures.h"
-#include "libft.h"
 #include "minishell.h"
 
-int	ft_strcmp(char str1[], char str2[])
-{
-	size_t	i;
-
-	i = 0;
-	while (str1[i] && str2[i])
-	{
-		if (str1[i] != str2[i])
-			return (str1[i] - str2[i]);
-		++i;
-	}
-	return (str1[i] - str2[i]);
-}
-
-// TODO: check why not working if echo -n $?
-size_t	has_option(char **cmd, char opt)
+static size_t	has_option(char **cmd, char opt)
 {
 	size_t	i;
 	size_t	j;
@@ -27,9 +10,12 @@ size_t	has_option(char **cmd, char opt)
 		return (1);
 	while (cmd[i])
 	{
-		j = 1;
-		while (cmd[i][j - 1] && cmd[i][j])
+		j = 0;
+		if (cmd[i][j] == '-')
+			++j;
+		while (cmd[i][j])
 		{
+			printf("cij= [%c] ; opt= [%c]\n", cmd[i][j], opt);
 			if (cmd[i][j] != opt)
 				return (i);
 			++j;
@@ -39,7 +25,6 @@ size_t	has_option(char **cmd, char opt)
 	return (i);
 }
 
-// TODO: ft_printf_fd to print into > or STDIN
 int	ft_echo(char **cmd, t_env_lst *env)
 {
 	size_t	i;
