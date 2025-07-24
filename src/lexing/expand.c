@@ -1,6 +1,9 @@
 #include "minishell.h"
 
-// TODO: space before after spe-K
+static char	*expand_dollar(t_env_lst *env, char *str, size_t i, size_t len);
+static char	*expand_metachar(char *str, size_t i, size_t len);
+static char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len);
+
 char	*expand_line(t_env_lst *env, char str[])
 {
 	size_t	i;
@@ -14,14 +17,10 @@ char	*expand_line(t_env_lst *env, char str[])
 		return (NULL);
 	while (str[i])
 	{
-		// if (str[i] == '<' || str[i] == '>')
-		// 	++i;
-		// if (str[i] == '<' || str[i] == '>')
-		// 	++i;
 		part_len = get_part_len(&str[i]);
 		next_chunk = set_chunk_val(env, str, i, part_len);
 		i += part_len;
-		if (!is_inquote(str, i) && (str[i] == '|' || str[i] == '<' || str[i] == '>'))
+		if (!is_inquote(str, i) && is_metachar(str[i]))
 			++i;
 		if (!is_inquote(str, i) && (str[i] == '<' || str[i] == '>'))
 			++i;
@@ -32,53 +31,71 @@ char	*expand_line(t_env_lst *env, char str[])
 	return (expanded);
 }
 
-t_bool	is_inquote(char *str, size_t pos)
+static char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 {
-	size_t	i;
-	int		sq;
-	int		dq;
+	char		*next_chunk;
 
-	i = 0;
-	sq = 0;
-	dq = 0;
-	while (i < pos)
+	if (i == 0 && is_metachar(str[i]))
 	{
-		if (str[i] == '\'')
-			++sq;
-		if (str[i] == '"')
-			++dq;
 		++i;
+		--len;
+		if (str[i] == '<' || str[i] == '>')
+		{
+			++i;
+			--len;
+		}
 	}
-	return ((sq % 2) + (dq % 2) % 2);
+	if (str[i] == '$' && must_expand(str, i))
+		next_chunk = expand_dollar(env, str, i, len);
+	else if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
+		next_chunk = expand_metachar(str, i, len);
+	else
+		next_chunk = ft_substr(str, i, len);
+	return (next_chunk);
 }
 
-int	check_meta_validity(char *str)
+static char	*expand_dollar(t_env_lst *env, char *str, size_t i, size_t len)
 {
-	size_t	i;
+	char		*varname;
+	char		*next_chunk;
+	t_env_lst	*tmp;
 
-	i = 0;
-	while (str[i])
+	varname = ft_substr(str, i + 1, len - (len > 1));
+	if (!varname)
+		return (NULL);
+	if (ft_isalnum(str[i + 1]) || str[i + 1] == '?')
 	{
-		if ((str[i] == '|' || str[i] == '>' || str[i] == '<') && !is_inquote(str, i))
-		{
-			if (str[i] != '|' && str[i] != '>' && str[i] != '<')
-			{
-				++i;
-				continue ;
-			}
-			if (str[i] == '|' && ((str[i + 1] == '>' || str[i + 1] == '<')))
-				return (ERR_PARSING);
-			if (str[i] == '>' && ((str[i + 1] == '|'|| str[i + 1] == '<')))
-				return (ERR_PARSING);
-			if (str[i] == '<' && ((str[i + 1] == '|'|| str[i + 1] == '>')))
-				return (ERR_PARSING);
-			if (str[i] == '<' || str[i] == '>')
-			{
-				if (str[i + 1] == str[i] && str[i + 2] == str[i])
-					return (ERR_PARSING);
-			}
-		}
-		++i;
+		tmp = search_env_var(env, varname);
+		if (tmp)
+			next_chunk = ft_concat(3, "\"", tmp->value, "\"");
+		else
+			next_chunk = ft_strdup("");
 	}
-	return (SUCCESS);
+	else
+		next_chunk = ft_strdup("$");
+	free(varname);
+	return (next_chunk);
+}
+
+static char	*expand_metachar(char *str, size_t i, size_t len)
+{
+	char	*varname;
+	char	*next_chunk;
+	char	meta[3];
+
+	if (!is_inquote(str, i))
+		--i;
+	varname = ft_substr(str, i + 1, len);
+	if (!varname)
+		return (NULL);
+	ft_bzero(meta, 3);
+	meta[0] = str[i];
+	if (str[i] != '|' && (i > 0 && str[i] == str[i - 1]))
+		meta[1] = meta[0];
+	if (is_inquote(str, i))
+		next_chunk = ft_concat(2, meta, varname);
+	else
+		next_chunk = ft_concat(4, " ", meta, " ", varname);
+	free(varname);
+	return (next_chunk);
 }

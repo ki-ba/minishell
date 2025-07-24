@@ -71,6 +71,8 @@ t_bool			determine_pipe(char token_str[]);
 /* expand.c */
 
 char			*expand_line(t_env_lst *env, char str[]);
+t_bool			is_inquote(char *str, size_t pos);
+int				is_metachar(char c);
 
 /* expand_utils.c */
 
@@ -78,9 +80,8 @@ void			join_in_place(char **s1, char *s2);
 size_t			varnamelen(char str[]);
 size_t			get_part_len(char str[]);
 t_bool			must_expand(char str[], size_t pos);
-char			*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len);
 
-/* env.c */
+/* env_init.c */
 
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 char			**create_env_arr(t_env_lst *env_lst);

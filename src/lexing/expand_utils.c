@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+//? maybe libft
 void	join_in_place(char **s1, char *s2)
 {
 	char	*s3;
@@ -47,86 +48,4 @@ size_t	get_part_len(char str[])
 	if (!is_inquote(str, tmp) && i > tmp && tmp > 0)
 		i = tmp;
 	return (i);
-}
-
-t_bool	must_expand(char str[], size_t pos)
-{
-	char	quote;
-	size_t	i;
-
-	i = 0;
-	quote = '\0';
-	while (i < pos)
-	{
-		if ((str[i] == '"' || str[i] == '\'') && !quote)
-			quote = str[i];
-		else if (str[i] == quote)
-			quote = '\0';
-		++i;
-	}
-	return (quote != '\'');
-}
-
-// char	*expand_meta_char(char *str, size_t i, size_t len)
-// {
-
-// }
-
-static int	is_metachar(char c)
-{
-	return (c == '<' || c == '>' || c == '|');
-}
-// TODO: space before after spe-K
-char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
-{
-	char	*next_chunk;
-	char	*varname;
-	char	*meta;
-	char	*tmp;
-
-	if (i == 0 && is_metachar(str[i]))
-	{
-		++i;
-		--len;
-		if (str[i] == '<' || str[i] == '>')
-		{
-			++i;
-			--len;
-		}
-	}
-	if (str[i] == '$' && must_expand(str, i))
-	{
-		varname = ft_substr(str, i + 1, len - (len > 1));
-		if (ft_isalnum(str[i + 1]) || str[i + 1] == '?')
-		{
-			tmp = get_env_val(env, varname, 0);
-			next_chunk = ft_concat(3, "\"", tmp, "\"");
-		}
-		else
-			next_chunk = ft_strdup("$");
-		free(varname);
-	}
-	else if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
-	{
-		if (!is_inquote(str, i))
-			--i;
-		varname = ft_substr(str, i + 1, len);
-		meta = ft_calloc(3, sizeof (char));
-		meta[0] = str[i];
-		if (str[i] != '|' && (i > 0 && str[i] == str[i - 1]))
-			meta[1] = meta[0];
-		if (is_inquote(str, i))
-			next_chunk = ft_concat(2, meta, varname);
-		else
-			next_chunk = ft_concat(4, " ", meta, " ", varname);
-		free(meta);
-		free(varname);
-	}
-	else
-	{
-		next_chunk = ft_substr(str, i, len);
-		if (!next_chunk)
-			return (NULL);
-	}
-	return (next_chunk);
 }
