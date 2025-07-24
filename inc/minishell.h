@@ -32,7 +32,6 @@ int				exec_unique_cmd(t_list **exec_lst, t_env_lst *env);
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 size_t			ft_strlen_c(char str[], char c);
 void			env_add_back(t_env_lst **head, t_env_lst *new);
-void			print_env(t_env_lst *env_lst);
 void			update_qm(t_env_lst *env, int status, int conditionnal);
 
 /* debug.c */
@@ -93,9 +92,12 @@ void			add_to_env(t_env_lst *env, char *name, char *val, t_bool sh);
 
 t_env_lst		*create_env_lst(char name[]);
 void			env_add_back(t_env_lst **head, t_env_lst *new);
-void			print_env(t_env_lst *env_lst);
 char			*get_env_val(t_env_lst *env, char name[], int sh);
 size_t			get_env_size(t_env_lst *env_lst);
+
+/* no_env.c */
+
+t_env_lst		**empty_env_check(t_env_lst **env_lst);
 
 /* parsing.c */
 

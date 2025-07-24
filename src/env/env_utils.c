@@ -55,16 +55,6 @@ void	env_add_back(t_env_lst **head, t_env_lst *new)
 	}
 }
 
-void	print_env(t_env_lst *env_lst)
-{
-	ft_printf("ENVIRONMENT VARIABLES\n");
-	while (env_lst)
-	{
-		ft_printf("%s=%s\n", env_lst->name, env_lst->value);
-		env_lst = env_lst->next;
-	}
-}
-
 char	*get_env_val(t_env_lst *env, char name[], int sh)
 {
 	t_env_lst	*current;

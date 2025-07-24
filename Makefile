@@ -27,7 +27,7 @@ INC_DIR = inc/
 TEST_DIR = test/
 
 
-ENV_SRC = env.c env_utils.c
+ENV_SRC = env.c env_utils.c no_env.c
 HISTORY_SRC = history.c
 LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c token.c id_token.c quotes.c
 BUILTINS_SRC = echo.c cd.c pwd.c export.c unset.c env.c exit.c export_utils.c cd_utils.c cd_symlink.c

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 19:49:52 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/23 20:41:22 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/24 15:50:20 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static int	update_env_sys(t_env_lst **env_v, char *new_path, t_env_lst *env)
 {
 	env_v[0] = search_env_var(env, "?PWD");
 	env_v[1] = search_env_var(env, "?OLDPWD");
+	if (!env_v[0] || !env_v[1])
+		return (ERR_FAIL);
 	free(env_v[1]->value);
 	env_v[1]->value = ft_strdup(env_v[0]->value);
 	if (!env_v[1]->value)

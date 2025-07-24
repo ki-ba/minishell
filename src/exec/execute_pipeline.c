@@ -46,7 +46,7 @@ int	try_exec(t_list **exec, char **cmd, t_env_lst *env)
 		env_arr = envlist_to_arr(env);
 		path = path_to_cmd(cmd, env);
 		err = define_error(path, env);
-		if (path && env_arr)
+		if (path && env_arr && !err)
 			execve(path, cmd, env_arr);
 		ft_free_arr(env_arr);
 		free(path);

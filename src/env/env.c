@@ -25,6 +25,7 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 			add_to_env(*env_lst, new->name, new->value, 1);
 		++i;
 	}
+	empty_env_check(env_lst);
 	return (*env_lst);
 }
 
@@ -83,16 +84,24 @@ t_env_lst	*new_env_entry(char *name, char *value)
 	if (!new)
 		return (NULL);
 	new->name = ft_strdup(name);
+	if (!new->name)
+	{
+		free(new);
+		return (NULL);
+	}
 	if (value)
+	{
 		new->value = ft_strdup(value);
+		if (!new->value)
+		{
+			free(new->name);
+			free(new);
+			return (NULL);
+		}
+	}
 	else
 		new->value = NULL;
 	new->next = NULL;
-	if (!name || !value)
-	{
-		free(new);
-		new = NULL;
-	}
 	return (new);
 }
 

@@ -10,7 +10,10 @@ char	*find_path(char *cmd, t_env_lst *env)
 	char	*path;
 	size_t	i;
 
-	paths = ft_split(get_env_val(env, "PATH", 0), ':');
+	path = get_env_val(env, "PATH", 0);
+	paths = ft_split(path, ':');
+	if (path && !path[0])
+		free(path);
 	if (!paths)
 		return (NULL);
 	i = 0;
@@ -19,9 +22,7 @@ char	*find_path(char *cmd, t_env_lst *env)
 	{
 		path = ft_concat(3, paths[i], "/", cmd);
 		if (!path || !access(path, F_OK & X_OK))
-		{
 			break ;
-		}
 		free(path);
 		path = NULL;
 		i++;

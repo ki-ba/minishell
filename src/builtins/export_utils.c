@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:31:12 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/23 10:31:22 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/24 13:47:37 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_env_lst	*dup_env(t_env_lst *env)
 	dup = NULL;
 	while (tmp)
 	{
-		if (tmp->name && tmp->value)
+		if (tmp->name)
 		{
 			cpy = new_env_entry(tmp->name, tmp->value);
 			env_add_back(&dup, cpy);
