@@ -81,6 +81,7 @@ int	read_input(char *del)
 
 	update_signals(0);
 	fd = open_random_file(&filename);
+	unlink(filename);
 	if (fd < 0)
 		return (fd);
 	if (g_signal != 2)
@@ -91,7 +92,6 @@ int	read_input(char *del)
 		fd = open(filename, O_RDONLY);
 	else
 		fd = open(filename, O_RDWR | O_TRUNC);
-	unlink(filename);
 	free(filename);
 	return (fd);
 }
