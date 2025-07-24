@@ -32,6 +32,7 @@ int	define_error(char path[], t_env_lst *env)
 		err = 0;
 	return (err);
 }
+
 int	try_exec(t_list **exec, char **cmd, t_env_lst *env)
 {
 	char		*path;
@@ -106,7 +107,6 @@ pid_t	dup_and_fork(t_list **exec, t_list **current, t_env_lst *env, int *next_pi
 	if (pipe(pipe_fd) < 0)
 		return (-1);
 	pid = fork();
-	// (void)exec_list;
 	if (pid == 0)
 	{
 		if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
@@ -131,7 +131,7 @@ pid_t	dup_and_fork(t_list **exec, t_list **current, t_env_lst *env, int *next_pi
 	return (pid);
 }
 
-int exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
+int	exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 {
 	t_exec_node	*exe;
 	int			saved;
@@ -154,6 +154,7 @@ int exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 		close (saved);
 	return (err);
 }
+
 /**
 * entry point of the execution part of the program.
 * takes an exec_list and the environment and executes it.
