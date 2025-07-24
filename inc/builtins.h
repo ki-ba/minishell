@@ -2,6 +2,7 @@
 # define BUILTINS_H
 
 # include "data_structures.h"
+# include <sys/types.h>
 
 typedef enum bool	t_bool;
 

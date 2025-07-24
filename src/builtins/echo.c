@@ -11,11 +11,10 @@ static size_t	has_option(char **cmd, char opt)
 	while (cmd[i])
 	{
 		j = 0;
-		if (cmd[i][j] == '-')
+		if (cmd[i][j] == '-' && cmd[i][j + 1] == opt)
 			++j;
 		while (cmd[i][j])
 		{
-			printf("cij= [%c] ; opt= [%c]\n", cmd[i][j], opt);
 			if (cmd[i][j] != opt)
 				return (i);
 			++j;

@@ -30,8 +30,8 @@ void	update_signals(int cmd)
     sigemptyset(&s_si.sa_mask); 
     sigaddset(&s_sa.sa_mask, SIGINT); 
     sigaddset(&s_si.sa_mask, SIGQUIT);
-    s_sa.sa_flags = SA_SIGINFO;
-    s_si.sa_flags = SA_SIGINFO;
+    s_sa.sa_flags = SA_RESTART;
+    s_si.sa_flags = SA_RESTART;
 	s_sa.sa_handler = &sig_handler_cmd;
     if (cmd)
 		s_si.sa_handler = &sig_handler_cmd;

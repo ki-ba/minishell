@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:41:42 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/23 20:41:52 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/24 11:17:27 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,13 @@ static int	change_dir(char **cmd, t_env_lst *env)
 	if (!path)
 		return (ERR_ALLOC);
 	err = check_dir_access(path);
-	if (err != 0)
-		return (ERR_ARGS);
-	err = chdir(path);
-	if (err != 0)
-		return (ERR_ARGS);
-	err = update_env(path, env);
+	if (err == SUCCESS)
+		err = chdir(path);
+	if (err == SUCCESS)
+		err = update_env(path, env);
 	free(path);
+	if (err != SUCCESS)
+		err = ERR_ARGS;
 	return (err);
 }
 

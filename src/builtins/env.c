@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:03:49 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/23 10:04:01 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/24 10:32:32 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ int	check_name_validity(char *name)
 {
 	int	i;
 
-	if (!isalpha(name[0]) && name[0] != '_')
+	if (!ft_isalpha(name[0]) && name[0] != '_')
 		return (ERR_ARGS);
 	i = 1;
 	while (name[i] && name[i] != '=')
 	{
-		if (!isalnum(name[i]) && name[i] != '_')
+		if (!ft_isalnum(name[i]) && name[i] != '_')
 			return (ERR_ARGS);
 		i++;
 	}

@@ -161,14 +161,10 @@ int	readline_loop(t_env_lst *env_lst)
 	last_cmd = NULL;
 	hist_fd = retrieve_history(env_lst, &last_cmd);
 	is_exit = FALSE;
+	g_signal = 0;
 	while (error != ERR_ALLOC && !is_exit)
 	{
-		g_signal = 0;
 		init_signals();
-		if (error > -1)
-			update_qm(env_lst, error, 0);
-		else
-			error = ft_atoi(get_env_val(env_lst, "?", 0));
 		errno = 0;
 		cmd = readline("zinzinshell$ ");
 		if (errno != 0)
@@ -181,6 +177,10 @@ int	readline_loop(t_env_lst *env_lst)
 			tmp = ft_strtrim(cmd, " \t\n\r\v\f");
 			cmd = ft_strdup(tmp);
 			free(tmp);
+		}
+		if (cmd && !cmd[0])
+		{
+			continue ;
 		}
 		if (cmd && cmd[0])
 		{
@@ -197,10 +197,9 @@ int	readline_loop(t_env_lst *env_lst)
 				error = 130;
 			break ;
 		}
-		update_qm(env_lst, error, 0);
-	}
-	if (is_exit)
 		error = ft_atoi(get_env_val(env_lst, "?", 0));
+		g_signal = 0;
+	}
 	if (hist_fd > 0)
 		close(hist_fd);
 	if (last_cmd)

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:42:36 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/23 20:43:40 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/24 11:20:20 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static int	print_export(t_env_lst *env)
 	t_env_lst	*tmp;
 	t_env_lst	*head;
 
-	tmp = dup_env(env); //TODO: test leak if null
+	tmp = dup_env(env);
 	if (!tmp)
 		return (ERR_ALLOC);
 	sort_env_var(tmp);
@@ -86,18 +86,16 @@ static int	init_exp_node(char *cmd, t_env_lst *new)
 		new->value = ft_substr(cmd, i + 1, ft_strlen(cmd));
 		if (!new->value)
 		{
-			free(new->name);
-			free(new);
+			if (new->name)
+				free(new->name);
 			return (ERR_ALLOC);
 		}
 	}
 	if (!new->name)
 	{
-		if (new->value)
-			free(new->value);
-		free(new);
+		free(new->value);
 		return (ERR_ALLOC);
-	}	
+	}
 	return (SUCCESS);
 }
 
@@ -110,7 +108,11 @@ static int	create_exp_node(char *cmd, t_env_lst **env)
 	new = malloc(sizeof(t_env_lst));
 	if (!new)
 		return (ERR_ALLOC);
-	init_exp_node(cmd, new);
+	if (init_exp_node(cmd, new))
+	{
+		free(new);
+		return (ERR_ALLOC);
+	}
 	if (search_env_var(*env, new->name) != NULL)
 	{
 		free(new->name);
