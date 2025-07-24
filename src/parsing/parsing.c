@@ -49,7 +49,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 	fd = 0;
 	if (redir == 0 && node->io[redir] > MAX_FD)
 		node->io[0] = read_input(token->token);
-	else
+	else if (node->status == 0)
 	{
 		node->filename[redir] = ft_strdup(token->token);
 		if (!node->filename[redir])
@@ -79,8 +79,8 @@ static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 	old_arr = node->cmd;
 	node->cmd = add_to_array(node->cmd, token->token);
 	if (!node->cmd)
-	{	
-		if(old_arr)
+	{
+		if (old_arr)
 			ft_free_arr(old_arr);
 		ft_lstclear(exec_list, del_exec_node);
 		return (ERR_ALLOC);
@@ -120,24 +120,6 @@ void	update_qm(t_env_lst *env, int status, int conditionnal)
 	qm->value = ft_itoa(status);
 }
 
-void	advance_tokens(t_list **tokens, int status)
-{
-	t_token	*token;
-
-	token = (t_token *)(*tokens)->content;
-	if (status)
-	{
-		while (*tokens && token && token->type != TOKEN_PIPE)
-		{
-			*tokens = (*tokens)->next;
-			if (*tokens)
-				token = (t_token *)(*tokens)->content;
-		}
-	}
-	else
-		*tokens = (*tokens)->next;
-}
-
 /**
 * Parse the token list and create a process list with correct infiles,
 * outfiles, argv and environments.
@@ -166,7 +148,7 @@ t_list	*parse_tokens(t_list *tokens)
 			status = handle_file(node, token, redir_type, &exec_lst);
 		if (status != 0 || node->status == 0)
 			node->status = status;
-		advance_tokens(&tokens, status);
+		tokens = tokens->next;
 	}
 	// ft_lstclear(&tokens, deltoken);
 	return (exec_lst);
