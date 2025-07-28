@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -g
 DEBUG_FLAGS = -Wall -Wextra -g -fsanitize=address
 
 ##### TESTS #####
@@ -116,7 +116,7 @@ asan :
 	$(MAKE) clean
 
 debug :
-	$(MAKE) re CFLAGS+="-D DEBUG=TRUE -g"
+	$(MAKE) re CFLAGS=$(DEBUG_FLAGS)
 	$(MAKE) clean
 
 ###### OBJECT FILES ######

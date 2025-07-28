@@ -25,5 +25,4 @@ int			setup_path_parts(char **path_parts, char *cmd, t_env_lst *env);
 int			check_dir_access(char *new_path);
 int			update_env(char *new_path, t_env_lst *env);
 
-
 #endif

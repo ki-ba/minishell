@@ -72,10 +72,9 @@ int	call_cmd(char **cmd, t_env_lst *env)
 	if (err > 300 && err != ERR_ALLOC)
 		err -= 300;
 	qm = search_env_var(env, "?");
-	err_c = ft_itoa(err); //check
+	err_c = ft_itoa(err);
 	free(qm->value);
 	qm->value = ft_strdup(err_c);
 	free(err_c);
-	// check
 	return (err);
 }
