@@ -53,3 +53,19 @@ static int	check_exit_arg(char **cmd)
 	}
 	return (SUCCESS);
 }
+
+int	is_correct_exit(char *cmd[])
+{
+	size_t	i;
+
+	if (!cmd[1])
+		return (TRUE);
+	i = 0;
+	if (cmd[1][i] == '-' || cmd[1][i] == '+')
+		i++;
+	while (cmd[1][i] && ft_isdigit(cmd[1][i]))
+		i++;
+	if (cmd[1][i] != '\0')
+		return (FALSE);
+	return (TRUE);
+}

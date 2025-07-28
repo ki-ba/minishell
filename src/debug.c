@@ -54,6 +54,16 @@ char	*summarize_lexing(t_list *tokens)
 	return (str);
 }
 
+static void	print_cmd(char *cmd[])
+{
+	int i = -1;
+
+	while (cmd[++i])
+	{
+		ft_printf("%s ", cmd[i]);
+	}
+	ft_printf("\n");
+}
 void	print_exec(t_list	*exec_lst)
 {
 	t_exec_node	*current;
@@ -61,11 +71,10 @@ void	print_exec(t_list	*exec_lst)
 	while (exec_lst)
 	{
 		current = (t_exec_node *)exec_lst->content;
-		ft_printf("========EXEC NODE=========\n\n");
+		ft_printf("====EXEC NODE=====\n\n");
 		ft_printf("IO:	[%d;%d]\n", (current->io)[0], (current->io)[1]);
-		ft_printf("infile:	%s\noutfile:	%s\n", (current->filename)[0], (current->filename)[1]);
-		ft_printf("argv:	\n");
-		ft_print_arr(current->cmd);
+		ft_printf("in:	%s\nout:	%s\n", (current->filename)[0], (current->filename)[1]);
+		print_cmd(current->cmd);
 		ft_printf("=================\n\n");
 		exec_lst = exec_lst->next;
 	}

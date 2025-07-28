@@ -33,6 +33,7 @@ t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 size_t			ft_strlen_c(char str[], char c);
 void			env_add_back(t_env_lst **head, t_env_lst *new);
 void			update_qm(t_env_lst *env, int status, int conditionnal);
+int				is_correct_exit(char *cmd[]);
 
 /* debug.c */
 void			display_token(t_token *token);
@@ -40,8 +41,7 @@ void			print_token_list(t_list *tokens);
 char			*summarize_lexing(t_list *tokens);
 /* history.c */
 
-void			ft_add_history(int hist_fd, char entry[], char *last_cmd);
-int				retrieve_history(t_env_lst *env, char *last_cmd[]);
+void			ft_add_history(char entry[]);
 
 /* lexing.c */
 

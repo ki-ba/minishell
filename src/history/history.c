@@ -1,20 +1,20 @@
+#include "libft.h"
 #include "minishell.h"
+#include <readline/history.h>
 
-void	ft_add_history(int hist_fd, char entry[], char *last_cmd)
+void	ft_add_history(char entry[])
 {
-	if (last_cmd)
+	static char	last_cmd[255];
+
+	if (entry)
 	{
-		if (entry && entry[0] && !ft_strncmp(entry, last_cmd, ft_strlen(entry) + 1))
+		if (!last_cmd[0] || ft_strncmp(entry, last_cmd, ft_strlen(entry) + 1))
 		{
-			free(last_cmd);
-			last_cmd = NULL;
-			return ;
+			add_history(entry);
+			if (ft_strlcpy(last_cmd, entry, 255) > 255)
+				ft_putstr_fd("warning : history entry truncated", 2);
 		}
-		free(last_cmd);
 	}
-	write(hist_fd, entry, ft_strlen(entry));
-	write(hist_fd, "\n", 1);
-	add_history(entry);
 }
 
 int	retrieve_history(t_env_lst *env, char *last_cmd[])

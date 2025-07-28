@@ -1,5 +1,6 @@
 #include "builtins.h"
 #include "data_structures.h"
+#include <errno.h>
 #include "error.h"
 #include "libft.h"
 #include "minishell.h"
@@ -111,7 +112,7 @@ int	start_execution(t_list *exec, t_env_lst *env, t_bool *is_exit)
 		return (0);
 	}
 	if (!exec->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
-		*is_exit = 1;
+		*is_exit = is_correct_exit(node->cmd);
 	if (!exec->next && is_builtin(node->cmd))
 		update_qm(env, exec_unique_cmd(&exec, env), 1);
 	else
@@ -147,19 +148,36 @@ int	interpret_line(char *cmd, t_env_lst *env_lst, t_bool *is_exit)
 	ft_lstclear(&exec_lst, del_exec_node);
 	return (err);
 }
-#include <errno.h>
+
+int	handle_line(t_env_lst *env, char cmd[], t_bool *is_exit, int *error)
+{
+	char	*tmp;
+
+	if (cmd[0])
+	{
+		ft_add_history(cmd);
+		tmp = ft_strtrim(cmd, " \t\n\r\v\f");
+		cmd = ft_strdup(tmp);
+		free(tmp);
+		*error = interpret_line(cmd, env, is_exit);
+		if (*error > 300)
+		{
+			print_error_msg(*error);
+			*error -= 300;
+		}
+		return (0);
+	}
+	else
+		return (1);
+}
+
 int	readline_loop(t_env_lst *env_lst)
 {
 	char		*cmd;
-	char		*tmp;
-	int			hist_fd;
-	char		*last_cmd;
 	int			error;
 	t_bool		is_exit;
 
 	error = 0;
-	last_cmd = NULL;
-	hist_fd = retrieve_history(env_lst, &last_cmd);
 	is_exit = FALSE;
 	g_signal = 0;
 	while (error != ERR_ALLOC && !is_exit)
@@ -169,41 +187,14 @@ int	readline_loop(t_env_lst *env_lst)
 		cmd = readline("zinzinshell$ ");
 		if (errno != 0)
 			;
-		tmp = NULL;
-		if (cmd && cmd[0])
-		{
-			ft_add_history(hist_fd, cmd, last_cmd);
-			last_cmd = cmd;
-			tmp = ft_strtrim(cmd, " \t\n\r\v\f");
-			cmd = ft_strdup(tmp);
-			free(tmp);
-		}
-		if (cmd && !cmd[0])
-		{
+		if (cmd && (handle_line(env_lst, cmd, &is_exit, &error) || 1))
 			continue ;
-		}
-		if (cmd && cmd[0])
-		{
-			error = interpret_line(cmd, env_lst, &is_exit);
-			if (error > 300)
-			{
-				print_error_msg(error);
-				error -= 300;
-			}
-		}
-		if (!cmd)
-		{
-			if (g_signal == 2)
-				error = 130;
-			break ;
-		}
-		error = ft_atoi(get_env_val(env_lst, "?", 0));
+		else if (g_signal == 2)
+			error = 130;
+		break ;
 		g_signal = 0;
 	}
-	if (hist_fd > 0)
-		close(hist_fd);
-	if (last_cmd)
-		free(last_cmd);
+	ft_add_history(NULL);
 	return (error);
 }
 
