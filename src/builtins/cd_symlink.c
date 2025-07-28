@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:22:39 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/23 20:42:15 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/28 14:44:13 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	getsymlink_helper(char **path_parts, char *cmd, size_t len)
 int	setup_path_parts(char **path_parts, char *cmd, t_env_lst *env)
 {
 	if (cmd[0] != '/')
-		path_parts[0] = ft_strdup(get_env_val(env, "PWD", 1));
+		path_parts[0] = ft_strdup(get_env_val(env, "CURRPATH", 1));
 	else
 		path_parts[0] = ft_strdup("");
 	if (!path_parts[0])

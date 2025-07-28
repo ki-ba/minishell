@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:33:19 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/23 10:42:41 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/28 14:42:02 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_pwd(char **cmd, t_env_lst *env)
 	char	*path;
 
 	(void)cmd;
-	path = get_env_val(env, "PWD", 1);
+	path = get_env_val(env, "CURRPATH", 1);
 	printf("%s\n", path);
 	return (SUCCESS);
 }

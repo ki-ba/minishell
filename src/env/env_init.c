@@ -21,8 +21,8 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 			return (NULL);
 		}
 		env_add_back(env_lst, new);
-		if (!ft_strncmp(name, "PWD", 4) || !ft_strncmp(name, "OLDPWD", 7))
-			add_to_env(*env_lst, new->name, new->value, 1);
+		if (!ft_strncmp(name, "PWD", 4))
+			add_to_env(*env_lst, "CURRPATH", new->value, 1);
 		++i;
 	}
 	empty_env_check(env_lst);
