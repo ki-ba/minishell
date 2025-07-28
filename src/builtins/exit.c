@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:04:44 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/23 10:06:56 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/28 18:19:34 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,6 @@ static int	check_exit_arg(char **cmd)
 {
 	size_t	i;
 
-	if (cmd[2])
-	{
-		printf("exit\n");
-		ft_printf_fd(2, "minishell: exit: too many arguments\n");
-		return (ERR_ARGS);
-	}
 	i = 0;
 	if (cmd[1][i] == '-' || cmd[1][i] == '+')
 		i++;
@@ -50,6 +44,12 @@ static int	check_exit_arg(char **cmd)
 		ft_printf_fd
 			(2, "minishell: exit: %s: numeric argument required\n", cmd[1]);
 		return (ERR_PARSING);
+	}
+	if (cmd[1] && cmd[2])
+	{
+		printf("exit\n");
+		ft_printf_fd(2, "minishell: exit: too many arguments\n");
+		return (ERR_ARGS);
 	}
 	return (SUCCESS);
 }
@@ -66,6 +66,8 @@ int	is_correct_exit(char *cmd[])
 	while (cmd[1][i] && ft_isdigit(cmd[1][i]))
 		i++;
 	if (cmd[1][i] != '\0')
+		return (TRUE);
+	if (cmd[1] && cmd[2])
 		return (FALSE);
 	return (TRUE);
 }
