@@ -49,8 +49,6 @@ t_bool	is_builtin(char **cmd)
 
 int	call_cmd(char **cmd, t_env_lst *env)
 {
-	t_env_lst	*qm;
-	char		*err_c;
 	int			err;
 
 	err = 1;
@@ -72,10 +70,6 @@ int	call_cmd(char **cmd, t_env_lst *env)
 		err = ft_env(cmd, env);
 	if (err > 300 && err != ERR_ALLOC)
 		err -= 300;
-	qm = search_env_var(env, "?");
-	err_c = ft_itoa(err);
-	free(qm->value);
-	qm->value = ft_strdup(err_c);
-	free(err_c);
+	update_qm(env, err, 0);
 	return (err);
 }

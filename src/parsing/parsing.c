@@ -42,7 +42,8 @@ static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
  *	to read from / write into.
  *	if `open` fails, write on stderr, then return an error.
  * */
-static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list **exec_lst)
+static int	handle_file(t_exec_node *node, t_token *token,
+	t_redir redir, t_list **exec_lst)
 {
 	int	fd;
 
@@ -61,9 +62,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list 
 			node->file_exist = TRUE;
 		fd = open(node->filename[redir], node->oflags[redir], 0644);
 		if (fd < 0)
-		{
 			perror("open");
-		}
 		node->io[redir] = fd;
 	}
 	return (fd < 0);
@@ -114,6 +113,12 @@ void	update_qm(t_env_lst *env, int status, int conditionnal)
 	t_env_lst	*qm;
 
 	qm = search_env_var(env, "?");
+	if (g_signal == 2)
+	{
+		free(qm->value);
+		qm->value = ft_itoa(130);
+		g_signal = 0;
+	}
 	if (conditionnal && (status == 0 || ft_atoi(qm->value) > 0))
 		return ;
 	free(qm->value);
@@ -150,6 +155,5 @@ t_list	*parse_tokens(t_list *tokens)
 			node->status = status;
 		tokens = tokens->next;
 	}
-	// ft_lstclear(&tokens, deltoken);
 	return (exec_lst);
 }

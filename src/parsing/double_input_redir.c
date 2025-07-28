@@ -40,10 +40,9 @@ int	rl_help(void)
 {
 	if (g_signal == SIGINT)
 		rl_done = 1;
-	return 0;
+	return (0);
 }
 
-#include <termios.h>
 static void	fill_input(int fd, char del[], char *prompt)
 {
 	size_t	len;
@@ -55,7 +54,8 @@ static void	fill_input(int fd, char del[], char *prompt)
 	line = readline(prompt);
 	len = ft_strlen(line);
 	dlen = ft_strlen(del);
-	while (g_signal != 2 && line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
+	while (g_signal != 2
+		&& line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
 	{
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
@@ -66,11 +66,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 	rl_done = 0;
 	rl_event_hook = NULL;
 	if (!line && g_signal != 2)
-	{
-		ft_printf_fd(2,
-			"minishell: warning: ended with end of file instead of '%s'\n",
-			 del);
-	}
+		ft_putendl_fd("minishell: warning: ended with end of file", 2);
 	free(line);
 }
 

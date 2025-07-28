@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:09:11 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/24 17:10:57 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/28 19:15:12 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,17 @@ void	sig_handler_cmd(int sig)
 	rl_on_new_line();
 }
 
+void	sig_handler_redir(int sig)
+{
+	if (sig == SIGINT)
+	{
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	g_signal = sig;
+}
+
 void	update_signals(int cmd)
 {
 	struct sigaction	s_sa;
@@ -44,11 +55,16 @@ void	update_signals(int cmd)
 	sigaddset(&s_si.sa_mask, SIGQUIT);
 	s_sa.sa_flags = SA_RESTART;
 	s_si.sa_flags = SA_RESTART;
-	s_sa.sa_handler = &sig_handler_cmd;
 	if (cmd)
+	{
+		s_sa.sa_handler = &sig_handler_cmd;
 		s_si.sa_handler = &sig_handler_cmd;
+	}
 	else
+	{
+		s_sa.sa_handler = &sig_handler_redir;
 		s_si.sa_handler = SIG_IGN;
+	}
 	sigaction(SIGINT, &s_sa, NULL);
 	sigaction(SIGQUIT, &s_si, NULL);
 }

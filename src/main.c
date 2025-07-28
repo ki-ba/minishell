@@ -56,17 +56,19 @@ int	check_parsing(char str[])
 char	*trim_cmd(char *cmd)
 {
 	char	*trim;
+	size_t	len;
 
 	trim = ft_strtrim(cmd, " \t\n\r\v\f");
+	len = ft_strlen(trim);
 	free(cmd);
 	if (!trim)
 		return (NULL);
-	if (trim[0] && (trim[0] == '|' || trim[ft_strlen(trim) - 1] == '|'))
+	if (trim[0] && (trim[0] == '|' || trim[len - 1] == '|'))
 	{
 		free(trim);
 		return (NULL);
 	}
-	if (trim[0] && (trim[ft_strlen(trim) - 1] == '<' || trim[ft_strlen(trim) - 1] == '>'))
+	if (trim[0] && (trim[len - 1] == '<' || trim[len - 1] == '>'))
 	{
 		free(trim);
 		return (NULL);
@@ -93,7 +95,8 @@ int	process_tokens(t_list *tokens)
 	t_token	*token;
 
 	token = (t_token *) tokens->content;
-	if (!tokens->next && (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
+	if (!tokens->next
+		&& (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
 		return (ERR_PARSING);
 	ft_lstiter(tokens, remove_quotes);
 	return (0);
@@ -125,16 +128,12 @@ int	interpret_line(char *cmd, t_env_lst *env_lst, t_bool *is_exit)
 	t_list		*tokens;
 	t_list		*exec_lst;
 	int			err;
-	t_env_lst	*qm;
 
-	qm = search_env_var(env_lst, "?");
-	if (g_signal == 2)
-	{
-		qm->value = ft_itoa(130);
-		g_signal = 0;
-	}
+	update_qm(env_lst, 0, 1);
 	tokens = NULL;
 	cmd = format_cmd(env_lst, cmd);
+	if (!cmd)
+		return (SUCCESS);
 	if (tokenize(&tokens, cmd) != 0)
 		return (tokenize(&tokens, cmd));
 	free(cmd);
@@ -144,7 +143,10 @@ int	interpret_line(char *cmd, t_env_lst *env_lst, t_bool *is_exit)
 	ft_lstclear(&tokens, deltoken);
 	if (!exec_lst)
 		return (ERR_ALLOC);
-	err = start_execution(exec_lst, env_lst, is_exit);
+	if (g_signal == 2)
+		err = 130;
+	else
+		err = start_execution(exec_lst, env_lst, is_exit);
 	ft_lstclear(&exec_lst, del_exec_node);
 	return (err);
 }
@@ -186,11 +188,9 @@ int	readline_loop(t_env_lst *env_lst)
 		errno = 0;
 		cmd = readline("zinzinshell$ ");
 		if (errno != 0)
-			;
+			return (ERR_ALLOC);
 		if (cmd && (handle_line(env_lst, cmd, &is_exit, &error) || 1))
 			continue ;
-		else if (g_signal == 2)
-			error = 130;
 		break ;
 		g_signal = 0;
 	}
