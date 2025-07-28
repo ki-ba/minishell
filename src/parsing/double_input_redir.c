@@ -1,4 +1,5 @@
 #include "minishell.h"
+#include <termios.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -40,10 +41,9 @@ int	rl_help(void)
 {
 	if (g_signal == SIGINT)
 		rl_done = 1;
-	return 0;
+	return (0);
 }
 
-#include <termios.h>
 static void	fill_input(int fd, char del[], char *prompt)
 {
 	size_t	len;
@@ -69,7 +69,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 	{
 		ft_printf_fd(2,
 			"minishell: warning: ended with end of file instead of '%s'\n",
-			 del);
+			del);
 	}
 	free(line);
 }

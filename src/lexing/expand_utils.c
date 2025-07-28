@@ -67,15 +67,6 @@ t_bool	must_expand(char str[], size_t pos)
 	return (quote != '\'');
 }
 
-// char	*expand_meta_char(char *str, size_t i, size_t len)
-// {
-
-// }
-
-static int	is_metachar(char c)
-{
-	return (c == '<' || c == '>' || c == '|');
-}
 // TODO: space before after spe-K
 char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
 {

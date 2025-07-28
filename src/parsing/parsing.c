@@ -1,9 +1,4 @@
-#include "builtins.h"
-#include "data_structures.h"
-#include "error.h"
-#include "libft.h"
 #include "minishell.h"
-#include <fcntl.h>
 
 /** handles current TOKEN_REDIRECT.
  *	sets up open oflags according to the given metachar (<< vs < vs >> vs >)
@@ -34,39 +29,6 @@ static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
 		node->oflags[*redir] = (O_RDONLY);
 	}
 	return (0);
-}
-
-/** handles current TOKEN_FILE.
- *	if the current token is a heredoc delimiter, call appropriate function.
- *	otherwise setup the token's `filename` attribute to the name of the file
- *	to read from / write into.
- *	if `open` fails, write on stderr, then return an error.
- * */
-static int	handle_file(t_exec_node *node, t_token *token, t_redir redir, t_list **exec_lst)
-{
-	int	fd;
-
-	fd = 0;
-	if (redir == 0 && node->io[redir] > MAX_FD)
-		node->io[0] = read_input(token->token);
-	else if (node->status == 0)
-	{
-		node->filename[redir] = ft_strdup(token->token);
-		if (!node->filename[redir])
-		{
-			ft_lstclear(exec_lst, del_exec_node);
-			return (ERR_ALLOC);
-		}
-		if (node->io[0] != STDIN_FILENO && access(node->filename[1], F_OK))
-			node->file_exist = TRUE;
-		fd = open(node->filename[redir], node->oflags[redir], 0644);
-		if (fd < 0)
-		{
-			perror("open");
-		}
-		node->io[redir] = fd;
-	}
-	return (fd < 0);
 }
 
 /** handles current TOKEN_CMD.
@@ -150,6 +112,5 @@ t_list	*parse_tokens(t_list *tokens)
 			node->status = status;
 		tokens = tokens->next;
 	}
-	// ft_lstclear(&tokens, deltoken);
 	return (exec_lst);
 }

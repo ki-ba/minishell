@@ -1,7 +1,6 @@
 #include "minishell.h"
-#include <signal.h>
 
-int g_signal;
+int	g_signal;
 
 void	sigint_handler(int sig)
 {
@@ -26,18 +25,18 @@ void	update_signals(int cmd)
 	struct sigaction	s_sa;
 	struct sigaction	s_si;
 
-    sigemptyset(&s_sa.sa_mask); 
-    sigemptyset(&s_si.sa_mask); 
-    sigaddset(&s_sa.sa_mask, SIGINT); 
-    sigaddset(&s_si.sa_mask, SIGQUIT);
-    s_sa.sa_flags = SA_RESTART;
-    s_si.sa_flags = SA_RESTART;
+	sigemptyset(&s_sa.sa_mask);
+	sigemptyset(&s_si.sa_mask);
+	sigaddset(&s_sa.sa_mask, SIGINT);
+	sigaddset(&s_si.sa_mask, SIGQUIT);
+	s_sa.sa_flags = SA_RESTART;
+	s_si.sa_flags = SA_RESTART;
 	s_sa.sa_handler = &sig_handler_cmd;
-    if (cmd)
+	if (cmd)
 		s_si.sa_handler = &sig_handler_cmd;
-    else
+	else
 		s_si.sa_handler = SIG_IGN;
-    sigaction(SIGINT, &s_sa, NULL);
+	sigaction(SIGINT, &s_sa, NULL);
 	sigaction(SIGQUIT, &s_si, NULL);
 }
 
@@ -48,10 +47,10 @@ void	init_signals(void)
 
 	sigemptyset(&s_sa.sa_mask);
 	sigemptyset(&s_si.sa_mask);
-	sigaddset(&s_sa.sa_mask, SIGINT); 
+	sigaddset(&s_sa.sa_mask, SIGINT);
 	sigaddset(&s_si.sa_mask, SIGQUIT);
 	s_sa.sa_flags = SA_SIGINFO;
-    s_si.sa_flags = SA_SIGINFO;
+	s_si.sa_flags = SA_SIGINFO;
 	s_sa.sa_handler = &sigint_handler;
 	s_si.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &s_sa, NULL);

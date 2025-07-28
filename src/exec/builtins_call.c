@@ -1,3 +1,4 @@
+#include "data_structures.h"
 #include "libft.h"
 #include "minishell.h"
 #include "builtins.h"
@@ -46,16 +47,12 @@ t_bool	is_builtin(char **cmd)
 	return (TRUE);
 }
 
-int	call_cmd(char **cmd, t_env_lst *env)
+int	dumb_conditionnal(char **cmd, t_env_lst *env)
 {
-	t_env_lst	*qm;
-	char		*err_c;
-	int			err;
+	int	err;
 
 	err = 1;
-	if (!cmd[0])
-		err = SUCCESS;
-	else if (!ft_strncmp(cmd[0], "echo", 5))
+	if (!ft_strncmp(cmd[0], "echo", 5))
 		err = ft_echo(cmd, env);
 	else if (!ft_strncmp(cmd[0], "cd", 3))
 		err = ft_cd(cmd, env);
@@ -69,6 +66,19 @@ int	call_cmd(char **cmd, t_env_lst *env)
 		err = ft_exit(cmd, env);
 	else if (!ft_strncmp(cmd[0], "env", 4))
 		err = ft_env(cmd, env);
+	return (err);
+}
+int	call_cmd(char **cmd, t_env_lst *env)
+{
+	t_env_lst	*qm;
+	char		*err_c;
+	int			err;
+
+	err = 1;
+	if (!cmd[0])
+		err = SUCCESS;
+	else
+		err = dumb_conditionnal(cmd, env);
 	if (err > 300 && err != ERR_ALLOC)
 		err -= 300;
 	qm = search_env_var(env, "?");

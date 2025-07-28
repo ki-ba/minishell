@@ -58,6 +58,8 @@ int	is_correct_exit(char *cmd[])
 {
 	size_t	i;
 
+	if (cmd[1] && cmd[2])
+		return (FALSE);
 	if (!cmd[1])
 		return (TRUE);
 	i = 0;
