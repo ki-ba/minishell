@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:41:42 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/28 14:44:24 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/28 17:28:21 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,14 @@ static char	*getsymlink(char *cmd, t_env_lst *env)
 static int	no_arg_cd(char **cmd, t_env_lst *env)
 {
 	t_env_lst	*home;
+	int			err;
 
+	err = 0;
 	home = search_env_var(env, "HOME");
-	if (!home || !(home->value))
+	if (!home || !home->value)
 	{
-		cmd[1] = ft_strdup("/");
-		if (!cmd[1])
-			return (ERR_ALLOC);
+		ft_putendl_fd("minishell: cd: HOME not set", 2);
+		return (ERR_ARGS);
 	}
 	else
 	{
@@ -107,8 +108,8 @@ static int	no_arg_cd(char **cmd, t_env_lst *env)
 		if (!cmd[1])
 			return (ERR_ALLOC);
 	}
-	change_dir(cmd, env);
+	err = change_dir(cmd, env);
 	free(cmd[1]);
 	cmd[1] = NULL;
-	return (0);
+	return (err);
 }

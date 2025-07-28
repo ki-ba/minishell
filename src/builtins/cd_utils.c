@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 19:49:52 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/28 14:42:34 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/28 17:25:08 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	update_env(char *new_path, t_env_lst *env)
 
 	env_vars[0] = search_env_var(env, "?CURRPATH");
 	env_vars[1] = search_env_var(env, "OLDPWD");
-	if (env_vars[1] && env_vars[0])
+	if (env_vars[0] && env_vars[1])
 	{
 		free(env_vars[1]->value);
 		env_vars[1]->value = ft_strdup(env_vars[0]->value);
