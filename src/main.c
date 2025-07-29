@@ -110,10 +110,7 @@ int	start_execution(t_list *exec, t_env_lst *env, t_bool *is_exit)
 	qm = search_env_var(env, "?");
 	node = (t_exec_node *) exec->content;
 	if (ft_strlen(node->cmd[0]) == 0)
-	{
 		update_qm(env, 0, 0);
-		return (0);
-	}
 	if (!exec->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		*is_exit = is_correct_exit(node->cmd);
 	if (!exec->next && is_builtin(node->cmd))

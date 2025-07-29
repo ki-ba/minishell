@@ -63,7 +63,7 @@ static char	*expand_dollar(t_env_lst *env, char *str, size_t i, size_t len)
 	varname = ft_substr(str, i + 1, len - (len > 1));
 	if (!varname)
 		return (NULL);
-	if (ft_isalnum(str[i + 1]) || str[i + 1] == '?')
+	if (ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?')
 	{
 		tmp = search_env_var(env, varname);
 		if (tmp)
@@ -71,8 +71,10 @@ static char	*expand_dollar(t_env_lst *env, char *str, size_t i, size_t len)
 		else
 			next_chunk = ft_strdup("");
 	}
-	else
+	else if (!str[i + 1] || str[i + 1] == '$')
 		next_chunk = ft_strdup("$");
+	else
+		next_chunk = ft_strdup("");
 	free(varname);
 	return (next_chunk);
 }
