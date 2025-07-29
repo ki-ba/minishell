@@ -55,7 +55,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 	len = ft_strlen(line);
 	dlen = ft_strlen(del);
 	while (g_signal != 2
-		&& line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
+		&& line && ft_strncmp(line, del, ft_max(len, dlen)))
 	{
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);

@@ -4,18 +4,35 @@
 #include "error.h"
 #include "exec.h"
 
+char	*check_path_exist(t_env_lst *env)
+{
+	t_env_lst	*var;
+	char		*path;
+
+	var = search_env_var(env, "PATH");
+	if (!var)
+		path = ft_strdup(".");
+	else
+	{
+		path = ft_strdup(get_env_val(env, "PATH", 0));
+		if (!path)
+			path = ft_strdup(".");
+	}
+	return (path);
+}
+
 char	*find_path(char *cmd, t_env_lst *env)
 {
 	char	**paths;
 	char	*path;
 	size_t	i;
 
-	path = get_env_val(env, "PATH", 0);
+	path = check_path_exist(env);
 	paths = ft_split(path, ':');
-	if (path && !path[0])
-		free(path);
 	if (!paths)
 		return (NULL);
+	if (path)
+		free(path);
 	i = 0;
 	path = NULL;
 	while (paths[i])

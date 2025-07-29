@@ -15,7 +15,7 @@ int			ft_env(char **cmd, t_env_lst *env);
 int			ft_exit(char **cmd, t_env_lst *env);
 
 t_env_lst	*search_env_var(t_env_lst *env, char *var);
-char			**envlist_to_arr(t_env_lst *env_lst);
+char		**envlist_to_arr(t_env_lst *env_lst);
 int			check_name_validity(char *name);
 t_env_lst	*dup_env(t_env_lst *env);
 t_env_lst	*sort_env_var(t_env_lst *env);

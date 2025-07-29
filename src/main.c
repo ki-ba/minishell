@@ -10,7 +10,7 @@ void	print_error_msg(int status)
 	if (status == ERR_ARGS)
 		ft_putstr_fd("ERROR : incorrect arguments\n", 2);
 	if (status == ERR_PARSING)
-		ft_putstr_fd("ERROR : parsing failed\n", 2);
+		ft_putstr_fd("ERROR : wrong syntax\n", 2);
 	if (status == ERR_ALLOC)
 		ft_putstr_fd("ERROR : memory allocation failed\n", 2);
 	if (status == ERR_FAIL)
@@ -119,7 +119,9 @@ int	start_execution(t_list *exec, t_env_lst *env, t_bool *is_exit)
 	if (!exec->next && is_builtin(node->cmd))
 		update_qm(env, exec_unique_cmd(&exec, env), 1);
 	else
-		update_qm(env, wait_processes(exec_pipeline(&exec, env), 0), 0);
+		update_qm(env, wait_processes(exec_pipeline(&exec, &env), 0), 0);
+	if (node->io[0] == -1 && !node->filename[1])
+		ft_putendl_fd("minishell: no such file", 2);
 	return (ft_atoi(qm->value));
 }
 

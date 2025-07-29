@@ -52,16 +52,19 @@ static int	handle_file(t_exec_node *node, t_token *token,
 		node->io[0] = read_input(token->token);
 	else if (node->status == 0)
 	{
+		if (node->filename[redir])
+			free(node->filename[redir]);
 		node->filename[redir] = ft_strdup(token->token);
 		if (!node->filename[redir])
 		{
 			ft_lstclear(exec_lst, del_exec_node);
 			return (ERR_ALLOC);
 		}
-		if (node->io[0] != STDIN_FILENO && access(node->filename[1], F_OK))
+		if (node->io[0] != STDIN_FILENO && node->filename[1]
+			&& access(node->filename[1], F_OK))
 			node->file_exist = TRUE;
 		fd = open(node->filename[redir], node->oflags[redir], 0644);
-		if (fd < 0)
+		if (node->filename[1] && fd < 0)
 			perror("open");
 		node->io[redir] = fd;
 	}
@@ -106,23 +109,6 @@ static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
 	ft_lstadd_back(exec_lst, new_list_node);
 	*node = (t_exec_node *)ft_lstlast(*exec_lst)->content;
 	return (SUCCESS);
-}
-
-void	update_qm(t_env_lst *env, int status, int conditionnal)
-{
-	t_env_lst	*qm;
-
-	qm = search_env_var(env, "?");
-	if (g_signal == 2)
-	{
-		free(qm->value);
-		qm->value = ft_itoa(130);
-		g_signal = 0;
-	}
-	if (conditionnal && (status == 0 || ft_atoi(qm->value) > 0))
-		return ;
-	free(qm->value);
-	qm->value = ft_itoa(status);
 }
 
 /**

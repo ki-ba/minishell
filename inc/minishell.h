@@ -59,6 +59,7 @@ void			deltoken(void *token);
 
 /* exec_node.c */
 void			del_exec_node(void *node);
+void			ft_lstclear_but(t_list **lst, void (*f)(void *), t_list *item);
 
 /* lexing_utils.c */
 
@@ -112,7 +113,6 @@ char			**add_to_array(char **arr, char *str);
 /* double_input_redir.c */
 int				read_input(char *del);
 
-//TODO: 
 int				check_meta_validity(char *str);
 
 /* signals.c */
