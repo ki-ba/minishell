@@ -6,12 +6,14 @@
 /*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:08:47 by kbarru            #+#    #+#             */
-/*   Updated: 2025/06/24 14:37:30 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/30 12:22:19 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DATA_STRUCTURES_H
 # define DATA_STRUCTURES_H
+
+# include <stddef.h>
 
 /* note : a TOKEN_FILE can only be after a redirection.
  * in other cases, it is considered a TOKEN_STR,

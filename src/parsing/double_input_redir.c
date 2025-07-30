@@ -1,8 +1,5 @@
 #include "minishell.h"
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
+#include <errno.h>
 
 /**
 * @brief creates a random string starting with tmp_ and creates
@@ -46,21 +43,23 @@ int	rl_help(void)
 static void	fill_input(int fd, char del[], char *prompt)
 {
 	size_t	len;
-	size_t	dlen;
 	char	*line;
 
 	line = NULL;
 	rl_event_hook = rl_help;
+	errno = 0;
 	line = readline(prompt);
 	len = ft_strlen(line);
-	dlen = ft_strlen(del);
-	while (g_signal != 2
-		&& line && ft_strncmp(line, del, ft_max(len, dlen)))
+	while (!errno && g_signal != 2
+		&& line && ft_strncmp(line, del, ft_max(len, ft_strlen(del))))
 	{
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);
+		errno = 0;
 		line = readline(prompt);
+		if (errno)
+			break ;
 		len = ft_strlen(line);
 	}
 	rl_done = 0;
@@ -77,7 +76,6 @@ int	read_input(char *del)
 
 	update_signals(0);
 	fd = open_random_file(&filename);
-	unlink(filename);
 	if (fd < 0)
 		return (fd);
 	if (g_signal != 2)
@@ -88,6 +86,7 @@ int	read_input(char *del)
 		fd = open(filename, O_RDONLY);
 	else
 		fd = open(filename, O_RDWR | O_TRUNC);
+	unlink(filename);
 	free(filename);
 	return (fd);
 }

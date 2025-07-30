@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "builtins.h"
-#include "error.h"
 
 int	ft_env(char **cmd, t_env_lst *env)
 {

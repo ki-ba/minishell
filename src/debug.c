@@ -1,4 +1,3 @@
-#include "libft.h"
 #include "minishell.h"
 
 void	display_token(t_token *token)
@@ -21,7 +20,7 @@ void	display_token(t_token *token)
 		ft_strlcpy(token_type, "FILE", 10);
 	else
 		ft_strlcpy(token_type, "UNKNOWN", 10);
-	ft_printf("-----\ntoken %p : %s\n[%s]\n------\n", token, token_type, token->token);
+	ft_printf("\n_token %p : %s\n[%s]\n\n_", token, token_type, token->token);
 }
 
 void	print_token_list(t_list *tokens)
@@ -56,8 +55,9 @@ char	*summarize_lexing(t_list *tokens)
 
 static void	print_cmd(char *cmd[])
 {
-	int i = -1;
+	int	i;
 
+	i = -1;
 	while (cmd[++i])
 	{
 		ft_printf("%s ", cmd[i]);
@@ -73,7 +73,8 @@ void	print_exec(t_list	*exec_lst)
 		current = (t_exec_node *)exec_lst->content;
 		ft_printf("====EXEC NODE=====\n\n");
 		ft_printf("IO:	[%d;%d]\n", (current->io)[0], (current->io)[1]);
-		ft_printf("in:	%s\nout:	%s\n", (current->filename)[0], (current->filename)[1]);
+		ft_printf("in:	%s\nout:	%s\n",
+			(current->filename)[0], (current->filename)[1]);
 		print_cmd(current->cmd);
 		ft_printf("=================\n\n");
 		exec_lst = exec_lst->next;

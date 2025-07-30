@@ -1,7 +1,18 @@
 #include "minishell.h"
-#include <unistd.h>
 
-static void	add_pwd(t_env_lst **env_lst);
+static void	add_pwd(t_env_lst **env_lst)
+{
+	t_env_lst	*check;
+	char		*name;
+
+	name = NULL;
+	name = getcwd(name, PATH_MAX);
+	env_add_back(env_lst, new_env_entry("?CURRPATH", name));
+	check = search_env_var(*env_lst, "PWD");
+	if (!check)
+		env_add_back(env_lst, new_env_entry("PWD", name));
+	free(name);
+}
 
 t_env_lst	**empty_env_check(t_env_lst **env_lst)
 {
@@ -17,18 +28,4 @@ t_env_lst	**empty_env_check(t_env_lst **env_lst)
 	if (!check)
 		env_add_back(env_lst, new_env_entry("SHLVL", "1"));
 	return (env_lst);
-}
-
-static void	add_pwd(t_env_lst **env_lst)
-{
-	t_env_lst	*check;
-	char		*name;
-
-	name = NULL;
-	name = getcwd(name, PATH_MAX);
-	env_add_back(env_lst, new_env_entry("?CURRPATH", name));
-	check = search_env_var(*env_lst, "PWD");
-	if (!check)
-		env_add_back(env_lst, new_env_entry("PWD", name));
-	free(name);
 }

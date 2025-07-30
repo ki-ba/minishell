@@ -52,23 +52,6 @@ pid_t	dup_n_fork(t_list **exec, t_list **cur, t_env_lst **env, int *nxt_pip)
 	return (pid);
 }
 
-void	update_qm(t_env_lst *env, int status, int conditionnal)
-{
-	t_env_lst	*qm;
-
-	qm = search_env_var(env, "?");
-	if (g_signal == 2)
-	{
-		free(qm->value);
-		qm->value = ft_itoa(130);
-		g_signal = 0;
-	}
-	if (conditionnal && (status == 0 || ft_atoi(qm->value) > 0))
-		return ;
-	free(qm->value);
-	qm->value = ft_itoa(status);
-}
-
 char	*path_to_cmd(char *cmd[], t_env_lst *env)
 {
 	char	*path;

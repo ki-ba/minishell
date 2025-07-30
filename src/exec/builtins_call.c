@@ -1,7 +1,3 @@
-#include "libft.h"
-#include "minishell.h"
-#include "builtins.h"
-#include "error.h"
 #include "exec.h"
 
 char	*check_path_exist(t_env_lst *env)

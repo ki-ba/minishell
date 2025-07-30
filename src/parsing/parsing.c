@@ -1,9 +1,4 @@
-#include "builtins.h"
-#include "data_structures.h"
-#include "error.h"
-#include "libft.h"
 #include "minishell.h"
-#include <fcntl.h>
 
 /** handles current TOKEN_REDIRECT.
  *	sets up open oflags according to the given metachar (<< vs < vs >> vs >)

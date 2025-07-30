@@ -1,21 +1,5 @@
 #include "minishell.h"
 
-static int	is_quote(char c);
-static void	remove_quotes_str(char str[]);
-
-/**
-	* @brief removes quotes from the given string in-place.
-	* @brief the string is re-null-terminated accordingly.
-	* @brief exceeding space is not freed.
-*/
-void	remove_quotes(void *item)
-{
-	char	*str;
-
-	str = (char *)((t_token *)item)->token;
-	remove_quotes_str(str);
-}
-
 static int	is_quote(char c)
 {
 	return (c == '\'' || c == '"');
@@ -46,4 +30,17 @@ static void	remove_quotes_str(char str[])
 		++i;
 	}
 	str[j] = '\0';
+}
+
+/**
+	* @brief removes quotes from the given string in-place.
+	* @brief the string is re-null-terminated accordingly.
+	* @brief exceeding space is not freed.
+*/
+void	remove_quotes(void *item)
+{
+	char	*str;
+
+	str = (char *)((t_token *)item)->token;
+	remove_quotes_str(str);
 }
