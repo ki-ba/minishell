@@ -6,13 +6,11 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:42:36 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/24 11:20:20 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/30 12:49:29 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "builtins.h"
-#include "error.h"
 
 static int	print_export(t_env_lst *env);
 static int	create_exp_node(char *cmd, t_env_lst **env);

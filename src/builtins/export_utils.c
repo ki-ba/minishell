@@ -6,14 +6,11 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:31:12 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/24 13:47:37 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/30 12:48:23 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
 #include "minishell.h"
-#include "error.h"
-#include "builtins.h"
 
 t_env_lst	*dup_env(t_env_lst *env)
 {
