@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_node.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 13:59:46 by kbarru            #+#    #+#             */
+/*   Updated: 2025/07/30 14:00:34 by kbarru           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include <unistd.h>
 
 /** @brief create a new empty t_exec_node structure */
 t_exec_node	*create_exec_node(void)

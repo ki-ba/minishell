@@ -1,5 +1,4 @@
 #include "minishell.h"
-#include <errno.h>
 
 /**
 * @brief creates a random string starting with tmp_ and creates

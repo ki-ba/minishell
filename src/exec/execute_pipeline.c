@@ -1,9 +1,16 @@
-#include "builtins.h"
-#include "libft.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_pipeline.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
+/*   Updated: 2025/07/30 13:59:59 by kbarru           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include <signal.h>
-#include <sys/stat.h>
-#include <sys/types.h>
 
 int	try_exec(t_list **exec, char **cmd, t_env_lst *env)
 {

@@ -1,4 +1,15 @@
-#include <errno.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
+/*   Updated: 2025/07/30 14:01:29 by kbarru           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static void	print_error_msg(int status)
@@ -70,7 +81,6 @@ int	main(int argc, char *argv[], char *envp[])
 		exit(1);
 	}
 	exit_status = 1;
-	(void)argc;
 	(void)argv;
 	env_lst = create_environment(&env_lst, envp);
 	if (env_lst)

@@ -1,4 +1,4 @@
-#include "exec.h"
+#include "minishell.h"
 
 char	*check_path_exist(t_env_lst *env)
 {
