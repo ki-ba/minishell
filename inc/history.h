@@ -1,23 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.c                                            :+:      :+:    :+:   */
+/*   history.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/30 14:09:24 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:27 by mlouis           ###   ########.fr       */
+/*   Created: 2025/07/30 12:54:23 by kbarru            #+#    #+#             */
+/*   Updated: 2025/07/30 12:54:51 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef HISTORY_H
+# define HISTORY_H
 
-void	deltoken(void *token)
-{
-	t_token	*ttoken;
-
-	ttoken = (t_token *)token;
-	if (token)
-		free(ttoken->token);
-	free(token);
-}
+void	ft_add_history(char entry[]);
+#endif

@@ -1,164 +1,71 @@
-#include "minishell.h"
-#include "exec.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
+/*   Updated: 2025/07/30 14:17:33 by kbarru           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	print_error_msg(int status)
+#include "minishell.h"
+
+static void	print_error_msg(int status)
 {
 	if (status == ERR_ARGS)
 		ft_putstr_fd("ERROR : incorrect arguments\n", 2);
 	if (status == ERR_PARSING)
-		ft_putstr_fd("ERROR : parsing failed\n", 2);
+		ft_putstr_fd("ERROR : wrong syntax\n", 2);
 	if (status == ERR_ALLOC)
 		ft_putstr_fd("ERROR : memory allocation failed\n", 2);
-	if (status == ERR_FAIL)
-		ft_putstr_fd("ERROR : unspecified issue\n", 2);
 }
 
-int	wait_processes(pid_t pid, int err)
+int	handle_line(t_env_lst *env, char cmd[], t_bool *is_exit, int *error)
 {
-	int	status;
+	char	*tmp;
 
-	status = 0;
-	if (pid == -1)
-		return (-1);
-	if (pid > 0)
-		waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status) || g_signal != 0)
+	if (cmd[0])
 	{
-		if (WIFSIGNALED(status))
-			err = WTERMSIG(status) + 128;
-		else
-			err = g_signal + 128;
-		if (err == 131)
-			printf("(core dumped)");
-		printf("\n");
+		ft_add_history(cmd);
+		tmp = ft_strtrim(cmd, " \t\n\r\v\f");
+		cmd = ft_strdup(tmp);
+		free(tmp);
+		*error = interpret_line(cmd, env, is_exit);
+		if (*error > 300)
+		{
+			print_error_msg(*error);
+			*error -= 300;
+		}
+		return (0);
 	}
-	if (err == 0 && status > 0)
-		err = status / 256;
-	while (wait(&status) > -1)
-		;
-	return (err);
+	else
+		return (1);
 }
 
-int	interpret_line(char cmd[], t_env_lst *env_lst, t_bool *is_exit)
-{
-	t_list	*tokens;
-	char	*expanded;
-	char	*to_trim;
-	t_list	*exec_lst;
-	pid_t	pid;
-	int		err;
-	t_env_lst	*qm;
-
-	err = 0;
-	qm = search_env_var(env_lst, "?");
-	if (g_signal == 2)
-	{
-		qm->value = ft_itoa(130);
-		g_signal = 0;
-	}
-	tokens = NULL;
-	if (check_meta_validity(cmd))
-		return (ERR_PARSING);
-	expanded = expand_line(env_lst, cmd);
-	if (!expanded)
-		return (ERR_ALLOC);
-	to_trim = expanded;
-	expanded = ft_strtrim(to_trim, " \t\n\r\v");
-	free(to_trim);
-	if (!ft_strncmp(expanded, "", 2))
-	{
-		free (expanded);
-		return (ft_atoi(qm->value));
-	}
-	if (check_quotes(expanded))
-		return (ERR_PARSING);
-	if (tokenize(&tokens, expanded) != 0)
-	{
-		free(expanded);
-		return (ERR_ALLOC);
-	}
-	free(expanded);
-	t_token	*token = (t_token*) tokens->content;
-	if (!tokens->next && (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
-		return (ERR_PARSING);
-	ft_lstiter(tokens, remove_quotes);
-	if (DEBUG)
-		print_token_list(tokens);
-	if (!tokens)
-		return (ERR_ALLOC);
-	exec_lst = parse_tokens(tokens);
-	ft_lstclear(&tokens, deltoken);
-	if (!exec_lst)
-		return (ERR_ALLOC);
-	if (DEBUG)
-		print_exec(exec_lst);
-	//exit
-	t_exec_node	*node;
-	node = (t_exec_node *) exec_lst->content;
-	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
-		*is_exit = 1;
-	//TODO: another function for stuff bellow to get the right err
-	// 		(either parsing/alloc from above, or from the exec after)
-	pid = exec_pipeline(&exec_lst, env_lst);
-	err = wait_processes(pid, err);
-	ft_lstclear(&exec_lst, del_exec_node);
-	return (err);
-}
-#include <errno.h>
 int	readline_loop(t_env_lst *env_lst)
 {
-	char	*cmd;
-	int		hist_fd;
-	char	*last_cmd;
-	int		error;
-	char	*hist_fd_str;
-	t_env_lst	*qm_var;
+	char		*cmd;
+	int			error;
+	t_bool		is_exit;
 
 	error = 0;
-	last_cmd = NULL;
-	cmd = NULL;
-	hist_fd = retrieve_history(&last_cmd);
-	hist_fd_str = ft_itoa(hist_fd);
-	add_to_env(env_lst, HIST_FILE, hist_fd_str, 1);
-	if (DEBUG)
-		print_env(env_lst);
-	free(hist_fd_str);
-	qm_var = search_env_var(env_lst, "?");
-	t_bool is_exit;
 	is_exit = FALSE;
-	while (error != ERR_ALLOC && !is_exit) // if error occured, quit program
+	g_signal = 0;
+	while (error != ERR_ALLOC && !is_exit)
 	{
-		g_signal = 0;
 		init_signals();
-		if (error > -1)
-		{
-			free(qm_var->value);
-			qm_var->value = ft_itoa(error);
-		}
-		else
-			error = ft_atoi(qm_var->value);
+		errno = 0;
 		cmd = readline("zinzinshell$ ");
-		if (cmd && cmd[0])
-		{
-			ft_add_history(hist_fd, cmd, last_cmd);
-			error = interpret_line(cmd, env_lst, &is_exit);
-			if (last_cmd)
-				free(last_cmd);
-			last_cmd = cmd;
-			if (error == ERR_PARSING)
-				print_error_msg(error);
-		}
-		if (!cmd)
-		{
-			if (g_signal == 2)
-				error = 130;
-			// printf("exit\n");
-			break ;
-		}
+		if (errno != 0)
+			return (ERR_ALLOC);
+		if (cmd && (handle_line(env_lst, cmd, &is_exit, &error) || 1))
+			continue ;
+		break ;
+		g_signal = 0;
 	}
-	if (is_exit)
-		error = ft_atoi(qm_var->value);
-	close(hist_fd);
+	ft_add_history(NULL);
 	return (error);
 }
 
@@ -167,8 +74,13 @@ int	main(int argc, char *argv[], char *envp[])
 	t_env_lst	*env_lst;
 	int			exit_status;
 
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
+	{
+		if (!isatty(STDIN_FILENO))
+			ft_putstr_fd("error : funny business detected\n", 2);
+		exit(1);
+	}
 	exit_status = 1;
-	(void)argc;
 	(void)argv;
 	env_lst = create_environment(&env_lst, envp);
 	if (env_lst)

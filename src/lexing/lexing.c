@@ -1,5 +1,15 @@
-#include "error.h"
-#include "libft.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexing.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:08:47 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/30 14:08:52 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b)
@@ -63,7 +73,6 @@ int	tokenize(t_list **tokens, char *line)
 		if (!cur_token || !new)
 		{
 			ft_lstclear(tokens, deltoken);
-			// deltoken(cur_token);
 			return (ERR_ALLOC);
 		}
 		ft_lstadd_back(tokens, new);
@@ -71,5 +80,5 @@ int	tokenize(t_list **tokens, char *line)
 		while (ft_iswhitespace(line[i]))
 			++i;
 	}
-	return (!line);
+	return (!line * ERR_PARSING);
 }

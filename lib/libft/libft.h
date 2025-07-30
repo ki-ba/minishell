@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:06:45 by kbarru            #+#    #+#             */
-/*   Updated: 2025/06/10 14:09:58 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/16 12:46:04 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ char				*ft_strnjoin(char *s1, char *s2, size_t n);
 char				*ft_strncpy(char dst[], const char src[], size_t n);
 
 int					find_char(char *str, char c);
+int					find_char_end(char *str, char c);
 int					ft_printf_fd(int fd, const char *format, ...);
 int					converter_handler_fd(const char format, va_list a_lst,
 						int fd);

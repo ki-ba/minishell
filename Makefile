@@ -27,12 +27,12 @@ INC_DIR = inc/
 TEST_DIR = test/
 
 
-ENV_SRC = env.c env_utils.c
+ENV_SRC = env_init.c env_utils.c no_env.c envlist_utils.c 
 HISTORY_SRC = history.c
-LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c token.c id_token.c quotes.c
-BUILTINS_SRC = echo.c cd.c pwd.c export.c unset.c env.c exit.c export_utils.c
+LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c expand_check.c token.c id_token.c quotes.c
+BUILTINS_SRC = echo.c cd.c pwd.c export.c unset.c env.c exit.c export_utils.c cd_utils.c cd_symlink.c
 PARSING_SRC = parsing.c parsing_utils.c exec_node.c double_input_redir.c
-EXEC_SRC = builtins_call.c envlist_utils.c execute_pipeline.c
+EXEC_SRC = builtins_call.c execute_pipeline.c exec_utils.c execution.c
 SIGNALS_SRC = signals.c
 
 ENV_SRC_DIR = env/
@@ -52,7 +52,7 @@ P_PARSING = $(addprefix $(PARSING_SRC_DIR), $(PARSING_SRC))
 P_EXEC = $(addprefix $(EXEC_SRC_DIR), $(EXEC_SRC))
 P_SIGNALS = $(addprefix $(SIGNALS_DIR), $(SIGNALS_SRC))
 
-SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) $(P_EXEC) $(P_SIGNALS) main.c debug.c
+SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) $(P_EXEC) $(P_SIGNALS) initial_formatting.c main.c debug.c
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 INCLUDES = $(INC_DIR)minishell.h
@@ -61,7 +61,10 @@ TOBJ = $(filter-out $(OBJ_DIR)main.o, $(OBJ))
 
 .PHONY = all clean fclean re lib test
 
-all : $(NAME)
+all : libft $(NAME)
+
+libft :
+	$(MAKE) -C $(LIB_DIR)
 
 $(NAME) : $(OBJ) $(LIB_DIR)libft.a
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $@
@@ -113,7 +116,7 @@ asan :
 	$(MAKE) clean
 
 debug :
-	$(MAKE) re CFLAGS+="-D DEBUG=TRUE -g"
+	$(MAKE) re CFLAGS=$(DEBUG_FLAGS)
 	$(MAKE) clean
 
 ###### OBJECT FILES ######

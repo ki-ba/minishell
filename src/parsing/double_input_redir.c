@@ -1,7 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   double_input_redir.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/30 14:17:39 by kbarru           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 /**
 * @brief creates a random string starting with tmp_ and creates
@@ -37,42 +46,40 @@ int	ft_max(int a, int b)
 
 int	rl_help(void)
 {
-	if (g_signal == 2)
+	if (g_signal == SIGINT)
 		rl_done = 1;
-	return 0;
+	return (0);
 }
 
-#include <termios.h>
 static void	fill_input(int fd, char del[], char *prompt)
 {
 	size_t	len;
-	size_t	dlen;
 	char	*line;
 
 	line = NULL;
 	rl_event_hook = rl_help;
+	errno = 0;
 	line = readline(prompt);
 	len = ft_strlen(line);
-	dlen = ft_strlen(del);
-	while (g_signal != 2 && line && ft_strncmp(line, del, ft_max(len - 1, dlen)))
+	while (g_signal != 2
+		&& line && ft_strncmp(line, del, ft_max(len, ft_strlen(del))))
 	{
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);
+		errno = 0;
 		line = readline(prompt);
+		if (errno)
+			break ;
 		len = ft_strlen(line);
 	}
 	rl_done = 0;
 	rl_event_hook = NULL;
 	if (!line && g_signal != 2)
-	{
-		ft_printf_fd(2,
-			"minishell: warning: ended with end of file instead of '%s'\n",
-			 del);
-	}
+		ft_putendl_fd("minishell: warning: ended with end of file", 2);
 	free(line);
 }
-#include <signal.h>
+
 int	read_input(char *del)
 {
 	int		fd;
@@ -84,7 +91,8 @@ int	read_input(char *del)
 		return (fd);
 	if (g_signal != 2)
 		fill_input(fd, del, "input> ");
-	close (fd);
+	if (fd > 0)
+		close (fd);
 	if (g_signal != 2)
 		fd = open(filename, O_RDONLY);
 	else

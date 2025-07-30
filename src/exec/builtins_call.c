@@ -1,8 +1,33 @@
-#include "libft.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_call.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:09:04 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/30 14:09:05 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include "builtins.h"
-#include "error.h"
-#include "exec.h"
+
+char	*check_path_exist(t_env_lst *env)
+{
+	t_env_lst	*var;
+	char		*path;
+
+	var = search_env_var(env, "PATH");
+	if (!var)
+		path = ft_strdup(".");
+	else
+	{
+		path = ft_strdup(get_env_val(env, "PATH", 0));
+		if (!path)
+			path = ft_strdup(".");
+	}
+	return (path);
+}
 
 char	*find_path(char *cmd, t_env_lst *env)
 {
@@ -10,18 +35,19 @@ char	*find_path(char *cmd, t_env_lst *env)
 	char	*path;
 	size_t	i;
 
-	paths = ft_split(get_env_val(env, "PATH", 0), ':');
+	path = check_path_exist(env);
+	paths = ft_split(path, ':');
 	if (!paths)
 		return (NULL);
+	if (path)
+		free(path);
 	i = 0;
 	path = NULL;
 	while (paths[i])
 	{
 		path = ft_concat(3, paths[i], "/", cmd);
 		if (!path || !access(path, F_OK & X_OK))
-		{
 			break ;
-		}
 		free(path);
 		path = NULL;
 		i++;
@@ -48,8 +74,6 @@ t_bool	is_builtin(char **cmd)
 
 int	call_cmd(char **cmd, t_env_lst *env)
 {
-	t_env_lst	*qm;
-	char		*err_c;
 	int			err;
 
 	err = 1;
@@ -69,11 +93,8 @@ int	call_cmd(char **cmd, t_env_lst *env)
 		err = ft_exit(cmd, env);
 	else if (!ft_strncmp(cmd[0], "env", 4))
 		err = ft_env(cmd, env);
-	qm = search_env_var(env, "?");
-	err_c = ft_itoa(err); //check
-	free(qm->value);
-	qm->value = ft_strdup(err_c);
-	free(err_c);
-	// check
+	if (err > 300 && err != ERR_ALLOC)
+		err -= 300;
+	update_qm(env, err, 0);
 	return (err);
 }

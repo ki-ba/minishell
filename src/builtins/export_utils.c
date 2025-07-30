@@ -1,7 +1,16 @@
-#include "libft.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 10:31:12 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/30 12:48:23 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include "error.h"
-#include "builtins.h"
 
 t_env_lst	*dup_env(t_env_lst *env)
 {
@@ -15,13 +24,14 @@ t_env_lst	*dup_env(t_env_lst *env)
 	dup = NULL;
 	while (tmp)
 	{
-		cpy = malloc(sizeof(t_env_lst));
-		cpy->name = ft_strdup(tmp->name);
-		cpy->value = ft_strdup(tmp->value);
-		cpy->next = NULL;
-		env_add_back(&dup, cpy);
+		if (tmp->name)
+		{
+			cpy = new_env_entry(tmp->name, tmp->value);
+			env_add_back(&dup, cpy);
+		}
 		tmp = tmp->next;
 	}
+	tmp = NULL;
 	return (dup);
 }
 

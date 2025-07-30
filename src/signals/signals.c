@@ -1,7 +1,18 @@
-#include "minishell.h"
-#include <signal.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/24 17:09:11 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/30 12:56:40 by kbarru           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
-int g_signal;
+#include "minishell.h"
+
+int	g_signal;
 
 void	sigint_handler(int sig)
 {
@@ -21,23 +32,39 @@ void	sig_handler_cmd(int sig)
 	rl_on_new_line();
 }
 
+void	sig_handler_redir(int sig)
+{
+	if (sig == SIGINT)
+	{
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
+	}
+	g_signal = sig;
+}
+
 void	update_signals(int cmd)
 {
 	struct sigaction	s_sa;
 	struct sigaction	s_si;
 
-    sigemptyset(&s_sa.sa_mask); 
-    sigemptyset(&s_si.sa_mask); 
-    sigaddset(&s_sa.sa_mask, SIGINT); 
-    sigaddset(&s_si.sa_mask, SIGQUIT);
-    s_sa.sa_flags = SA_SIGINFO;
-    s_si.sa_flags = SA_SIGINFO;
-	s_sa.sa_handler = &sig_handler_cmd;
-    if (cmd)
+	sigemptyset(&s_sa.sa_mask);
+	sigemptyset(&s_si.sa_mask);
+	sigaddset(&s_sa.sa_mask, SIGINT);
+	sigaddset(&s_si.sa_mask, SIGQUIT);
+	s_sa.sa_flags = SA_RESTART;
+	s_si.sa_flags = SA_RESTART;
+	if (cmd)
+	{
+		s_sa.sa_handler = &sig_handler_cmd;
 		s_si.sa_handler = &sig_handler_cmd;
-    else
+	}
+	else
+	{
+		s_sa.sa_handler = &sig_handler_redir;
 		s_si.sa_handler = SIG_IGN;
-    sigaction(SIGINT, &s_sa, NULL);
+	}
+	sigaction(SIGINT, &s_sa, NULL);
 	sigaction(SIGQUIT, &s_si, NULL);
 }
 
@@ -48,10 +75,10 @@ void	init_signals(void)
 
 	sigemptyset(&s_sa.sa_mask);
 	sigemptyset(&s_si.sa_mask);
-	sigaddset(&s_sa.sa_mask, SIGINT); 
+	sigaddset(&s_sa.sa_mask, SIGINT);
 	sigaddset(&s_si.sa_mask, SIGQUIT);
 	s_sa.sa_flags = SA_SIGINFO;
-    s_si.sa_flags = SA_SIGINFO;
+	s_si.sa_flags = SA_SIGINFO;
 	s_sa.sa_handler = &sigint_handler;
 	s_si.sa_handler = SIG_IGN;
 	sigaction(SIGINT, &s_sa, NULL);

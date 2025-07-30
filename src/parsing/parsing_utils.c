@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:09:40 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/30 14:09:41 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /**
@@ -25,4 +37,26 @@ char	**add_to_array(char **arr, char *str)
 	arr2[initial_size + 1] = NULL;
 	free(arr);
 	return (arr2);
+}
+
+int	check_parsing(char str[])
+{
+	if (!str || !ft_strncmp(str, "\0", 1) || check_quotes(str))
+	{
+		free (str);
+		return (1);
+	}
+	return (0);
+}
+
+int	process_tokens(t_list *tokens)
+{
+	t_token	*token;
+
+	token = (t_token *) tokens->content;
+	if (!tokens->next
+		&& (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
+		return (ERR_PARSING);
+	ft_lstiter(tokens, remove_quotes);
+	return (0);
 }

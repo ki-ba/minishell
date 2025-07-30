@@ -1,23 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token.c                                            :+:      :+:    :+:   */
+/*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/30 14:09:24 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:27 by mlouis           ###   ########.fr       */
+/*   Created: 2025/07/30 12:55:30 by kbarru            #+#    #+#             */
+/*   Updated: 2025/07/30 12:56:33 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef SIGNALS_H
+# define SIGNALS_H
 
-void	deltoken(void *token)
-{
-	t_token	*ttoken;
+void	sigint_handler(int sig);
+void	sig_handler_cmd(int sig);
+void	sig_handler_redir(int sig);
+void	update_signals(int cmd);
+void	init_signals(void);
 
-	ttoken = (t_token *)token;
-	if (token)
-		free(ttoken->token);
-	free(token);
-}
+#endif

@@ -1,20 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:09:00 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/30 14:09:02 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-
-static int	is_quote(char c);
-static void	remove_quotes_str(char str[]);
-
-/**
-	* @brief removes quotes from the given string in-place.
-	* @brief the string is re-null-terminated accordingly.
-	* @brief exceeding space is not freed.
-*/
-void	remove_quotes(void *item)
-{
-	char	*str;
-
-	str = (char *)((t_token *)item)->token;
-	remove_quotes_str(str);
-}
 
 static int	is_quote(char c)
 {
@@ -46,4 +42,17 @@ static void	remove_quotes_str(char str[])
 		++i;
 	}
 	str[j] = '\0';
+}
+
+/**
+	* @brief removes quotes from the given string in-place.
+	* @brief the string is re-null-terminated accordingly.
+	* @brief exceeding space is not freed.
+*/
+void	remove_quotes(void *item)
+{
+	char	*str;
+
+	str = (char *)((t_token *)item)->token;
+	remove_quotes_str(str);
 }
