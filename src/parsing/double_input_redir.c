@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:14:12 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/07/30 14:17:39 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ static void	fill_input(int fd, char del[], char *prompt)
 		free(line);
 		errno = 0;
 		line = readline(prompt);
-		// if (errno)
-		// 	break ;
+		if (errno)
+			break ;
 		len = ft_strlen(line);
 	}
 	rl_done = 0;
