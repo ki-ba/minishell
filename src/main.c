@@ -6,7 +6,7 @@
 /*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 14:01:29 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/07/30 14:14:26 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,8 @@ int	readline_loop(t_env_lst *env_lst)
 		init_signals();
 		errno = 0;
 		cmd = readline("zinzinshell$ ");
-		if (errno != 0)
-			return (ERR_ALLOC);
+		// if (errno != 0)
+		// 	return (ERR_ALLOC);
 		if (cmd && (handle_line(env_lst, cmd, &is_exit, &error) || 1))
 			continue ;
 		break ;
@@ -74,12 +74,13 @@ int	main(int argc, char *argv[], char *envp[])
 	t_env_lst	*env_lst;
 	int			exit_status;
 
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
-	{
-		if (!isatty(STDIN_FILENO))
-			ft_putstr_fd("error : funny business detected\n", 2);
-		exit(1);
-	}
+	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
+	// {
+	// 	if (!isatty(STDIN_FILENO))
+	// 		ft_putstr_fd("error : funny business detected\n", 2);
+	// 	exit(1);
+	// }
+	(void)argc;
 	exit_status = 1;
 	(void)argv;
 	env_lst = create_environment(&env_lst, envp);
