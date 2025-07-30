@@ -55,7 +55,8 @@ P_SIGNALS = $(addprefix $(SIGNALS_DIR), $(SIGNALS_SRC))
 SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) $(P_EXEC) $(P_SIGNALS) initial_formatting.c main.c debug.c
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
-INCLUDES = $(INC_DIR)minishell.h
+R_INCLUDES = minishell.h exec.h parsing.h lexing.h history.h signals.h builtins.h data_structures.h env.h error.h
+INCLUDES = $(addprefix $(INC_DIR), $(R_INCLUDES))
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:%.c=%.o)) 
 TOBJ = $(filter-out $(OBJ_DIR)main.o, $(OBJ))
 
