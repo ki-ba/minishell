@@ -6,13 +6,11 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:41:42 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/28 17:28:21 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/07/30 12:45:53 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "builtins.h"
-#include "error.h"
 #include <limits.h>
 
 static int	no_arg_cd(char **cmd, t_env_lst *env);
