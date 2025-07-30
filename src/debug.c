@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   debug.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:07:36 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/30 14:07:53 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	display_token(t_token *token)
@@ -64,6 +76,7 @@ static void	print_cmd(char *cmd[])
 	}
 	ft_printf("\n");
 }
+
 void	print_exec(t_list	*exec_lst)
 {
 	t_exec_node	*current;
