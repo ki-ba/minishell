@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 14:17:27 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 17:09:07 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 	err = call_cmd(exe->cmd, env);
 	if (exe->filename[1])
 		dup2(saved, STDOUT_FILENO);
-	if (saved > 0)
+	if (saved > STDOUT_FILENO)
 		close (saved);
 	return (err);
 }

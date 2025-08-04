@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:40 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 15:36:00 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 18:29:22 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,20 @@ int	check_parsing(char str[])
 int	process_tokens(t_list *tokens)
 {
 	t_token	*token;
+	t_token	*token2;
 
-	token = (t_token *) tokens->content;
+	while (tokens->next)
+	{
+		token = (t_token *) tokens->content;
+		token2 = (t_token *) tokens->next->content;
+		if (token->type == TOKEN_REDIRECT && token2->type == TOKEN_REDIRECT)
+			return (ERR_PARSING);
+		if (token->type == TOKEN_REDIRECT && token2->type == TOKEN_PIPE)
+			return (ERR_PARSING);
+		if (token->type == TOKEN_PIPE && token2->type == TOKEN_PIPE)
+			return (ERR_PARSING);
+		tokens = tokens->next;
+	}
 	if (!tokens->next
 		&& (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
 		return (ERR_PARSING);
