@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:24:24 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 16:08:38 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 	errno = 0;
 	line = readline(prompt);
 	len = ft_strlen(line);
-	while (!errno && g_signal != 2
+	while (g_signal != 2
 		&& line && ft_strncmp(line, del, ft_max(len, ft_strlen(del))))
 	{
 		write(fd, line, ft_strlen(line));

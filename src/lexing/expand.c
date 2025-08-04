@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:21:14 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 16:07:55 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static char	*expand_dollar(t_env_lst *env, char *str, size_t i, size_t len)
 		else
 			next_chunk = ft_strdup("");
 	}
-	else if (!str[i + 1] || str[i + 1] == '$' || str[i + 1] == '"')
+	else if (!str[i + 1] || str[i + 1] == '$' || is_inquote(str, i + 1))
 		next_chunk = ft_strdup("$");
 	else
 		next_chunk = ft_strdup("");
