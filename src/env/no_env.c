@@ -6,11 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:15 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:16 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:14:52 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "data_structures.h"
+#include "env.h"
+#include <limits.h>
 
 static void	add_pwd(t_env_lst **env_lst)
 {

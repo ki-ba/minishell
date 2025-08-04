@@ -6,11 +6,12 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:00 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:02 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:22:51 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "lexing.h"
 
 static int	is_quote(char c)
 {

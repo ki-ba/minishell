@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   exec_node.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:46 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 14:00:34 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 14:24:51 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "data_structures.h"
 
 /** @brief create a new empty t_exec_node structure */
 t_exec_node	*create_exec_node(void)

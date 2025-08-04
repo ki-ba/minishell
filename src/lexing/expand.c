@@ -6,11 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:32 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:21:14 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "lexing.h"
+#include "env.h"
 
 static char	*expand_dollar(t_env_lst *env, char *str, size_t i, size_t len);
 static char	*expand_metachar(char *str, size_t i, size_t len);

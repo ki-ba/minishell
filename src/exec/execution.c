@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 13:59:35 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 15:42:43 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+#include "data_structures.h"
+#include "exec.h"
+#include "error.h"
+#include "parsing.h"
 #include "minishell.h"
+#include "env.h"
+#include "lexing.h"
+#include "builtins.h"
+#include "signals.h"
+#include <sys/wait.h>
 
 int	wait_processes(pid_t pid, int err)
 {
@@ -68,7 +78,7 @@ int	interpret_line(char *cmd, t_env_lst *env_lst, t_bool *is_exit)
 	tokens = NULL;
 	cmd = format_cmd(env_lst, cmd);
 	if (!cmd)
-		return (SUCCESS);
+		return (ERR_PARSING);
 	if (tokenize(&tokens, cmd) != 0)
 		return (tokenize(&tokens, cmd));
 	free(cmd);

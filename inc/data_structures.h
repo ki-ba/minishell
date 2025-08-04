@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   data_structures.h                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:08:47 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 12:22:19 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 13:53:11 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DATA_STRUCTURES_H
 # define DATA_STRUCTURES_H
 
-# include <stddef.h>
+// # include <stddef.h>
 
 /* note : a TOKEN_FILE can only be after a redirection.
  * in other cases, it is considered a TOKEN_STR,

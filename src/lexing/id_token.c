@@ -6,11 +6,11 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:33 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:08:37 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:21:32 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
 /**
 	* @brief determines if the given string is a redirection meta-character.

@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexing.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:17:03 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 13:00:10 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 14:20:10 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "data_structures.h"
-#include "libft.h"
+// #include "libft.h"
+// # include <stddef.h>
 
 /* LEXING */
 

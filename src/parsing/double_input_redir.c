@@ -6,11 +6,15 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:38 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:24:24 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "data_structures.h"
+#include "signals.h"
 #include "minishell.h"
+#include <errno.h>
+#include <readline/readline.h>
 
 /**
 * @brief creates a random string starting with tmp_ and creates

@@ -6,11 +6,12 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:55 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:08:58 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:20:29 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "error.h"
 
 int	is_metachar(char c)
 {

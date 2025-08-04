@@ -6,11 +6,12 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:09:11 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 12:56:40 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 14:26:34 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <signal.h>
+#include <readline/readline.h>
 
 int	g_signal;
 
