@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:40 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 18:29:22 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 19:21:00 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	process_tokens(t_list *tokens)
 			return (ERR_PARSING);
 		tokens = tokens->next;
 	}
+	token = (t_token *) tokens->content;
 	if (!tokens->next
 		&& (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))
 		return (ERR_PARSING);

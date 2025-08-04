@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 16:07:35 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 18:49:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,10 @@ int	readline_loop(t_env_lst *env_lst)
 		errno = 0;
 		cmd = readline("zinzinshell$ ");
 		if (errno != 0)
+		{
+			perror("readline");
 			return (ERR_ALLOC);
+		}
 		if (cmd && (handle_line(env_lst, cmd, &is_exit, &error) || 1))
 			continue ;
 		break ;
