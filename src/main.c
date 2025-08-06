@@ -69,13 +69,15 @@ int	readline_loop(t_env_lst *env_lst)
 	g_signal = 0;
 	while (error != ERR_ALLOC && !is_exit)
 	{
+		cmd = NULL;
 		init_signals();
 		errno = 0;
 		cmd = readline("zinzinshell$ ");
 		if (errno != 0)
 		{
+			free(cmd);
 			perror("readline");
-			return (ERR_ALLOC);
+			return (ERR_FAIL);
 		}
 		if (cmd && (handle_line(env_lst, cmd, &is_exit, &error) || 1))
 			continue ;
