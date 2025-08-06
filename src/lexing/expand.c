@@ -1,9 +1,22 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
+/*   Updated: 2025/08/04 16:07:55 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// static t_bool	ft_isquote(char c)
-// {
-// 	return (c == '\'' || c == '"');
-// }
+#include "libft.h"
+#include "lexing.h"
+#include "env.h"
+
+static char	*expand_dollar(t_env_lst *env, char *str, size_t i, size_t len);
+static char	*expand_metachar(char *str, size_t i, size_t len);
+static char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len);
 
 char	*expand_line(t_env_lst *env, char str[])
 {
@@ -21,6 +34,10 @@ char	*expand_line(t_env_lst *env, char str[])
 		part_len = get_part_len(&str[i]);
 		next_chunk = set_chunk_val(env, str, i, part_len);
 		i += part_len;
+		if (!is_inquote(str, i) && is_metachar(str[i]))
+			++i;
+		if (!is_inquote(str, i) && (str[i] == '<' || str[i] == '>'))
+			++i;
 		join_in_place(&expanded, next_chunk);
 		if (!expanded)
 			return (NULL);
@@ -28,55 +45,73 @@ char	*expand_line(t_env_lst *env, char str[])
 	return (expanded);
 }
 
-/**
-*	@brief counts the number of 'parts' in provided string.
-*	@brief a part is either an env. variable name, or a string
-*	@brief that is between two env. variable names, or between a variable
-*	@brief name and the beginning/end of the string.
-*	@brief for instance, "Hi $USR you are at $PWD" contains 4 parts.
-*/
-// size_t	count_parts(char *line)
-// {
-// 	size_t	i;
-// 	size_t	n;
-// 	size_t	len;
-//
-// 	last_del = '\0';
-// 	i = 0;
-// 	n = 0;
-// 	quote = 0;
-// 	len = ft_strlen(line);
-// 	quote = '\0';
-// 	while (i < len)
-// 	{
-// 		++n;
-// 		i += get_part_len(&line[i]);
-// 	}
-// 	return (n);
-// }
+static char	*set_chunk_val(t_env_lst *env, char *str, size_t i, size_t len)
+{
+	char		*next_chunk;
 
-// char	**split_vars(char *line)
-// {
-// 	char	**arr;
-// 	size_t	nb_parts;
-// 	size_t	i;
-// 	size_t	j;
-//
-// 	i = 0;
-// 	j = 0;
-// 	nb_parts = count_parts(line);
-// 	arr = ft_calloc(nb_parts, sizeof(char *));
-// 	if (!arr)
-// 		return (NULL);
-// 	while (i < nb_parts)
-// 	{
-// 		arr[i] = ft_substr(line, j, get_part_len(&line[j]));
-// 		if (!arr[i])
-// 		{
-// 			ft_free_arr(arr);
-// 			return (NULL);
-// 		}
-// 	}
-// 	arr[i] = (NULL);
-// 	return (arr);
-// }
+	if (i == 0 && is_metachar(str[i]))
+	{
+		++i;
+		--len;
+		if (str[i] == '<' || str[i] == '>')
+		{
+			++i;
+			--len;
+		}
+	}
+	if (str[i] == '$' && must_expand(str, i))
+		next_chunk = expand_dollar(env, str, i, len);
+	else if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
+		next_chunk = expand_metachar(str, i, len);
+	else
+		next_chunk = ft_substr(str, i, len);
+	return (next_chunk);
+}
+
+static char	*expand_dollar(t_env_lst *env, char *str, size_t i, size_t len)
+{
+	char		*varname;
+	char		*next_chunk;
+	t_env_lst	*tmp;
+
+	varname = ft_substr(str, i + 1, len - (len > 1));
+	if (!varname)
+		return (NULL);
+	if (ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?')
+	{
+		tmp = search_env_var(env, varname);
+		if (tmp)
+			next_chunk = ft_concat(3, "\"", tmp->value, "\"");
+		else
+			next_chunk = ft_strdup("");
+	}
+	else if (!str[i + 1] || str[i + 1] == '$' || is_inquote(str, i + 1))
+		next_chunk = ft_strdup("$");
+	else
+		next_chunk = ft_strdup("");
+	free(varname);
+	return (next_chunk);
+}
+
+static char	*expand_metachar(char *str, size_t i, size_t len)
+{
+	char	*varname;
+	char	*next_chunk;
+	char	meta[3];
+
+	if (!is_inquote(str, i))
+		--i;
+	varname = ft_substr(str, i + 1, len);
+	if (!varname)
+		return (NULL);
+	ft_bzero(meta, 3);
+	meta[0] = str[i];
+	if (str[i] != '|' && (i > 0 && str[i] == str[i - 1]))
+		meta[1] = meta[0];
+	if (is_inquote(str, i))
+		next_chunk = ft_concat(2, meta, varname);
+	else
+		next_chunk = ft_concat(4, " ", meta, " ", varname);
+	free(varname);
+	return (next_chunk);
+}

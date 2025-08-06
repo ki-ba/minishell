@@ -1,13 +1,23 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/23 20:41:42 by mlouis            #+#    #+#             */
+/*   Updated: 2025/08/04 14:06:51 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
 #include "builtins.h"
 #include "error.h"
-#include <limits.h>
+#include "env.h"
 
 static int	no_arg_cd(char **cmd, t_env_lst *env);
-static int	update_env(char *new_path, t_env_lst *env);
-static int	check_dir_access(char *new_path);
-
-//TODO: go bad to check if `cd ""` function properly after cmd is properly passed
+static int	change_dir(char **cmd, t_env_lst *env);
+static char	*getsymlink(char *cmd, t_env_lst *env);
 
 /** @brief if relative => check access from end to start */
 /** @param cmd[0] is the cmd (here cd) */
@@ -16,94 +26,81 @@ static int	check_dir_access(char *new_path);
 /** @return 0 on success or a non-zero int on failure */
 int	ft_cd(char **cmd, t_env_lst *env)
 {
-	size_t	i;
-	int		err;
-	char	path[PATH_MAX];
-
-	if (cmd[1] == NULL)
-		return (no_arg_cd(cmd, env));
-	if (cmd[2] != NULL)
+	if (cmd[1] != NULL && cmd[2] != NULL)
 	{
-		ft_putendl_fd("minishell: cd: to many arguments", 2);
+		ft_putendl_fd("minishell: cd: too many arguments", 2);
 		return (ERR_ARGS);
 	}
+	if (cmd[1] == NULL)
+		return (no_arg_cd(cmd, env));
+	return (change_dir(cmd, env));
+}
+
+static int	change_dir(char **cmd, t_env_lst *env)
+{
+	size_t		i;
+	int			err;
+	char		*path;
+
+	path = NULL;
 	if (cmd[1][0] == '\0')
 		return (SUCCESS);
 	i = ft_strlen(cmd[1]) - 1;
 	if (i > 0 && cmd[1][i] == '/')
 		cmd[1][i] = '\0';
-	err = check_dir_access(cmd[1]);
-	err = chdir(cmd[1]);
-	if (err != 0)
-	{
-		perror("minishell: cd");
-		return (err);
-	}
-	err = update_env(getcwd(path, PATH_MAX), env);
+	path = getsymlink(cmd[1], env);
+	if (!path)
+		return (ERR_ALLOC);
+	err = check_dir_access(path);
+	if (err == SUCCESS)
+		err = chdir(path);
+	if (err == SUCCESS)
+		err = update_env(path, env);
+	free(path);
+	if (err != SUCCESS)
+		err = ERR_ARGS;
 	return (err);
 }
 
-static int	check_dir_access(char *new_path)
+static char	*getsymlink(char *cmd, t_env_lst *env)
 {
-	char	*full_path;
-	size_t	i;
-	size_t	j;
+	char	*path_parts[3];
 	int		err;
+	size_t	len;
 
-	i = 0;
-	full_path = NULL;
-	while (new_path[i] != '\0')
+	err = setup_path_parts(path_parts, cmd, env);
+	if (err)
+		return (NULL);
+	len = ft_strlen(cmd);
+	while (path_parts[1][0] != '\0')
 	{
-		j = i + 1;
-		while (new_path[j - 1] != '/' && new_path[j] != '\0')
-			j++;
-		full_path = ft_concat(2, full_path, ft_substr(new_path, i, j - i));
-		err = access(full_path, R_OK | X_OK);
-		if (err != 0)
-		{
-			perror("minishell: cd");
-			break ;
-		}
-		i = j;
+		err = getsymlink_helper(path_parts, cmd, len);
+		if (err)
+			return (NULL);
 	}
-	free (full_path);
-	return (err);
-}
-
-static int	update_env(char *new_path, t_env_lst *env)
-{
-	t_env_lst	*head;
-	t_env_lst	*tmp;
-
-	head = env;
-	tmp = search_env_var(env, "PWD");
-	env = search_env_var(env, "OLDPWD");
-	env->value = ft_strdup(tmp->value);
-	if (!env->value)
+	if (path_parts[1])
+		free(path_parts[1]);
+	if (path_parts[0][0] == '\0')
 	{
-		perror("minishell: cd");
-		return (ERR_ALLOC);
+		free(path_parts[0]);
+		path_parts[0] = ft_strdup("/");
+		if (!path_parts[0])
+			return (NULL);
 	}
-	tmp->value = ft_strdup(new_path);
-	if (!tmp->value)
-	{
-		perror("minishell: cd");
-		return (ERR_ALLOC);
-	}
-	env = head;
-	return (SUCCESS);
+	return (path_parts[0]);
 }
 
 static int	no_arg_cd(char **cmd, t_env_lst *env)
 {
 	t_env_lst	*home;
+	int			err;
 
+	err = 0;
 	home = search_env_var(env, "HOME");
-	if (!home || !(home->value))
+	if (!home || !home->value)
 	{
-		cmd[1] = ft_strdup("/");
-		if (!cmd[1])
-			return (ERR_ALLOC);
+		ft_putendl_fd("minishell: cd: HOME not set", 2);
+		return (ERR_ARGS);
 	}
 	else
 	{
@@ -111,6 +108,8 @@ static int	no_arg_cd(char **cmd, t_env_lst *env)
 		if (!cmd[1])
 			return (ERR_ALLOC);
 	}
-	ft_cd(cmd, env);
-	return (0);
+	err = change_dir(cmd, env);
+	free(cmd[1]);
+	cmd[1] = NULL;
+	return (err);
 }

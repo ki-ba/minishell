@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_create_random_str.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 11:05:42 by kiba              #+#    #+#             */
-/*   Updated: 2025/03/10 12:21:05 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/07/22 17:48:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ char	*create_random_str(size_t len)
 	while (!random_str[0] || !ft_str_is_alnum(random_str)
 		|| ft_strlen(random_str) != len)
 		read(urandom, random_str, len);
-	close(urandom);
+	if (urandom > 0)
+		close(urandom);
 	return (random_str);
 }

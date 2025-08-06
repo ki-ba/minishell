@@ -1,32 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
+/*   find_char.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/15 13:11:07 by kbarru            #+#    #+#             */
-/*   Updated: 2025/06/10 13:53:08 by mlouis           ###   ########.fr       */
+/*   Created: 2025/06/10 13:50:35 by mlouis            #+#    #+#             */
+/*   Updated: 2025/07/16 12:48:36 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_putnbr_fd(int nb, int fd)
+int	find_char(char *str, char c)
 {
-	int		len;
-	char	cnb;
+	int	i;
 
-	len = 0;
-	if (nb == -2147483648)
-		return (ft_putstr_fd("-2147483648", fd));
-	if (nb < 0)
+	i = 0;
+	while (str[i])
 	{
-		nb = -nb;
-		len = len + ft_putchar_fd('-', fd);
+		if (str[i] == c)
+			return (i);
+		++i;
 	}
-	cnb = nb % 10 + '0';
-	if (nb > 9)
-		len = len + ft_putnbr_fd(nb / 10, fd);
-	return (len + ft_putchar_fd(cnb, fd));
+	return (-1);
+}
+
+int	find_char_end(char *str, char c)
+{
+	int	i;
+
+	i = ft_strlen(str) - 1;
+	while (i >= 0)
+	{
+		if (str[i] == c)
+			return (i);
+		--i;
+	}
+	return (-1);
 }

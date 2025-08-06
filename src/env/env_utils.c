@@ -1,5 +1,34 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:08:13 by mlouis            #+#    #+#             */
+/*   Updated: 2025/08/04 14:13:09 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
+#include "data_structures.h"
 #include "minishell.h"
+#include <limits.h>
+
+int	handle_shlvl(t_env_lst *new)
+{
+	int	prev_shlvl;
+
+	prev_shlvl = ft_atoi(getenv("SHLVL"));
+	new->value = ft_itoa(prev_shlvl + 1);
+	if (prev_shlvl < 0 || prev_shlvl >= INT_MAX)
+	{
+		return (ft_putstr_fd("ERROR : SHLVL too high\n", 2));
+		free(new->value);
+	}
+	else
+		return (new->value == NULL);
+}
 
 t_env_lst	*create_env_lst(char name[])
 {
@@ -11,7 +40,16 @@ t_env_lst	*create_env_lst(char name[])
 	if (!new)
 		return (NULL);
 	new->name = name;
-	new->value = getenv(name);
+	if (!ft_strncmp(name, "SHLVL", 6))
+	{
+		if (handle_shlvl(new))
+		{
+			free(new);
+			return (NULL);
+		}
+	}
+	else
+		new->value = ft_strdup(getenv(name));
 	new->next = NULL;
 	return (new);
 }
@@ -28,16 +66,6 @@ void	env_add_back(t_env_lst **head, t_env_lst *new)
 		while (current->next)
 			current = current->next;
 		current->next = new;
-	}
-}
-
-void	print_env(t_env_lst *env_lst)
-{
-	ft_printf("ENVIRONMENT VARIABLES\n");
-	while (env_lst)
-	{
-		ft_printf("%s=%s\n", env_lst->name, env_lst->value);
-		env_lst = env_lst->next;
 	}
 }
 

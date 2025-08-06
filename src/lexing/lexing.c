@@ -1,12 +1,24 @@
-#include "error.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexing.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/30 14:08:47 by mlouis            #+#    #+#             */
+/*   Updated: 2025/08/04 18:28:41 by mlouis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
-#include "minishell.h"
+#include "lexing.h"
+#include "error.h"
 
 t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b)
 {
 	if (determine_redirect(val))
 		return (TOKEN_REDIRECT);
-	else if (*last_type == TOKEN_REDIRECT)
+	else if (*last_type == TOKEN_REDIRECT && ft_strncmp(val, "|", 1))
 		return (TOKEN_FILE);
 	else if (determine_option(val))
 		return (TOKEN_OPT);
@@ -63,7 +75,6 @@ int	tokenize(t_list **tokens, char *line)
 		if (!cur_token || !new)
 		{
 			ft_lstclear(tokens, deltoken);
-			// deltoken(cur_token);
 			return (ERR_ALLOC);
 		}
 		ft_lstadd_back(tokens, new);
@@ -71,5 +82,5 @@ int	tokenize(t_list **tokens, char *line)
 		while (ft_iswhitespace(line[i]))
 			++i;
 	}
-	return (!line);
+	return (!line * ERR_PARSING);
 }
