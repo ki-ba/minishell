@@ -54,8 +54,8 @@ int	handle_line(t_env_lst *env, char cmd[], t_bool *is_exit, int *error)
 		}
 		return (0);
 	}
-	else
-		return (1);
+	free(cmd);
+	return (1);
 }
 
 int	readline_loop(t_env_lst *env_lst)

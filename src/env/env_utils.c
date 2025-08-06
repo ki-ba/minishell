@@ -75,8 +75,6 @@ char	*get_env_val(t_env_lst *env, char name[], int sh)
 
 	if (sh)
 		name = ft_concat(2, "?", name);
-	if (DEBUG)
-		ft_printf("looking for %s\n", name);
 	current = env;
 	if (!name)
 		return (NULL);
