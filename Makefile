@@ -1,31 +1,15 @@
+DEPS = $(OBJ:.o=.d)
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
-DEBUG_FLAGS = -Wall -Wextra -g -fsanitize=address
-
-##### TESTS #####
-
-UNITY_OBJ_DIR = .unity_obj/
-UNITY_DIR = test/unity/src/
-UNITY_H = unity.h
-UNITY_SRC = unity.c
-UNITY_FSRC = $(addprefix $(UNITY_DIR), $(UNITY_SRC))
-
-UNITY_INCS = $(addprefix $(UNITY_DIR), $(UNITY_H) $(UNITY_C))
-TEST_DIR = test/
-UNITY_OBJ = $(subst $(UNITY_DIR), $(UNITY_OBJ_DIR), $(UNITY_FSRC:%.c=%.o))
-TEST_OBJ = $(addprefix $(TEST_DIR), $(TEST_SRC:%.c=%.o))
-TEST_SRC = test/test.o
-##################
+CFLAGS = -Wall -Wextra -Werror
+CPPFLAGS = -Iinc/ -Ilib/libft/inc -MMD -MP
 
 ###### SOURCE AND OBJ #####
 
 
 SRC_DIR = src/
-OBJ_DIR = .obj/
+OBJ_DIR = .build/
 INC_DIR = inc/
-TEST_DIR = test/
-
 
 ENV_SRC = env_init.c env_utils.c no_env.c envlist_utils.c 
 HISTORY_SRC = history.c
@@ -70,8 +54,10 @@ libft :
 $(NAME) : $(OBJ) $(LIB_DIR)libft.a
 	$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $@
 
-$(OBJ_DIR)%.o : $(SRC_DIR)%.c $(INCLUDES) | $(OBJ_DIR)
-	$(CC) $(CFLAGS) -I$(INC_DIR) -I$(LIB_DIR) -c $< -o $@
+$(OBJ_DIR)%.o : $(SRC_DIR)%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) $(CPPFLAGS) -I$(INC_DIR) -I$(LIB_DIR) -c $< -o $@
+
+-include $(DEPS)
 
 ##### DIRECTORIES #####
 
@@ -109,40 +95,3 @@ fclean :	clean
 re : fclean
 	$(MAKE) all
 
-mac :
-	$(MAKE) all LIBS="-L$(LIB_DIR) -lft -ledit"
-
-asan :
-	$(MAKE) re CFLAGS="$(DEBUG_FLAGS)"
-	$(MAKE) clean
-
-debug :
-	$(MAKE) re CFLAGS=$(DEBUG_FLAGS)
-	$(MAKE) clean
-
-###### OBJECT FILES ######
-
-
-$(TEST_DIR)%.o : $(TEST_DIR)%.c $(UNITY_INCS) | $(TEST_DIR)
-	$(CC) $(CFLAGS) -I$(INC_DIR) -I$(UNITY_DIR) -I$(LIB_DIR) -c $< -o $@
-
-
-$(UNITY_OBJ_DIR)%.o : $(UNITY_DIR)%.c | $(UNITY_OBJ_DIR)
-	$(CC) -c $< -o $@
-
-
-
-######## TESTING #########
-
-
-testmac : mac $(TEST_OBJ) $(UNITY_OBJ)
-	$(CC) $(CFLAGS) $(TOBJ) $(TEST_OBJ) $(UNITY_OBJ) -L$(LIB_DIR) -lft -ledit -o runtest
-	chmod +x runtest
-	rm $(TEST_OBJ)
-	./runtest
-
-test : all $(TEST_OBJ) $(UNITY_OBJ)
-	$(CC) $(CFLAGS) $(TOBJ) $(TEST_OBJ) $(UNITY_OBJ) $(LIBS) -lft -o runtest
-	chmod +x runtest
-	rm $(TEST_OBJ)
-	./runtest

@@ -38,6 +38,7 @@ int	handle_line(t_env_lst *env, char cmd[], t_bool *is_exit, int *error)
 	{
 		ft_add_history(cmd);
 		tmp = ft_strtrim(cmd, " \t\n\r\v\f");
+		free(cmd);
 		cmd = ft_strdup(tmp);
 		free(tmp);
 		if (!strncmp(cmd, "\0", 1))

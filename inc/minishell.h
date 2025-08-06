@@ -26,14 +26,8 @@ char	*format_cmd(t_env_lst *env, char *cmd);
 int		handle_line(t_env_lst *env, char cmd[], t_bool *is_exit, int *error);
 int		readline_loop(t_env_lst *env_lst);
 
-# ifndef DEBUG
-#  define DEBUG FALSE
-# endif
-
 # ifndef HERE_DOC_LEN
 #  define HERE_DOC_LEN 8
 # endif
-
-// extern int	g_signal; // sig_atomic_t
 
 #endif
