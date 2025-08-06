@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 15:42:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/06 17:53:03 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,6 @@ int	interpret_line(char *cmd, t_env_lst *env_lst, t_bool *is_exit)
 
 	update_qm(env_lst, 0, 1);
 	tokens = NULL;
-	cmd = format_cmd(env_lst, cmd);
-	if (!cmd)
-		return (ERR_PARSING);
 	if (tokenize(&tokens, cmd) != 0)
 		return (tokenize(&tokens, cmd));
 	free(cmd);

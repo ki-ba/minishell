@@ -6,13 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:54:23 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 13:54:18 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/06 18:04:04 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HISTORY_H
 # define HISTORY_H
 
-void	ft_add_history(char entry[]);
+int	ft_add_history(char entry[]);
 
 #endif

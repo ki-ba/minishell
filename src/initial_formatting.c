@@ -6,10 +6,11 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:12:18 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 16:06:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/06 17:43:43 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "error.h"
 #include "minishell.h"
 #include "lexing.h"
 #include "parsing.h"
@@ -41,6 +42,8 @@ char	*format_cmd(t_env_lst *env, char *cmd)
 {
 	char	*expanded;
 
+	if (!cmd)
+		return (NULL);
 	if (check_meta_validity(cmd) || check_parsing(cmd))
 	{
 		free (cmd);

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:08:47 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 13:53:11 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/06 17:57:16 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,10 @@ typedef struct s_env_lst
 	struct s_env_lst	*next;
 }						t_env_lst;
 
+typedef struct s_minishell
+{
+	char		*last_cmd;
+	t_env_lst	env;
+	int			is_exit;
+}	t_minishell;
 #endif
