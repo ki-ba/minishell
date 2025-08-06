@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:09:11 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:26:34 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/06 14:47:36 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,8 @@ void	update_signals(int cmd)
 	sigemptyset(&s_si.sa_mask);
 	sigaddset(&s_sa.sa_mask, SIGINT);
 	sigaddset(&s_si.sa_mask, SIGQUIT);
-	s_sa.sa_flags = SA_RESTART;
-	s_si.sa_flags = SA_RESTART;
+	s_sa.sa_flags = SA_SIGINFO;
+	s_si.sa_flags = SA_SIGINFO;
 	if (cmd)
 	{
 		s_sa.sa_handler = &sig_handler_cmd;
