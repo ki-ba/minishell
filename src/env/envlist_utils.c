@@ -61,7 +61,7 @@ char	**envlist_to_arr(t_env_lst *env_lst)
 		env[i] = ft_concat(3, tmp->name, "=", tmp->value);
 		if (!env[i])
 		{
-			ft_putstr_fd("error converting env to array", 2);
+			ft_putstr_fd("error converting env to array\n", 2);
 			ft_free_arr(env);
 			break ;
 		}

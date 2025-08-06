@@ -23,7 +23,7 @@ void	ft_add_history(char entry[])
 		{
 			add_history(entry);
 			if (ft_strlcpy(last_cmd, entry, 255) > 255)
-				ft_putstr_fd("warning : history entry truncated", 2);
+				ft_putstr_fd("warning : history entry truncated\n", 2);
 		}
 	}
 }

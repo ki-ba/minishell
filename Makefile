@@ -1,7 +1,7 @@
 DEPS = $(OBJ:.o=.d)
 NAME = minishell
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 CPPFLAGS = -Iinc/ -Ilib/libft/inc -MMD -MP
 
 ###### SOURCE AND OBJ #####
@@ -36,7 +36,7 @@ P_PARSING = $(addprefix $(PARSING_SRC_DIR), $(PARSING_SRC))
 P_EXEC = $(addprefix $(EXEC_SRC_DIR), $(EXEC_SRC))
 P_SIGNALS = $(addprefix $(SIGNALS_DIR), $(SIGNALS_SRC))
 
-SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) $(P_EXEC) $(P_SIGNALS) initial_formatting.c main.c debug.c
+SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) $(P_EXEC) $(P_SIGNALS) initial_formatting.c main.c
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 R_INCLUDES = minishell.h exec.h parsing.h lexing.h history.h signals.h builtins.h data_structures.h env.h error.h
