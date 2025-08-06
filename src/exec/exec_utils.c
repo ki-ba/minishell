@@ -99,8 +99,6 @@ void	set_child_io(t_list **exe_ls, t_exec_node *exe, int *nxt_pip, int p[2])
 	dup2(exe->io[0], STDIN_FILENO);
 	if (exe->io[0] != STDIN_FILENO)
 	{
-		if (g_signal == 2 && exe->file_exist)
-			unlink(exe->filename[1]);
 		if (exe->io[0] > 0)
 			close(exe->io[0]);
 	}
