@@ -6,11 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 19:49:52 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 12:04:46 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:03:28 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "data_structures.h"
+#include "error.h"
+#include "env.h"
 
 static int	update_env_sys(t_env_lst *env_v, char *new_path, t_env_lst *env);
 

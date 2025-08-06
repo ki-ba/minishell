@@ -6,11 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:04:44 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/28 18:19:34 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:09:18 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "builtins.h"
+#include "error.h"
+#include "env.h"
 
 static int	check_exit_arg(char **cmd);
 

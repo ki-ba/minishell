@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:38:13 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 12:45:34 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 13:53:53 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXEC_H
 # define EXEC_H
 
-# include "data_structures.h"
-# include <stddef.h>
-# include "libft.h"
+// # include "data_structures.h"
+// # include <stddef.h>
+// # include "libft.h"
 
 /* EXECUTION */
 

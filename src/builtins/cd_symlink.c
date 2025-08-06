@@ -6,11 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:22:39 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/28 14:44:13 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:07:10 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "data_structures.h"
+#include "error.h"
+#include "env.h"
 
 static int	shortcut_path(char **path, ssize_t i, char *cmd);
 static int	normal_path(char **path, ssize_t i);

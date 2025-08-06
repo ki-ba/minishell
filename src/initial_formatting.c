@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   initial_formatting.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:12:18 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 14:12:19 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 16:06:23 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "lexing.h"
+#include "parsing.h"
 
 char	*trim_cmd(char *cmd)
 {
@@ -39,12 +41,13 @@ char	*format_cmd(t_env_lst *env, char *cmd)
 {
 	char	*expanded;
 
-	if (check_meta_validity(cmd))
+	if (check_meta_validity(cmd) || check_parsing(cmd))
+	{
+		free (cmd);
 		return (NULL);
+	}
 	expanded = expand_line(env, cmd);
 	free(cmd);
 	expanded = trim_cmd(expanded);
-	if (check_parsing(expanded))
-		return (NULL);
 	return (expanded);
 }

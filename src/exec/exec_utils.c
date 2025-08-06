@@ -6,14 +6,17 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/29 22:28:01 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 15:32:11 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include <signal.h>
+#include "libft.h"
+#include "data_structures.h"
+#include "exec.h"
+#include "parsing.h"
+#include "env.h"
+#include "signals.h"
 #include <sys/stat.h>
-#include <sys/types.h>
 
 void	failed_file_handler(t_list **exec, t_env_lst **env, int pipe_fd[2])
 {

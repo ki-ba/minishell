@@ -6,12 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:41:42 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 12:45:53 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:06:51 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include <limits.h>
+#include "libft.h"
+#include "builtins.h"
+#include "error.h"
+#include "env.h"
 
 static int	no_arg_cd(char **cmd, t_env_lst *env);
 static int	change_dir(char **cmd, t_env_lst *env);

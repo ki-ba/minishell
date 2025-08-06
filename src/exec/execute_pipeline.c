@@ -3,14 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipeline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 13:59:59 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 17:09:07 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "data_structures.h"
+#include "exec.h"
+#include "signals.h"
+#include "env.h"
+#include "parsing.h"
 
 int	try_exec(t_list **exec, char **cmd, t_env_lst *env)
 {
@@ -84,7 +89,7 @@ int	exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 	err = call_cmd(exe->cmd, env);
 	if (exe->filename[1])
 		dup2(saved, STDOUT_FILENO);
-	if (saved > 0)
+	if (saved > STDOUT_FILENO)
 		close (saved);
 	return (err);
 }
@@ -99,6 +104,7 @@ pid_t	exec_pipeline(t_list **exec_lst, t_env_lst **env)
 	pid_t		pid;
 	int			next_pipe_entry;
 
+	g_signal = 0;
 	next_pipe_entry = 0;
 	current = *exec_lst;
 	while (current)

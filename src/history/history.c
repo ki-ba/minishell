@@ -6,12 +6,11 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:28 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:08:31 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:19:02 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "minishell.h"
 #include <readline/history.h>
 
 void	ft_add_history(char entry[])

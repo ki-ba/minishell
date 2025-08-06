@@ -6,11 +6,12 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:55 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:08:58 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 19:22:41 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "error.h"
 
 int	is_metachar(char c)
 {
@@ -78,5 +79,7 @@ int	check_meta_validity(char *str)
 		}
 		++i;
 	}
+	if (i > 0 && is_metachar(str[i - 1]) && !is_inquote(str, i - 1))
+		return (ERR_PARSING);
 	return (SUCCESS);
 }

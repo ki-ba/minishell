@@ -6,11 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:40 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:41 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 19:21:00 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "error.h"
+#include "lexing.h"
 
 /**
  * @brief util function to add an entry to an array of strings.
@@ -42,17 +44,27 @@ char	**add_to_array(char **arr, char *str)
 int	check_parsing(char str[])
 {
 	if (!str || !ft_strncmp(str, "\0", 1) || check_quotes(str))
-	{
-		free (str);
 		return (1);
-	}
 	return (0);
 }
 
 int	process_tokens(t_list *tokens)
 {
 	t_token	*token;
+	t_token	*token2;
 
+	while (tokens->next)
+	{
+		token = (t_token *) tokens->content;
+		token2 = (t_token *) tokens->next->content;
+		if (token->type == TOKEN_REDIRECT && token2->type == TOKEN_REDIRECT)
+			return (ERR_PARSING);
+		if (token->type == TOKEN_REDIRECT && token2->type == TOKEN_PIPE)
+			return (ERR_PARSING);
+		if (token->type == TOKEN_PIPE && token2->type == TOKEN_PIPE)
+			return (ERR_PARSING);
+		tokens = tokens->next;
+	}
 	token = (t_token *) tokens->content;
 	if (!tokens->next
 		&& (token->type == TOKEN_PIPE || token->type == TOKEN_REDIRECT))

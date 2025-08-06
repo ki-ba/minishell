@@ -3,14 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:04:31 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 13:04:33 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 14:06:33 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include <stddef.h>
+#include <stdio.h>
+#include "data_structures.h"
+#include "error.h"
 
 static size_t	has_option(char **cmd, char opt)
 {

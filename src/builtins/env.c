@@ -6,11 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:03:49 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 12:45:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:08:01 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "builtins.h"
+#include "error.h"
 
 int	ft_env(char **cmd, t_env_lst *env)
 {

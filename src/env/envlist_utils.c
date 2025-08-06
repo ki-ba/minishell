@@ -6,11 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:24 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:08:26 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:13:36 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "data_structures.h"
+#include "env.h"
+#include "signals.h"
 
 void	update_qm(t_env_lst *env, int status, int conditionnal)
 {

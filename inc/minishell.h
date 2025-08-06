@@ -3,41 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:21 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 14:02:24 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 15:28:54 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-/* COMMON DEPENDANCIES */
-
 # include "libft.h"
 # include "data_structures.h"
-
-/* EXTERNAL DEPENDANCIES */
-
-// # include <limits.h>
-# include <sys/wait.h>
-# include <sys/types.h>
-# include <limits.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <errno.h>
-
-/* MINISHELL MODULES */
-
-# include "lexing.h"
-# include "parsing.h"
-# include "exec.h"
-# include "builtins.h"
-# include "env.h"
-# include "signals.h"
-# include "history.h"
-# include "error.h"
 
 /* INITIAL FORMATTING */
 
@@ -57,6 +34,6 @@ int		readline_loop(t_env_lst *env_lst);
 #  define HERE_DOC_LEN 8
 # endif
 
-extern int	g_signal; // sig_atomic_t
+// extern int	g_signal; // sig_atomic_t
 
 #endif

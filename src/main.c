@@ -3,14 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/30 14:17:33 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 18:49:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "error.h"
+#include "env.h"
+#include "history.h"
+#include "exec.h"
+#include "signals.h"
+#include <errno.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 static void	print_error_msg(int status)
 {
@@ -32,6 +40,11 @@ int	handle_line(t_env_lst *env, char cmd[], t_bool *is_exit, int *error)
 		tmp = ft_strtrim(cmd, " \t\n\r\v\f");
 		cmd = ft_strdup(tmp);
 		free(tmp);
+		if (!strncmp(cmd, "\0", 1))
+		{
+			free (cmd);
+			return (0);
+		}
 		*error = interpret_line(cmd, env, is_exit);
 		if (*error > 300)
 		{
@@ -59,11 +72,13 @@ int	readline_loop(t_env_lst *env_lst)
 		errno = 0;
 		cmd = readline("zinzinshell$ ");
 		if (errno != 0)
+		{
+			perror("readline");
 			return (ERR_ALLOC);
+		}
 		if (cmd && (handle_line(env_lst, cmd, &is_exit, &error) || 1))
 			continue ;
 		break ;
-		g_signal = 0;
 	}
 	ft_add_history(NULL);
 	return (error);

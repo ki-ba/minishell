@@ -6,11 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:04 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/30 14:09:05 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:15:27 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "error.h"
+#include "builtins.h"
+#include "env.h"
 
 char	*check_path_exist(t_env_lst *env)
 {

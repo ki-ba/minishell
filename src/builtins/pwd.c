@@ -6,11 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:33:19 by mlouis            #+#    #+#             */
-/*   Updated: 2025/07/28 14:42:02 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/04 14:11:43 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
+#include "data_structures.h"
+#include "error.h"
+#include "env.h"
 
 /**
  * @brief print the current directory
