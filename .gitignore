@@ -2,9 +2,10 @@ minishell
 .unity_obj/
 runtest
 .cache
-.obj
+.build
 compile_commands.json
 .DS_Store
+minishell_tester
 .zzsh_history
 build_lib.sh
 *.a
