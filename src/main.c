@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/06 18:03:21 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/04 18:49:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "history.h"
 #include "exec.h"
 #include "signals.h"
+#include <errno.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -29,12 +30,17 @@ static void	print_error_msg(int status)
 		ft_putstr_fd("ERROR : memory allocation failed\n", 2);
 }
 
-int	handle_line(ms_data, char cmd[], int *error)
+int	handle_line(t_env_lst *env, char cmd[], t_bool *is_exit, int *error)
 {
+	char	*tmp;
+
 	if (cmd[0])
 	{
-		if (ft_add_history(cmd) || !format_cmd(env, cmd))
-			return (ERR_ALLOC);
+		ft_add_history(cmd);
+		tmp = ft_strtrim(cmd, " \t\n\r\v\f");
+		free(cmd);
+		cmd = ft_strdup(tmp);
+		free(tmp);
 		if (!ft_strncmp(cmd, "\0", 1))
 		{
 			free (cmd);
@@ -52,7 +58,7 @@ int	handle_line(ms_data, char cmd[], int *error)
 	return (1);
 }
 
-int	readline_loop(t_minishell *ms_data, t_env_lst *env_lst)
+int	readline_loop(t_env_lst *env_lst)
 {
 	char		*cmd;
 	int			error;
@@ -65,8 +71,15 @@ int	readline_loop(t_minishell *ms_data, t_env_lst *env_lst)
 	{
 		cmd = NULL;
 		init_signals();
+		errno = 0;
 		cmd = readline("zinzinshell$ ");
-		if (cmd && (handle_line(ms_data, cmd, &error) || 1))
+		if (errno != 0)
+		{
+			free(cmd);
+			perror("readline");
+			return (ERR_FAIL);
+		}
+		if (cmd && (handle_line(env_lst, cmd, &is_exit, &error) || 1))
 			continue ;
 		break ;
 	}
@@ -77,10 +90,8 @@ int	readline_loop(t_minishell *ms_data, t_env_lst *env_lst)
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_env_lst	*env_lst;
-	t_minishell	ms_data;
 	int			exit_status;
 
-	ms_data.last_cmd = NULL;
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
 	{
 		if (!isatty(STDIN_FILENO))
@@ -91,7 +102,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	env_lst = create_environment(&env_lst, envp);
 	if (env_lst)
-		exit_status = readline_loop(&minishell_data, env_lst);
+		exit_status = readline_loop(env_lst);
 	if (exit_status)
 		print_error_msg(exit_status);
 	destroy_env_lst(env_lst);

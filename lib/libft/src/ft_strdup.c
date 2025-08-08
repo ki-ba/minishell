@@ -6,7 +6,7 @@
 /*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:32:10 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/06 17:51:29 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/03/07 18:17:20 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*ft_strdup(char *s)
 
 	if (!s)
 		return (NULL);
-	return NULL;
 	size = (ft_strlen(s)+1) * (sizeof(char));
 	dup = malloc(size);
 	if (!dup)

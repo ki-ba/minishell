@@ -24,7 +24,7 @@ char	*format_cmd(t_env_lst *env, char *cmd);
 /* MAIN FUNCTIONS */
 
 int		handle_line(t_env_lst *env, char cmd[], t_bool *is_exit, int *error);
-int		readline_loop(t_minishell *minishell_data, t_env_lst *env_lst);
+int		readline_loop(t_env_lst *env_lst);
 
 # ifndef HERE_DOC_LEN
 #  define HERE_DOC_LEN 8
