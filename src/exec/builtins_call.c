@@ -10,11 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "data_structures.h"
 #include "libft.h"
 #include "error.h"
 #include "builtins.h"
 #include "env.h"
 
+void	print_cmd(t_list *exec); //TODO remove;
 char	*check_path_exist(t_env_lst *env)
 {
 	t_env_lst	*var;
@@ -75,7 +77,7 @@ t_bool	is_builtin(char **cmd)
 	return (TRUE);
 }
 
-int	call_cmd(char **cmd, t_env_lst *env)
+int	call_cmd(t_minishell *ms_data, char **cmd)
 {
 	int			err;
 
@@ -83,21 +85,21 @@ int	call_cmd(char **cmd, t_env_lst *env)
 	if (!cmd[0])
 		err = SUCCESS;
 	else if (!ft_strncmp(cmd[0], "echo", 5))
-		err = ft_echo(cmd, env);
+		err = ft_echo(cmd, ms_data->env);
 	else if (!ft_strncmp(cmd[0], "cd", 3))
-		err = ft_cd(cmd, env);
+		err = ft_cd(cmd, ms_data->env);
 	else if (!ft_strncmp(cmd[0], "pwd", 4))
-		err = ft_pwd(cmd, env);
+		err = ft_pwd(cmd, ms_data->env);
 	else if (!ft_strncmp(cmd[0], "export", 7))
-		err = ft_export(cmd, env);
+		err = ft_export(cmd, ms_data->env);
 	else if (!ft_strncmp(cmd[0], "unset", 6))
-		err = ft_unset(cmd, env);
+		err = ft_unset(cmd, ms_data->env);
 	else if (!ft_strncmp(cmd[0], "exit", 5))
-		err = ft_exit(cmd, env);
+		err = ft_exit(cmd, ms_data->env);
 	else if (!ft_strncmp(cmd[0], "env", 4))
-		err = ft_env(cmd, env);
+		err = ft_env(cmd, ms_data->env);
 	if (err > 300 && err != ERR_ALLOC)
 		err -= 300;
-	update_qm(env, err, 0);
+	update_qm(&ms_data->error, err, 0);
 	return (err);
 }

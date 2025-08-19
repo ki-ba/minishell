@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:41 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 14:25:54 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/19 16:42:07 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,76 +15,57 @@
 #include "parsing.h"
 #include "error.h"
 
-/** handles current TOKEN_REDIRECT.
- *	sets up open oflags according to the given metachar (<< vs < vs >> vs >)
- *	to prepare for the expected file token right after.
- *	if the metachar is <<, a here_doc delimiter is expected in place of
- *	the file token. To allow `handle_file` to detect this, the corresponding
- *	file descriptor is set to MAX_FD + 1. (thus cannot be a real file)
- * */
-static int	handle_redir(t_exec_node *node, t_token *token, t_redir *redir)
+// NOTE : REDIRECTIONS TAKE OVER PIPES. This means if the i/o of a command
+// is supposed to be piped, but a redirection is encountered, the pipe fd
+// should be closed and the i/o be replaced by the redirection.
+
+static int	define_open_flags(t_token_type type)
 {
-	if (!ft_strncmp(token->token, ">", 2) || !ft_strncmp(token->token, ">>", 3))
-	{
-		*redir = OUTFILE;
-		if (!ft_strncmp(token->token, ">", 2))
-			node->oflags[*redir] = (O_CREAT | O_TRUNC | O_WRONLY);
-		else
-			node->oflags[*redir] = (O_CREAT | O_APPEND | O_WRONLY);
-	}
-	if (!ft_strncmp(token->token, "<", 2) || !ft_strncmp(token->token, "<<", 3))
-	{
-		*redir = INFILE;
-		if (!ft_strncmp(token->token, "<<", 3))
-		{
-			if (node->io[0] <= MAX_FD && node->io[0] > 0)
-				close(node->io[0]);
-			node->io[0] = MAX_FD + 1;
-		}
-		node->oflags[*redir] = (O_RDONLY);
-	}
-	return (0);
+	if (type == T_REDIR_OUT)
+		return (O_CREAT | O_TRUNC | O_WRONLY);
+	else if (type == T_APPEND)
+		return (O_CREAT | O_APPEND | O_WRONLY);
+	else
+		return (O_RDONLY);
 }
 
-/** handles current TOKEN_FILE.
- *	if the current token is a heredoc delimiter, call appropriate function.
- *	otherwise setup the token's `filename` attribute to the name of the file
- *	to read from / write into.
- *	if `open` fails, write on stderr, then return an error.
- * */
-static int	handle_file(t_exec_node *node, t_token *token,
-	t_redir redir, t_list **exec_lst)
+static int	def_redir_type(t_token_type type)
 {
-	int	fd;
+	if (type == T_REDIR_IN || type == T_HD)
+		return (INFILE);
+	else if (type == T_REDIR_OUT || type == T_APPEND)
+		return (OUTFILE);
+	return (-1);
+}
 
-	fd = 0;
-	if (redir == 0 && node->io[redir] > MAX_FD)
+static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
+{
+	int	oflags;
+
+	if (!node || !token)
+		return (ERR_ALLOC);
+	if (redir == T_HD)
 		node->io[0] = read_input(token->token);
 	else if (node->status == 0)
 	{
-		if (node->filename[redir])
-			free(node->filename[redir]);
-		node->filename[redir] = ft_strdup(token->token);
-		if (!node->filename[redir])
-		{
-			ft_lstclear(exec_lst, del_exec_node);
-			return (ERR_ALLOC);
-		}
-		fd = open(node->filename[redir], node->oflags[redir], 0644);
-		if (node->filename[1] && fd < 0)
+		oflags = define_open_flags(redir);
+		node->io[def_redir_type(redir)] = open(token->token, oflags, 0644);
+		if (node->io[redir] < 0)
 			perror("open");
-		node->io[redir] = fd;
 	}
-	return (fd < 0);
+	return (node->io[redir] < 0);
 }
 
-/** handles current TOKEN_CMD.
+/**
+ * handles current TOKEN_CMD.
  *	adds the current command or parameter to the cmd array.
- * */
+ **/
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
 	char	**old_arr;
 
+	if (!node || !token || !exec_list)
+		return (ERR_ALLOC);
 	old_arr = node->cmd;
 	node->cmd = add_to_array(node->cmd, token->token);
 	if (!node->cmd)
@@ -97,11 +78,12 @@ static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 	return (SUCCESS);
 }
 
-/** handles current PIPE_CMD, or the first token of the line.
- *	creates a new exec_node which data (i/o, filename, cmd ...)
- *	will be filled by other handler functions.
+/**
+ * @brief handles current PIPE_CMD, or the first token of the line.
+ * @brief creates a new exec_node which data (i/o, filename, cmd ...)
+ * @brief will be filled by other handler functions.
  **/
-static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
+static int	new_node(t_list **exec_lst)
 {
 	t_list		*new_list_node;
 	t_exec_node	*new_node;
@@ -114,7 +96,6 @@ static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
 		return (ERR_ALLOC);
 	}
 	ft_lstadd_back(exec_lst, new_list_node);
-	*node = (t_exec_node *)ft_lstlast(*exec_lst)->content;
 	return (SUCCESS);
 }
 
@@ -122,31 +103,31 @@ static int	handle_pipe(t_exec_node **node, t_list **exec_lst)
 * Parse the token list and create a process list with correct infiles,
 * outfiles, argv and environments.
 */
-t_list	*parse_tokens(t_list *tokens)
+int	parse_tokens(t_minishell *ms, t_list *tokens)
 {
-	t_list		*exec_lst;
-	t_token		*token;
-	t_exec_node	*node;
-	t_redir		redir_type;
-	int			status;
+	t_token			*token;
+	t_exec_node		*node;
+	t_token_type	redir_type;
+	int				status;
 
 	status = 0;
-	node = NULL;
-	exec_lst = NULL;
-	while (tokens)
+	if (new_node(&ms->exec_lst))
+		return (ERR_ALLOC);
+	while (tokens && status != ERR_ALLOC)
 	{
+		node = ft_lstlast(ms->exec_lst)->content;
 		token = (t_token *)(tokens)->content;
-		if (!node || token->type == TOKEN_PIPE)
-			status = handle_pipe(&node, &exec_lst);
-		if (token->type >= TOKEN_CMD && token->type <= TOKEN_STR)
-			status = handle_cmd(node, token, &exec_lst);
-		else if (token->type == TOKEN_REDIRECT)
-			status = handle_redir(node, token, &redir_type);
-		else if (token->type == TOKEN_FILE)
-			status = handle_file(node, token, redir_type, &exec_lst);
-		if (status != 0 || node->status == 0)
+		if (token->type == T_PIPE)
+			status = new_node(&ms->exec_lst);
+		else if (token->type >= T_CMD && token->type <= T_STR)
+			status = handle_cmd(node, token, &ms->exec_lst);
+		else if (token->type >= T_REDIR_IN && token->type <= T_HD)
+			redir_type = token->type;
+		else if (token->type == T_FILE)
+			status = handle_file(node, token, redir_type);
+		if (node && node->status && status != 0)
 			node->status = status;
 		tokens = tokens->next;
 	}
-	return (exec_lst);
+	return (status);
 }

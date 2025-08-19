@@ -13,6 +13,10 @@
 #include "libft.h"
 #include "lexing.h"
 
+/**
+	* @brief joins the two passed strings inside a new string,
+	* @briefs updates the s1 pointer and frees the passed strings.
+*/
 void	join_in_place(char **s1, char *s2)
 {
 	char	*s3;

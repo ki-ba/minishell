@@ -17,7 +17,7 @@
 #include "env.h"
 #include "parsing.h"
 
-int	try_exec(t_list **exec, char **cmd, t_env_lst *env)
+int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 {
 	char		*path;
 	char		**env_arr;
@@ -25,12 +25,12 @@ int	try_exec(t_list **exec, char **cmd, t_env_lst *env)
 
 	err = 127;
 	if (is_builtin(cmd))
-		err = call_cmd(cmd, env);
+		err = call_cmd(ms, cmd);
 	else
 	{
-		env_arr = envlist_to_arr(env);
-		path = path_to_cmd(cmd, env);
-		err = define_error(path, env);
+		env_arr = envlist_to_arr(ms->env);
+		path = path_to_cmd(cmd, ms->env);
+		err = define_error(path, ms->env);
 		if (path && env_arr && !err)
 			execve(path, cmd, env_arr);
 		ft_free_arr(env_arr);
@@ -38,7 +38,7 @@ int	try_exec(t_list **exec, char **cmd, t_env_lst *env)
 		if (err == 127)
 			ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	}
-	destroy_env_lst(env);
+	destroy_env_lst(ms->env);
 	ft_lstdelone(*exec, del_exec_node);
 	exec = NULL;
 	ft_free_arr(cmd);
@@ -46,7 +46,7 @@ int	try_exec(t_list **exec, char **cmd, t_env_lst *env)
 	return (err);
 }
 
-void	exec_child(t_list **cur, t_env_lst **env, int *next_pipe, int pipe[2])
+void	exec_child(t_minishell *ms, t_list **cur, int *next_pipe, int pipe[2])
 {
 	t_exec_node	*exe;
 	char		**cmd;
@@ -55,7 +55,7 @@ void	exec_child(t_list **cur, t_env_lst **env, int *next_pipe, int pipe[2])
 	exe = (t_exec_node *)(*cur)->content;
 	set_child_io(cur, exe, next_pipe, pipe);
 	cmd = duplicate_arr(exe->cmd);
-	try_exec(cur, cmd, *env);
+	try_exec(ms, cur, cmd);
 }
 
 void	exec_parent(t_exec_node *exe, int *nxt_pipe, int pipe[2])
@@ -70,7 +70,7 @@ void	exec_parent(t_exec_node *exe, int *nxt_pipe, int pipe[2])
 		close(exe->io[1]);
 }
 
-int	exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
+int	exec_unique_cmd(t_minishell *ms_data, t_list **exec_lst)
 {
 	t_exec_node	*exe;
 	int			saved;
@@ -80,13 +80,13 @@ int	exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 	if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
 		return (1);
 	saved = dup(STDOUT_FILENO);
-	if (exe->filename[1])
+	if (exe->io[1] )
 	{
 		dup2(exe->io[1], STDOUT_FILENO);
 		if (exe->io[1] != STDOUT_FILENO && exe->io[1] > 0)
 			close(exe->io[1]);
 	}
-	err = call_cmd(exe->cmd, env);
+	err = call_cmd(ms_data, exe->cmd);
 	if (exe->filename[1])
 		dup2(saved, STDOUT_FILENO);
 	if (saved > STDOUT_FILENO)
@@ -98,7 +98,7 @@ int	exec_unique_cmd(t_list **exec_lst, t_env_lst *env)
 * entry point of the execution part of the program.
 * takes an exec_list and the environment and executes it.
 */
-pid_t	exec_pipeline(t_list **exec_lst, t_env_lst **env)
+pid_t	exec_pipeline(t_minishell *ms)
 {
 	t_list		*current;
 	pid_t		pid;
@@ -106,10 +106,10 @@ pid_t	exec_pipeline(t_list **exec_lst, t_env_lst **env)
 
 	g_signal = 0;
 	next_pipe_entry = 0;
-	current = *exec_lst;
+	current = ms->exec_lst;
 	while (current)
 	{
-		pid = dup_n_fork(exec_lst, &current, env, &next_pipe_entry);
+		pid = dup_n_fork(ms, &current, &next_pipe_entry);
 		current = current->next;
 	}
 	return (pid);

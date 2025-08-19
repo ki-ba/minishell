@@ -29,7 +29,7 @@ void	failed_file_handler(t_list **exec, t_env_lst **env, int pipe_fd[2])
 
 /** creates a separate process for each command, 
  * creating pipes when necessary.*/
-pid_t	dup_n_fork(t_list **exec, t_list **cur, t_env_lst **env, int *nxt_pip)
+pid_t	dup_n_fork(t_minishell *ms, t_list **cur, int *nxt_pip)
 {
 	pid_t		pid;
 	int			pipe_fd[2];
@@ -42,9 +42,9 @@ pid_t	dup_n_fork(t_list **exec, t_list **cur, t_env_lst **env, int *nxt_pip)
 	if (pid == 0)
 	{
 		if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
-			failed_file_handler(exec, env, pipe_fd);
-		ft_lstclear_but(exec, del_exec_node, *cur);
-		exec_child(cur, env, nxt_pip, pipe_fd);
+			failed_file_handler(&ms->exec_lst, &ms->env, pipe_fd);
+		ft_lstclear_but(&ms->exec_lst, del_exec_node, *cur);
+		exec_child(ms, cur, nxt_pip, pipe_fd);
 	}
 	else
 		exec_parent(exe, nxt_pip, pipe_fd);

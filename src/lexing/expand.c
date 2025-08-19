@@ -39,8 +39,6 @@ char	*expand_line(t_env_lst *env, char str[])
 		if (!is_inquote(str, i) && (str[i] == '<' || str[i] == '>'))
 			++i;
 		join_in_place(&expanded, next_chunk);
-		if (!expanded)
-			return (NULL);
 	}
 	return (expanded);
 }

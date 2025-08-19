@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/06 17:53:03 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/19 16:42:56 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@
 #include "builtins.h"
 #include "signals.h"
 #include <sys/wait.h>
+
+void	print_cmd(t_list *exec)
+{
+	t_exec_node	*node;
+
+	node = ((t_exec_node *)exec->content);
+	ft_print_arr(node->cmd);
+	ft_printf("END\n");
+}
 
 int	wait_processes(pid_t pid, int err)
 {
@@ -48,47 +57,48 @@ int	wait_processes(pid_t pid, int err)
 	return (err);
 }
 
-int	start_execution(t_list *exec, t_env_lst *env, t_bool *is_exit)
+void	start_execution(t_minishell *ms)
 {
 	t_exec_node	*node;
-	t_env_lst	*qm;
+	t_list		*exec_lst;
 
-	qm = search_env_var(env, "?");
-	node = (t_exec_node *) exec->content;
+	node = (t_exec_node *) ms->exec_lst->content;
+	exec_lst = ms->exec_lst;
 	if (ft_strlen(node->cmd[0]) == 0)
-		update_qm(env, 0, 0);
-	if (!exec->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
-		*is_exit = is_correct_exit(node->cmd);
-	if (!exec->next && is_builtin(node->cmd))
-		update_qm(env, exec_unique_cmd(&exec, env), 1);
+		update_qm(&ms->error, 0, 0);
+	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
+		ms->is_exit = is_correct_exit(node->cmd);
+	if (!exec_lst->next && is_builtin(node->cmd))
+		update_qm(&ms->error, exec_unique_cmd(ms, &exec_lst), 1);
 	else
-		update_qm(env, wait_processes(exec_pipeline(&exec, &env), 0), 0);
-	if (node->io[0] == -1 && !node->filename[1])
+		update_qm(&ms->error, wait_processes(exec_pipeline(ms), 0), 0);
+	if (node->io[0] == -1)
 		ft_putendl_fd("minishell: no such file", 2);
-	return (ft_atoi(qm->value));
 }
 
-int	interpret_line(char *cmd, t_env_lst *env_lst, t_bool *is_exit)
+int	interpret_line(t_minishell *ms, char *cmd)
 {
 	t_list		*tokens;
 	t_list		*exec_lst;
 	int			err;
 
-	update_qm(env_lst, 0, 1);
+	update_qm(&ms->error, 0, 1);
+	err = ms->error;
 	tokens = NULL;
 	if (tokenize(&tokens, cmd) != 0)
-		return (tokenize(&tokens, cmd));
+		return (ERR_FAIL);
 	free(cmd);
 	if (process_tokens(tokens))
 		return (ERR_PARSING);
-	exec_lst = parse_tokens(tokens);
+	err = parse_tokens(ms, tokens);
 	ft_lstclear(&tokens, deltoken);
-	if (!exec_lst)
+	if (err == ERR_ALLOC || !(ms->exec_lst))
 		return (ERR_ALLOC);
 	if (g_signal == 2)
-		err = 130;
+		err = (130);
 	else
-		err = start_execution(exec_lst, env_lst, is_exit);
-	ft_lstclear(&exec_lst, del_exec_node);
+		start_execution(ms);
+	if (ms->exec_lst)
+		ft_lstclear(&exec_lst, del_exec_node);
 	return (err);
 }

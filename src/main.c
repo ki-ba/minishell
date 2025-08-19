@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "data_structures.h"
+#include "libft.h"
 #include "minishell.h"
 #include "error.h"
 #include "env.h"
@@ -19,6 +21,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+void			del_exec_node(void *node);
 static void	print_error_msg(int status)
 {
 	if (status == ERR_ARGS)
@@ -29,30 +32,29 @@ static void	print_error_msg(int status)
 		ft_putstr_fd("ERROR : memory allocation failed\n", 2);
 }
 
-int	handle_line(ms_data, char cmd[], int *error)
+int	handle_line(t_minishell *ms, char cmd[])
 {
+	char	*formatted;
+
 	if (cmd[0])
 	{
-		if (ft_add_history(cmd) || !format_cmd(env, cmd))
+		formatted = format_cmd(ms->env, cmd);
+		if (ft_add_history(ms, cmd) || !formatted)
 			return (ERR_ALLOC);
 		if (!ft_strncmp(cmd, "\0", 1))
-		{
-			free (cmd);
 			return (0);
-		}
-		*error = interpret_line(cmd, env, is_exit);
-		if (*error > 300)
+		ms->error = interpret_line(ms, formatted);
+		if (ms->error > 300)
 		{
-			print_error_msg(*error);
-			*error -= 300;
+			print_error_msg(ms->error);
+			ms->error -= 300;
 		}
 		return (0);
 	}
-	free(cmd);
 	return (1);
 }
 
-int	readline_loop(t_minishell *ms_data, t_env_lst *env_lst)
+int	readline_loop(t_minishell *ms_data)
 {
 	char		*cmd;
 	int			error;
@@ -63,38 +65,41 @@ int	readline_loop(t_minishell *ms_data, t_env_lst *env_lst)
 	g_signal = 0;
 	while (error != ERR_ALLOC && !is_exit)
 	{
+		ft_lstclear(&ms_data->exec_lst, del_exec_node);
 		cmd = NULL;
 		init_signals();
 		cmd = readline("zinzinshell$ ");
-		if (cmd && (handle_line(ms_data, cmd, &error) || 1))
-			continue ;
-		break ;
+		if (!cmd)
+			break ;
+		handle_line(ms_data, cmd);
+		free(cmd);
 	}
-	ft_add_history(NULL);
 	return (error);
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_env_lst	*env_lst;
 	t_minishell	ms_data;
 	int			exit_status;
 
 	ms_data.last_cmd = NULL;
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
+	ms_data.env = NULL;
+	ms_data.exec_lst = NULL;
+	if (!DEBUG && (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1))
 	{
-		if (!isatty(STDIN_FILENO))
-			ft_putstr_fd("error : funny business detected\n", 2);
+		ft_putstr_fd("error : zinzinshell neither support arguments,", 2);
+		ft_putstr_fd("nor piping/redirecting its input / output.\n", 2);
 		exit(1);
 	}
 	exit_status = 1;
+	(void)argc;
 	(void)argv;
-	env_lst = create_environment(&env_lst, envp);
-	if (env_lst)
-		exit_status = readline_loop(&minishell_data, env_lst);
+	create_environment(&ms_data.env, envp);
+	if (ms_data.env)
+		exit_status = readline_loop(&ms_data);
 	if (exit_status)
 		print_error_msg(exit_status);
-	destroy_env_lst(env_lst);
+	destroy_env_lst(ms_data.env);
 	printf("exit\n");
 	return (exit_status);
 }

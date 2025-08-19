@@ -15,6 +15,7 @@
 #include "lexing.h"
 #include "parsing.h"
 
+// TODO document this function
 char	*trim_cmd(char *cmd)
 {
 	char	*trim;
@@ -38,6 +39,13 @@ char	*trim_cmd(char *cmd)
 	return (trim);
 }
 
+/**
+* @brief checks parsing of current string, expands the $variables inside,
+* @brief then trims it.
+* @param env the environment
+* @param cmd the line to format
+* @return the formatted string
+*/
 char	*format_cmd(t_env_lst *env, char *cmd)
 {
 	char	*expanded;
@@ -50,7 +58,6 @@ char	*format_cmd(t_env_lst *env, char *cmd)
 		return (NULL);
 	}
 	expanded = expand_line(env, cmd);
-	free(cmd);
 	expanded = trim_cmd(expanded);
 	return (expanded);
 }
