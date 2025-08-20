@@ -29,6 +29,8 @@ char	*ft_concat(size_t n, ...)
 
 	i = 0;
 	string = malloc(sizeof(char));
+	if (!string)
+		return (NULL);
 	string[0] = '\0';
 	va_start(lst, n);
 	while (i < n)
