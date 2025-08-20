@@ -22,7 +22,7 @@ void	failed_file_handler(t_list **exec, t_env_lst **env, int pipe_fd[2])
 {
 	close(pipe_fd[0]);
 	close(pipe_fd[1]);
-	destroy_env_lst(*env);
+	destroy_env_lst(env);
 	ft_lstclear(exec, del_exec_node);
 	exit(1);
 }

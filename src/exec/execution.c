@@ -57,10 +57,11 @@ int	wait_processes(pid_t pid, int err)
 	return (err);
 }
 
-void	start_execution(t_minishell *ms)
+int	start_execution(t_minishell *ms)
 {
 	t_exec_node	*node;
 	t_list		*exec_lst;
+	int			error;
 
 	node = (t_exec_node *) ms->exec_lst->content;
 	exec_lst = ms->exec_lst;
@@ -69,20 +70,20 @@ void	start_execution(t_minishell *ms)
 	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		ms->is_exit = is_correct_exit(node->cmd);
 	if (!exec_lst->next && is_builtin(node->cmd))
-		update_qm(&ms->error, exec_unique_cmd(ms, &exec_lst), 1);
+		error = exec_unique_cmd(ms, &exec_lst);
 	else
-		update_qm(&ms->error, wait_processes(exec_pipeline(ms), 0), 0);
-	if (node->io[0] == -1)
-		ft_putendl_fd("minishell: no such file", 2);
+		error = wait_processes(exec_pipeline(ms), ms->error);
+	// if (node->io[0] == -1)
+	// 	ft_putendl_fd("minishell: no such file", 2);
+	return (error);
 }
 
 int	interpret_line(t_minishell *ms, char *cmd)
 {
 	t_list		*tokens;
-	t_list		*exec_lst;
 	int			err;
 
-	update_qm(&ms->error, 0, 1);
+	// update_qm(&ms->error, 0, 1);
 	err = ms->error;
 	tokens = NULL;
 	if (tokenize(&tokens, cmd) != 0)
@@ -95,10 +96,13 @@ int	interpret_line(t_minishell *ms, char *cmd)
 	if (err == ERR_ALLOC || !(ms->exec_lst))
 		return (ERR_ALLOC);
 	if (g_signal == 2)
+	{
 		err = (130);
+		ft_putstr_fd("recieved sigint\n",2);
+	}
 	else
-		start_execution(ms);
+		err = start_execution(ms);
 	if (ms->exec_lst)
-		ft_lstclear(&exec_lst, del_exec_node);
+		ft_lstclear(&ms->exec_lst, del_exec_node);
 	return (err);
 }

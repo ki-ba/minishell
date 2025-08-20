@@ -18,7 +18,7 @@
  * @brief util function to add an entry to an array of strings.
  * @param arr the array to add `str` to.
  * @param str the string to add at the end of `arr`.
- * @return the updated array.
+ * @return the updated array, or NULL if an error occcured.
  */
 char	**add_to_array(char **arr, char *str)
 {

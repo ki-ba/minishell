@@ -26,7 +26,7 @@ size_t			count_token_len(char *line);
 
 /* EXPAND */
 
-char			*expand_line(t_env_lst *env, char str[]);
+char			*expand_line(t_minishell *ms, char str[]);
 
 /* EXPAND UTILS */
 

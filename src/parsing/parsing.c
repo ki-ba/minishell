@@ -41,7 +41,9 @@ static int	def_redir_type(t_token_type type)
 static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
 {
 	int	oflags;
+	int	redir_type;
 
+	redir_type = def_redir_type(redir);
 	if (!node || !token)
 		return (ERR_ALLOC);
 	if (redir == T_HD)
@@ -49,11 +51,11 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
 	else if (node->status == 0)
 	{
 		oflags = define_open_flags(redir);
-		node->io[def_redir_type(redir)] = open(token->token, oflags, 0644);
-		if (node->io[redir] < 0)
+		node->io[redir_type] = open(token->token, oflags, 0644);
+		if (node->io[def_redir_type(redir)] < 0)
 			perror("open");
 	}
-	return (node->io[redir] < 0);
+	return (node->io[redir_type] < 0);
 }
 
 /**

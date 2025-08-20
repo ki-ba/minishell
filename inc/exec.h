@@ -21,7 +21,7 @@
 
 #include "data_structures.h"
 int		wait_processes(pid_t pid, int err);
-void		start_execution(t_minishell *ms);
+int		start_execution(t_minishell *ms);
 int		interpret_line(t_minishell *ms, char *cmd);
 
 /* EXEC UTILS */

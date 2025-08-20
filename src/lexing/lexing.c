@@ -21,7 +21,7 @@ t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b)
 	redir_type = determine_redirect(val);
 	if (redir_type)
 		return (redir_type);
-	else if (*last_type > T_PIPE)
+	else if (*last_type > T_PIPE && *last_type < T_FILE)
 		return (T_FILE);
 	else if (determine_option(val))
 		return (T_OPT);

@@ -19,7 +19,11 @@ t_exec_node	*create_exec_node(void)
 	t_exec_node	*new;
 
 	new = ft_calloc(1, sizeof (*new));
+	if (!new)
+		return (NULL);
 	new->cmd = ft_calloc(1, sizeof(char *));
+	if (!new->cmd)
+		return (NULL);
 	new->io[0] = STDIN_FILENO;
 	new->io[1] = STDOUT_FILENO;
 	new->status = 0;

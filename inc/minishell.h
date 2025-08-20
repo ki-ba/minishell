@@ -22,7 +22,7 @@
 /* INITIAL FORMATTING */
 
 char	*trim_cmd(char *cmd);
-char	*format_cmd(t_env_lst *env, char *cmd);
+char	*format_cmd(t_minishell *ms, char *cmd);
 
 /* MAIN FUNCTIONS */
 

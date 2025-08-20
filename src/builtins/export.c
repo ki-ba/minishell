@@ -67,7 +67,7 @@ static int	print_export(t_env_lst *env)
 		}
 		tmp = tmp->next;
 	}
-	destroy_env_lst(head);
+	destroy_env_lst(&head);
 	return (SUCCESS);
 }
 

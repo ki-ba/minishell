@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/06 18:03:21 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/20 12:33:16 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ int	handle_line(t_minishell *ms, char cmd[])
 
 	if (cmd[0])
 	{
-		formatted = format_cmd(ms->env, cmd);
+		formatted = format_cmd(ms, cmd);
 		if (ft_add_history(ms, cmd) || !formatted)
 			return (ERR_ALLOC);
-		if (!ft_strncmp(cmd, "\0", 1))
+		if (!ft_strncmp(formatted, "\0", 1))
 			return (0);
 		ms->error = interpret_line(ms, formatted);
 		if (ms->error > 300)
@@ -68,11 +68,11 @@ int	readline_loop(t_minishell *ms_data)
 		ft_lstclear(&ms_data->exec_lst, del_exec_node);
 		cmd = NULL;
 		init_signals();
+		ft_printf_fd(2, "signal : %d\n", g_signal); 
 		cmd = readline("zinzinshell$ ");
 		if (!cmd)
 			break ;
 		handle_line(ms_data, cmd);
-		free(cmd);
 	}
 	return (error);
 }
@@ -83,6 +83,7 @@ int	main(int argc, char *argv[], char *envp[])
 	int			exit_status;
 
 	ms_data.last_cmd = NULL;
+	ms_data.error = 0;
 	ms_data.env = NULL;
 	ms_data.exec_lst = NULL;
 	if (!DEBUG && (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1))
@@ -99,7 +100,7 @@ int	main(int argc, char *argv[], char *envp[])
 		exit_status = readline_loop(&ms_data);
 	if (exit_status)
 		print_error_msg(exit_status);
-	destroy_env_lst(ms_data.env);
+	destroy_env_lst(&ms_data.env);
 	printf("exit\n");
 	return (exit_status);
 }

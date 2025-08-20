@@ -16,6 +16,7 @@
 #include "signals.h"
 #include "env.h"
 #include "parsing.h"
+#include <unistd.h>
 
 int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 {
@@ -38,7 +39,7 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 		if (err == 127)
 			ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	}
-	destroy_env_lst(ms->env);
+	destroy_env_lst(&ms->env);
 	ft_lstdelone(*exec, del_exec_node);
 	exec = NULL;
 	ft_free_arr(cmd);
@@ -80,14 +81,14 @@ int	exec_unique_cmd(t_minishell *ms_data, t_list **exec_lst)
 	if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
 		return (1);
 	saved = dup(STDOUT_FILENO);
-	if (exe->io[1] )
+	if (exe->io[1])
 	{
 		dup2(exe->io[1], STDOUT_FILENO);
 		if (exe->io[1] != STDOUT_FILENO && exe->io[1] > 0)
 			close(exe->io[1]);
 	}
 	err = call_cmd(ms_data, exe->cmd);
-	if (exe->filename[1])
+	if (exe->io[1] != STDOUT_FILENO)
 		dup2(saved, STDOUT_FILENO);
 	if (saved > STDOUT_FILENO)
 		close (saved);

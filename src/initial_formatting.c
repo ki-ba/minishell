@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "data_structures.h"
 #include "error.h"
 #include "minishell.h"
 #include "lexing.h"
@@ -46,7 +47,7 @@ char	*trim_cmd(char *cmd)
 * @param cmd the line to format
 * @return the formatted string
 */
-char	*format_cmd(t_env_lst *env, char *cmd)
+char	*format_cmd(t_minishell *ms, char *cmd)
 {
 	char	*expanded;
 
@@ -57,7 +58,8 @@ char	*format_cmd(t_env_lst *env, char *cmd)
 		free (cmd);
 		return (NULL);
 	}
-	expanded = expand_line(env, cmd);
+	expanded = expand_line(ms, cmd);
+	free(cmd);
 	expanded = trim_cmd(expanded);
 	return (expanded);
 }

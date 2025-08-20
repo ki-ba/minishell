@@ -17,7 +17,7 @@
 
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 char			**create_env_arr(t_env_lst *env_lst);
-void			destroy_env_lst(t_env_lst *env_lst);
+void			destroy_env_lst(t_env_lst **env_lst);
 t_env_lst		*new_env_entry(char *name, char *value);
 void			add_to_env(t_env_lst *env, char *name, char *val, t_bool sh);
 
