@@ -1,12 +1,10 @@
-/* ************************************************************************** */
-/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/20 12:33:16 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 14:34:34 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +18,8 @@
 #include "signals.h"
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "prompt.h"
+#include <errno.h>
 
 void			del_exec_node(void *node);
 static void	print_error_msg(int status)
@@ -36,6 +36,8 @@ int	handle_line(t_minishell *ms, char cmd[])
 {
 	char	*formatted;
 
+	if (g_signal == 2)
+		ms->error = 130;
 	if (cmd[0])
 	{
 		formatted = format_cmd(ms, cmd);
@@ -57,24 +59,31 @@ int	handle_line(t_minishell *ms, char cmd[])
 int	readline_loop(t_minishell *ms_data)
 {
 	char		*cmd;
-	int			error;
+	char		*prompt;
 	t_bool		is_exit;
+	char		*err_str;
 
-	error = 0;
 	is_exit = FALSE;
 	g_signal = 0;
-	while (error != ERR_ALLOC && !is_exit)
+	while (ms_data->error != ERR_ALLOC && !is_exit)
 	{
 		ft_lstclear(&ms_data->exec_lst, del_exec_node);
-		cmd = NULL;
+		prompt = create_prompt(ms_data);
+		if (!prompt)
+			return (ERR_ALLOC);
 		init_signals();
-		ft_printf_fd(2, "signal : %d\n", g_signal); 
-		cmd = readline("zinzinshell$ ");
+		cmd = readline(prompt);
+		free(prompt);
 		if (!cmd)
 			break ;
 		handle_line(ms_data, cmd);
+		err_str = err_code(ms_data->error);
+		if (!err_str)
+			return (1);
+		ft_printf("%s", err_str);
+		free(err_str);
 	}
-	return (error);
+	return (ms_data->error);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -85,6 +94,7 @@ int	main(int argc, char *argv[], char *envp[])
 	ms_data.last_cmd = NULL;
 	ms_data.error = 0;
 	ms_data.env = NULL;
+	ms_data.cur_wd = NULL;
 	ms_data.exec_lst = NULL;
 	if (!DEBUG && (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1))
 	{
@@ -97,7 +107,10 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	create_environment(&ms_data.env, envp);
 	if (ms_data.env)
+	{
+		printf("[\033[0;32m0\033[0m]	");
 		exit_status = readline_loop(&ms_data);
+	}
 	if (exit_status)
 		print_error_msg(exit_status);
 	destroy_env_lst(&ms_data.env);

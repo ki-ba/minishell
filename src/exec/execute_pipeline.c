@@ -108,10 +108,12 @@ pid_t	exec_pipeline(t_minishell *ms)
 	g_signal = 0;
 	next_pipe_entry = 0;
 	current = ms->exec_lst;
-	while (current)
+	while (current && pid > -1)
 	{
 		pid = dup_n_fork(ms, &current, &next_pipe_entry);
 		current = current->next;
 	}
+	if (pid == -1)
+		ft_printf_fd(2, "error : failed to create process");
 	return (pid);
 }

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/19 16:42:56 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/21 14:04:21 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	wait_processes(pid_t pid, int err)
 			printf("(core dumped)");
 		printf("\n");
 	}
-	if (err == 0 && status > 0)
-		err = status / 256;
+	// if (err == 0 && status > 0)
+	err = status / 256;
 	while (wait(&status) > -1)
 		;
 	return (err);
@@ -61,7 +61,6 @@ int	start_execution(t_minishell *ms)
 {
 	t_exec_node	*node;
 	t_list		*exec_lst;
-	int			error;
 
 	node = (t_exec_node *) ms->exec_lst->content;
 	exec_lst = ms->exec_lst;
@@ -70,12 +69,12 @@ int	start_execution(t_minishell *ms)
 	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		ms->is_exit = is_correct_exit(node->cmd);
 	if (!exec_lst->next && is_builtin(node->cmd))
-		error = exec_unique_cmd(ms, &exec_lst);
+		update_qm(&ms->error, exec_unique_cmd(ms, &exec_lst), 1);
 	else
-		error = wait_processes(exec_pipeline(ms), ms->error);
+		update_qm(&ms->error, wait_processes(exec_pipeline(ms), ms->error), 0);
 	// if (node->io[0] == -1)
 	// 	ft_putendl_fd("minishell: no such file", 2);
-	return (error);
+	return (ms->error);
 }
 
 int	interpret_line(t_minishell *ms, char *cmd)
@@ -83,7 +82,7 @@ int	interpret_line(t_minishell *ms, char *cmd)
 	t_list		*tokens;
 	int			err;
 
-	// update_qm(&ms->error, 0, 1);
+	update_qm(&ms->error, 0, 1);
 	err = ms->error;
 	tokens = NULL;
 	if (tokenize(&tokens, cmd) != 0)
@@ -98,7 +97,7 @@ int	interpret_line(t_minishell *ms, char *cmd)
 	if (g_signal == 2)
 	{
 		err = (130);
-		ft_putstr_fd("recieved sigint\n",2);
+		ms->error = 130;
 	}
 	else
 		err = start_execution(ms);
