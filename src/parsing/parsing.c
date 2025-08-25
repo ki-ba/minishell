@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:41 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/19 16:42:07 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/25 12:26:31 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 #include "data_structures.h"
 #include "parsing.h"
 #include "error.h"
-
-// NOTE : REDIRECTIONS TAKE OVER PIPES. This means if the i/o of a command
-// is supposed to be piped, but a redirection is encountered, the pipe fd
-// should be closed and the i/o be replaced by the redirection.
 
 static int	define_open_flags(t_token_type type)
 {
@@ -127,7 +123,7 @@ int	parse_tokens(t_minishell *ms, t_list *tokens)
 			redir_type = token->type;
 		else if (token->type == T_FILE)
 			status = handle_file(node, token, redir_type);
-		if (node && node->status && status != 0)
+		if (node && !node->status && status != 0)
 			node->status = status;
 		tokens = tokens->next;
 	}

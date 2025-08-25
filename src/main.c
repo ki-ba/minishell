@@ -1,10 +1,12 @@
+/* ************************************************************************** */
+/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/30 14:01:26 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/21 14:34:34 by kbarru           ###   ########lyon.fr   */
+/*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
+/*   Updated: 2025/08/25 13:16:35 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +43,9 @@ int	handle_line(t_minishell *ms, char cmd[])
 	if (cmd[0])
 	{
 		formatted = format_cmd(ms, cmd);
-		if (ft_add_history(ms, cmd) || !formatted)
+		if (!formatted)
+			return (ERR_PARSING);
+		if (ft_add_history(ms, formatted))
 			return (ERR_ALLOC);
 		if (!ft_strncmp(formatted, "\0", 1))
 			return (0);
@@ -60,23 +64,27 @@ int	readline_loop(t_minishell *ms_data)
 {
 	char		*cmd;
 	char		*prompt;
-	t_bool		is_exit;
 	char		*err_str;
 
-	is_exit = FALSE;
 	g_signal = 0;
-	while (ms_data->error != ERR_ALLOC && !is_exit)
+	while (ms_data->error != ERR_ALLOC && !(ms_data->is_exit))
 	{
 		ft_lstclear(&ms_data->exec_lst, del_exec_node);
 		prompt = create_prompt(ms_data);
 		if (!prompt)
 			return (ERR_ALLOC);
 		init_signals();
+		errno = 0;
 		cmd = readline(prompt);
 		free(prompt);
 		if (!cmd)
 			break ;
-		handle_line(ms_data, cmd);
+		ms_data->error = handle_line(ms_data, cmd);
+		if (ms_data->error > 300)
+		{
+			print_error_msg(ms_data->error);
+			ms_data->error -= 300;
+		}
 		err_str = err_code(ms_data->error);
 		if (!err_str)
 			return (1);
@@ -86,16 +94,23 @@ int	readline_loop(t_minishell *ms_data)
 	return (ms_data->error);
 }
 
+void	init_ms(t_minishell *ms)
+{
+	ms->interface = 0;
+	ms->last_cmd = NULL;
+	ms->error = 0;
+	ms->env = NULL;
+	ms->cur_wd = NULL;
+	ms->exec_lst = NULL;
+	ms->is_exit = 0;
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_minishell	ms_data;
 	int			exit_status;
 
-	ms_data.last_cmd = NULL;
-	ms_data.error = 0;
-	ms_data.env = NULL;
-	ms_data.cur_wd = NULL;
-	ms_data.exec_lst = NULL;
+	init_ms(&ms_data);
 	if (!DEBUG && (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1))
 	{
 		ft_putstr_fd("error : zinzinshell neither support arguments,", 2);

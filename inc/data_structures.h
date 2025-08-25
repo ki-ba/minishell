@@ -77,6 +77,7 @@ typedef struct s_minishell
 	t_env_lst	*env;
 	t_list		*exec_lst;
 	int			is_exit;
+	int			interface;
 	int			error;
 }	t_minishell;
 #endif

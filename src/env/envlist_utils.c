@@ -24,7 +24,7 @@ void	update_qm(int *qm, int status, int conditionnal)
 		*qm = 130;
 		g_signal = 0;
 	}
-	if (conditionnal && (status == 0 || qm > 0))
+	if (conditionnal && (status == 0 || *qm > 0))
 		return ;
 	*qm = status;
 }

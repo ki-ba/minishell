@@ -91,6 +91,7 @@ int	interpret_line(t_minishell *ms, char *cmd)
 	if (process_tokens(tokens))
 		return (ERR_PARSING);
 	err = parse_tokens(ms, tokens);
+	update_qm(&ms->error, err, 1);
 	ft_lstclear(&tokens, deltoken);
 	if (err == ERR_ALLOC || !(ms->exec_lst))
 		return (ERR_ALLOC);
