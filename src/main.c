@@ -18,6 +18,7 @@
 #include "history.h"
 #include "exec.h"
 #include "signals.h"
+#include <errno.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "prompt.h"
