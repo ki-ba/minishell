@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:42:36 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 18:00:58 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 18:30:49 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ static int	print_export(t_env_lst *env)
 	t_env_lst	*tmp;
 	t_env_lst	*head;
 
+	if (!env)
+		return (SUCCESS);
 	head = dup_env(env);
 	if (!head)
 		return (ERR_ALLOC);

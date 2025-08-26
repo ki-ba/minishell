@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:30:51 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 15:51:33 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 18:32:44 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,15 @@ static void	del_env_node(t_minishell *ms_data, t_env_lst *node)
 	t_env_lst	*tmp;
 
 	tmp = ms_data->env;
+	if (tmp == node)
+	{
+		ms_data->env = ms_data->env->next;
+		tmp = node->next;
+		free(node->name);
+		free(node->value);
+		free(node);
+		return ;
+	}
 	while (tmp)
 	{
 		if (tmp->next == node)

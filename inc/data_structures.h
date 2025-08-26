@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:08:47 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/26 17:29:24 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 18:31:59 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ typedef struct s_minishell
 	char		*last_cmd;
 	char		*cur_wd;
 	t_env_lst	*env;
-	t_env_lst	**head;
 	t_list		*exec_lst;
 	int			is_exit;
 	int			interface;

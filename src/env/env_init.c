@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:03:16 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/26 17:39:38 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 18:32:37 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ t_env_lst	*create_environment(t_minishell *ms_data, char *envp[])
 			return (NULL);
 		}
 		env_add_back(&ms_data->env, new);
-		if (i == 0)
-			ms_data->head = &new;
 		if (ft_strncmp(name, "PWD", 4))
 			ms_data->cur_wd = ft_strdup(new->value);
 			//! check MALLOC
