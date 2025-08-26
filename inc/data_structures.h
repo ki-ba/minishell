@@ -80,4 +80,5 @@ typedef struct s_minishell
 	int			interface;
 	int			error;
 }	t_minishell;
+
 #endif

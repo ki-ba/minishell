@@ -10,14 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "error.h"
 #include "libft.h"
 #include <readline/history.h>
-#include "data_structures.h"
 
-int	ft_add_history(t_minishell *minishell_data, char entry[])
+void	ft_add_history(char entry[])
 {
-	char	*last_cmd;
+	static char	last_cmd[255];
 
 	// if (ft_strlen(entry) > 255)
 	// {
@@ -37,5 +35,4 @@ int	ft_add_history(t_minishell *minishell_data, char entry[])
 				return (ERR_ALLOC);
 		}
 	}
-	return (SUCCESS);
 }
