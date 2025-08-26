@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:04 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:15:27 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 15:22:43 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,19 +85,19 @@ int	call_cmd(t_minishell *ms_data, char **cmd)
 	if (!cmd[0])
 		err = SUCCESS;
 	else if (!ft_strncmp(cmd[0], "echo", 5))
-		err = ft_echo(cmd, ms_data->env);
+		err = ft_echo(cmd, ms_data);
 	else if (!ft_strncmp(cmd[0], "cd", 3))
-		err = ft_cd(cmd, ms_data->env);
+		err = ft_cd(cmd, ms_data);
 	else if (!ft_strncmp(cmd[0], "pwd", 4))
-		err = ft_pwd(cmd, ms_data->env);
+		err = ft_pwd(cmd, ms_data);
 	else if (!ft_strncmp(cmd[0], "export", 7))
-		err = ft_export(cmd, ms_data->env);
+		err = ft_export(cmd, ms_data);
 	else if (!ft_strncmp(cmd[0], "unset", 6))
-		err = ft_unset(cmd, ms_data->env);
+		err = ft_unset(cmd, ms_data);
 	else if (!ft_strncmp(cmd[0], "exit", 5))
-		err = ft_exit(cmd, ms_data->env);
+		err = ft_exit(cmd, ms_data);
 	else if (!ft_strncmp(cmd[0], "env", 4))
-		err = ft_env(cmd, ms_data->env);
+		err = ft_env(cmd, ms_data);
 	if (err > 300 && err != ERR_ALLOC)
 		err -= 300;
 	update_qm(&ms_data->error, err, 0);

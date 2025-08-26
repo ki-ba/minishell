@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:03:16 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 14:12:41 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 17:39:38 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "data_structures.h"
 #include "env.h"
 
-t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
+t_env_lst	*create_environment(t_minishell *ms_data, char *envp[])
 {
 	size_t		i;
 	char		*name;
@@ -25,21 +25,25 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 	while (envp[i])
 	{
 		name = ft_substr(envp[i], 0, ft_strlen_c(envp[i], '='));
+		//! check MALLOC
 		new = create_env_lst(name);
 		if (!name || !new)
 		{
 			free(name);
-			destroy_env_lst(env_lst);
+			destroy_env_lst(&ms_data->env);
 			ft_putstr_fd("error creating environment\n", 2);
 			return (NULL);
 		}
-		env_add_back(env_lst, new);
+		env_add_back(&ms_data->env, new);
+		if (i == 0)
+			ms_data->head = &new;
 		if (ft_strncmp(name, "PWD", 4))
-			add_to_env(*env_lst, "CURRPATH", new->value, 1);
+			ms_data->cur_wd = ft_strdup(new->value);
+			//! check MALLOC
 		++i;
 	}
-	empty_env_check(env_lst);
-	return (*env_lst);
+	empty_env_check(ms_data);
+	return (ms_data->env);
 }
 
 char	**create_env_arr(t_env_lst *env_lst)

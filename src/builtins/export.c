@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:42:36 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:11:20 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 18:00:58 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	print_export(t_env_lst *env);
 static int	create_exp_node(char *cmd, t_env_lst **env);
 static int	update_exp_node(char *cmd, t_env_lst **env);
 
-int	ft_export(char **cmd, t_env_lst *env)
+int	ft_export(char **cmd, t_minishell *ms_data)
 {
 	int	i;
 	int	err;
@@ -28,11 +28,11 @@ int	ft_export(char **cmd, t_env_lst *env)
 	err = 0;
 	c_err = 0;
 	if (!cmd[1])
-		return (print_export(env));
+		return (print_export(ms_data->env));
 	i = 1;
 	while (cmd[i])
 	{
-		err = create_exp_node(cmd[i], &env);
+		err = create_exp_node(cmd[i], &ms_data->env);
 		if (err == ERR_ARGS)
 		{
 			ft_printf_fd(2,
@@ -51,10 +51,10 @@ static int	print_export(t_env_lst *env)
 	t_env_lst	*tmp;
 	t_env_lst	*head;
 
-	tmp = dup_env(env);
-	if (!tmp)
+	head = dup_env(env);
+	if (!head)
 		return (ERR_ALLOC);
-	sort_env_var(tmp);
+	tmp = sort_env_var(head);
 	head = tmp;
 	while (tmp)
 	{

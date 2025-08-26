@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:41:42 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:06:51 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 15:49:39 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 #include "error.h"
 #include "env.h"
 
-static int	no_arg_cd(char **cmd, t_env_lst *env);
-static int	change_dir(char **cmd, t_env_lst *env);
-static char	*getsymlink(char *cmd, t_env_lst *env);
+static int	no_arg_cd(char **cmd, t_minishell *ms_data);
+static int	change_dir(char **cmd, t_minishell *ms_data);
+static char	*getsymlink(char *cmd, t_minishell *ms_data);
 
 /** @brief if relative => check access from end to start */
 /** @param cmd[0] is the cmd (here cd) */
 /** @param cmd[1] is the new path */
 /** @param cmd[2] should be NULL */
 /** @return 0 on success or a non-zero int on failure */
-int	ft_cd(char **cmd, t_env_lst *env)
+int	ft_cd(char **cmd, t_minishell *ms_data)
 {
 	if (cmd[1] != NULL && cmd[2] != NULL)
 	{
@@ -32,11 +32,11 @@ int	ft_cd(char **cmd, t_env_lst *env)
 		return (ERR_ARGS);
 	}
 	if (cmd[1] == NULL)
-		return (no_arg_cd(cmd, env));
-	return (change_dir(cmd, env));
+		return (no_arg_cd(cmd, ms_data));
+	return (change_dir(cmd, ms_data));
 }
 
-static int	change_dir(char **cmd, t_env_lst *env)
+static int	change_dir(char **cmd, t_minishell *ms_data)
 {
 	size_t		i;
 	int			err;
@@ -48,27 +48,27 @@ static int	change_dir(char **cmd, t_env_lst *env)
 	i = ft_strlen(cmd[1]) - 1;
 	if (i > 0 && cmd[1][i] == '/')
 		cmd[1][i] = '\0';
-	path = getsymlink(cmd[1], env);
+	path = getsymlink(cmd[1], ms_data);
 	if (!path)
 		return (ERR_ALLOC);
 	err = check_dir_access(path);
 	if (err == SUCCESS)
 		err = chdir(path);
 	if (err == SUCCESS)
-		err = update_env(path, env);
+		err = update_env(path, ms_data);
 	free(path);
 	if (err != SUCCESS)
 		err = ERR_ARGS;
 	return (err);
 }
 
-static char	*getsymlink(char *cmd, t_env_lst *env)
+static char	*getsymlink(char *cmd, t_minishell *ms_data)
 {
 	char	*path_parts[3];
 	int		err;
 	size_t	len;
 
-	err = setup_path_parts(path_parts, cmd, env);
+	err = setup_path_parts(path_parts, cmd, ms_data);
 	if (err)
 		return (NULL);
 	len = ft_strlen(cmd);
@@ -90,13 +90,13 @@ static char	*getsymlink(char *cmd, t_env_lst *env)
 	return (path_parts[0]);
 }
 
-static int	no_arg_cd(char **cmd, t_env_lst *env)
+static int	no_arg_cd(char **cmd, t_minishell *ms_data)
 {
 	t_env_lst	*home;
 	int			err;
 
 	err = 0;
-	home = search_env_var(env, "HOME");
+	home = search_env_var(ms_data->env, "HOME");
 	if (!home || !home->value)
 	{
 		ft_putendl_fd("minishell: cd: HOME not set", 2);
@@ -108,7 +108,7 @@ static int	no_arg_cd(char **cmd, t_env_lst *env)
 		if (!cmd[1])
 			return (ERR_ALLOC);
 	}
-	err = change_dir(cmd, env);
+	err = change_dir(cmd, ms_data);
 	free(cmd[1]);
 	cmd[1] = NULL;
 	return (err);

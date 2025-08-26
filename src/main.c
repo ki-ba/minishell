@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/25 13:16:35 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/26 15:36:34 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ int	main(int argc, char *argv[], char *envp[])
 	exit_status = 1;
 	(void)argc;
 	(void)argv;
-	create_environment(&ms_data.env, envp);
+	create_environment(&ms_data, envp);
 	if (ms_data.env)
 	{
 		printf("[\033[0;32m0\033[0m]	");

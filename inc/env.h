@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:46:51 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 13:53:29 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 15:51:00 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 /* ENV INIT */
 
-t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
+t_env_lst		*create_environment(t_minishell *ms_data, char *envp[]);
 char			**create_env_arr(t_env_lst *env_lst);
 void			destroy_env_lst(t_env_lst **env_lst);
 t_env_lst		*new_env_entry(char *name, char *value);
@@ -38,6 +38,6 @@ t_env_lst		*search_env_var(t_env_lst *env, char *var);
 
 /* NO ENV */
 
-t_env_lst		**empty_env_check(t_env_lst **env_lst);
+t_env_lst		**empty_env_check(t_minishell *ms_data);
 
 #endif

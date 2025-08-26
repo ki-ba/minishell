@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:04:31 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 14:06:33 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 15:26:02 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ static size_t	has_option(char **cmd, char opt)
 	return (i);
 }
 
-int	ft_echo(char **cmd, t_env_lst *env)
+int	ft_echo(char **cmd, t_minishell *ms_data)
 {
 	size_t	i;
 	size_t	opt;
 
-	(void) env;
+	(void) ms_data;
 	opt = has_option(cmd, 'n');
 	i = opt;
 	while (i && cmd[i])
