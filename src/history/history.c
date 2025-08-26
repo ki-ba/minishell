@@ -19,12 +19,6 @@ int	ft_add_history(t_minishell *minishell_data, char entry[])
 {
 	char	*last_cmd;
 
-	// if (ft_strlen(entry) > 255)
-	// {
-	// 	ft_printf_fd(2, "warning : command is very long. \n");
-	// 	ft_printf_fd(2, "not adding it to history to avoid add_history\n");
-	// 	ft_printf_fd(2, "memory errors.\n");
-	// }
 	last_cmd = minishell_data->last_cmd;
 	if (entry)
 	{
