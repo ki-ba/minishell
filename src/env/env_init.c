@@ -20,8 +20,7 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 	char		*name;
 	t_env_lst	*new;
 
-	*env_lst = NULL;
-	env_add_back(env_lst, new_env_entry("?", "0"));
+	name = NULL;
 	i = 0;
 	while (envp[i])
 	{
@@ -30,12 +29,12 @@ t_env_lst	*create_environment(t_env_lst **env_lst, char *envp[])
 		if (!name || !new)
 		{
 			free(name);
-			destroy_env_lst(*env_lst);
+			destroy_env_lst(env_lst);
 			ft_putstr_fd("error creating environment\n", 2);
 			return (NULL);
 		}
 		env_add_back(env_lst, new);
-		if (!ft_strncmp(name, "PWD", 4))
+		if (ft_strncmp(name, "PWD", 4))
 			add_to_env(*env_lst, "CURRPATH", new->value, 1);
 		++i;
 	}
@@ -70,24 +69,26 @@ char	**create_env_arr(t_env_lst *env_lst)
 	return (env_arr);
 }
 
-void	destroy_env_lst(t_env_lst *env_lst)
+void	destroy_env_lst(t_env_lst **env_lst)
 {
 	t_env_lst	*tmp;
+	t_env_lst	*cur;
 
-	while (env_lst)
+	cur = *env_lst;
+	while (cur)
 	{
-		tmp = env_lst->next;
-		if (env_lst->value)
+		tmp = cur->next;
+		if (cur->value)
 		{
-			free(env_lst->value);
-			env_lst->value = NULL;
+			free(cur->value);
+			cur->value = NULL;
 		}
-		free(env_lst->name);
-		env_lst->name = NULL;
-		free(env_lst);
-		env_lst = NULL;
-		env_lst = tmp;
+		free(cur->name);
+		cur->name = NULL;
+		free(cur);
+		cur = tmp;
 	}
+	*env_lst = NULL;
 }
 
 t_env_lst	*new_env_entry(char *name, char *value)

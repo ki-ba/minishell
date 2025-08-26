@@ -17,7 +17,7 @@
 
 t_env_lst		*create_environment(t_env_lst **env_lst, char *envp[]);
 char			**create_env_arr(t_env_lst *env_lst);
-void			destroy_env_lst(t_env_lst *env_lst);
+void			destroy_env_lst(t_env_lst **env_lst);
 t_env_lst		*new_env_entry(char *name, char *value);
 void			add_to_env(t_env_lst *env, char *name, char *val, t_bool sh);
 
@@ -31,7 +31,7 @@ size_t			get_env_size(t_env_lst *env_lst);
 
 /* ENVLIST UTILS */
 
-void			update_qm(t_env_lst *env, int status, int conditionnal);
+void			update_qm(int *qm, int status, int conditionnal);
 size_t			envlist_len(t_env_lst *env);
 char			**envlist_to_arr(t_env_lst *env_lst);
 t_env_lst		*search_env_var(t_env_lst *env, char *var);

@@ -1,26 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strdup.c                                        :+:      :+:    :+:   */
+/*   prompt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 17:32:10 by kbarru            #+#    #+#             */
-/*   Updated: 2025/03/07 18:17:20 by kbarru           ###   ########lyon.fr   */
+/*   Created: 2025/08/21 13:01:23 by kbarru            #+#    #+#             */
+/*   Updated: 2025/08/21 14:17:09 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+typedef struct s_minishell	t_minishell;
 
-char	*ft_strdup(char *s)
-{
-	char	*dup;
-	size_t	size;
-
-	size = (ft_strlen(s)+1) * (sizeof(char));
-	dup = malloc(size);
-	if (!dup)
-		return (0);
-	ft_strlcpy(dup, s, size);
-	return (dup);
-}
+char	*err_code(int error);
+char	*create_prompt(t_minishell *ms);

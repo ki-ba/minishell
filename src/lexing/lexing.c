@@ -16,24 +16,27 @@
 
 t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b)
 {
-	if (determine_redirect(val))
-		return (TOKEN_REDIRECT);
-	else if (*last_type == TOKEN_REDIRECT && ft_strncmp(val, "|", 1))
-		return (TOKEN_FILE);
+	int	redir_type;
+
+	redir_type = determine_redirect(val);
+	if (redir_type)
+		return (redir_type);
+	else if (*last_type > T_PIPE && *last_type < T_FILE)
+		return (T_FILE);
 	else if (determine_option(val))
-		return (TOKEN_OPT);
+		return (T_OPT);
 	else if (determine_pipe(val))
 	{
 		*cmd_b = FALSE;
-		return (TOKEN_PIPE);
+		return (T_PIPE);
 	}
 	else if (!(*cmd_b) && ft_str_is_alnum(val))
 	{
 		*cmd_b = TRUE;
-		return (TOKEN_CMD);
+		return (T_CMD);
 	}
 	else
-		return (TOKEN_STR);
+		return (T_STR);
 }
 
 t_token	*token(t_list **tokens, char *token_str, t_bool *cmd_bool)
@@ -49,7 +52,7 @@ t_token	*token(t_list **tokens, char *token_str, t_bool *cmd_bool)
 		return (NULL);
 	}
 	last_lst = ft_lstlast(*tokens);
-	last_type = TOKEN_PIPE;
+	last_type = T_PIPE;
 	if (last_lst)
 		last_type = ((t_token *)(last_lst->content))->type;
 	new_token->type = token_type(token_str, &last_type, cmd_bool);

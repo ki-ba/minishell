@@ -6,12 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:09:11 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/06 14:47:36 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/21 14:24:26 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <readline/readline.h>
+#include "prompt.h"
 
 int	g_signal;
 
@@ -22,6 +23,7 @@ void	sigint_handler(int sig)
 		printf("\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
+		// printf("%s", err_code(130));
 		rl_redisplay();
 	}
 	g_signal = sig;

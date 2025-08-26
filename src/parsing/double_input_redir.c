@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "data_structures.h"
+#include "error.h"
 #include "signals.h"
 #include "minishell.h"
 #include <errno.h>
@@ -35,6 +36,11 @@ static int	open_random_file(char **filename)
 		ft_multifree(2, 0, random_str, filename);
 		random_str = create_random_str(HERE_DOC_LEN);
 		*filename = ft_concat(2, "tmp_", random_str);
+		if (!filename)
+		{
+			free(random_str);
+			return (-1 * ERR_ALLOC);
+		}
 	}
 	hd_fd = open(*filename, O_CREAT | O_WRONLY, 0644);
 	free(random_str);

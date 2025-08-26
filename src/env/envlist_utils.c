@@ -15,21 +15,18 @@
 #include "env.h"
 #include "signals.h"
 
-void	update_qm(t_env_lst *env, int status, int conditionnal)
+void	update_qm(int *qm, int status, int conditionnal)
 {
-	t_env_lst	*qm;
-
-	qm = search_env_var(env, "?");
+	if (!qm)
+		return ;
 	if (g_signal == 2)
 	{
-		free(qm->value);
-		qm->value = ft_itoa(130);
+		*qm = 130;
 		g_signal = 0;
 	}
-	if (conditionnal && (status == 0 || ft_atoi(qm->value) > 0))
+	if (conditionnal && (status == 0 || *qm > 0))
 		return ;
-	free(qm->value);
-	qm->value = ft_itoa(status);
+	*qm = status;
 }
 
 size_t	envlist_len(t_env_lst *env)

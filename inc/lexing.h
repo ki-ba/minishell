@@ -26,7 +26,7 @@ size_t			count_token_len(char *line);
 
 /* EXPAND */
 
-char			*expand_line(t_env_lst *env, char str[]);
+char			*expand_line(t_minishell *ms, char str[]);
 
 /* EXPAND UTILS */
 
@@ -50,6 +50,6 @@ void			remove_quotes(void *item);
 void			deltoken(void *token);
 
 /* ID TOKEN */
-t_bool			determine_redirect(char token_str[]);
+t_token_type	determine_redirect(char token_str[]);
 t_bool			determine_option(char token_str[]);
 t_bool			determine_pipe(char token_str[]);

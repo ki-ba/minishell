@@ -13,6 +13,8 @@
 #ifndef HISTORY_H
 # define HISTORY_H
 
-void	ft_add_history(char entry[]);
+# include "data_structures.h"
+
+int	ft_add_history(t_minishell *ms, char entry[]);
 
 #endif

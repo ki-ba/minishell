@@ -18,24 +18,24 @@
 
 /* PARSING */
 
-t_list		*parse_tokens(t_list *tokens);
+int				parse_tokens(t_minishell *ms, t_list *tokens);
 
 /* PARSING UTILS */
 
-char		**add_to_array(char **arr, char *str);
-int			check_parsing(char str[]);
-int			process_tokens(t_list *tokens);
+char			**add_to_array(char **arr, char *str);
+int				check_parsing(char str[]);
+int				process_tokens(t_list *tokens);
 
 /* EXEC NODE */
 
-t_exec_node	*create_exec_node(void);
-void		del_exec_node(void *node);
-void		ft_lstclear_but(t_list **lst, void (*f)(void *), t_list *item);
+t_exec_node		*create_exec_node(void);
+void			del_exec_node(void *node);
+void			ft_lstclear_but(t_list **lst, void (*f)(void *), t_list *item);
 
 /* DOUBLE INPUT REDIR */
 
-int			ft_max(int a, int b);
-int			rl_help(void);
-int			read_input(char *del);
+int				ft_max(int a, int b);
+int				rl_help(void);
+int				read_input(char *del);
 
 #endif
