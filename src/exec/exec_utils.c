@@ -68,7 +68,7 @@ int	apply_redirections(t_list **cur_node)
 	exe = (t_exec_node *)(*cur_node)->content;
 	if (exe->io[1] != STDOUT_FILENO)
 		err = dup2(exe->io[1], STDOUT_FILENO);
-	if (!err && exe->io[0] != STDIN_FILENO)
+	if (err >= 0 && exe->io[0] != STDIN_FILENO)
 		err = dup2(exe->io[0], STDIN_FILENO);
 	return (err);
 }
