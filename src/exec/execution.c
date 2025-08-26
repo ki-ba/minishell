@@ -85,9 +85,6 @@ int	interpret_line(t_minishell *ms, char *cmd)
 	update_qm(&ms->error, 0, 1);
 	err = ms->error;
 	tokens = NULL;
-	cmd = format_cmd(env_lst, cmd);
-	if (!cmd)
-		return (ERR_PARSING);
 	if (tokenize(&tokens, cmd) != 0)
 		return (ERR_FAIL);
 	free(cmd);

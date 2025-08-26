@@ -18,7 +18,6 @@
 #include "history.h"
 #include "exec.h"
 #include "signals.h"
-#include <errno.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "prompt.h"
@@ -43,11 +42,11 @@ int	handle_line(t_minishell *ms, char cmd[])
 		ms->error = 130;
 	if (cmd[0])
 	{
+		if (ft_add_history(ms, cmd))
+			return (ERR_ALLOC);
 		formatted = format_cmd(ms, cmd);
 		if (!formatted)
 			return (ERR_PARSING);
-		if (ft_add_history(ms, formatted))
-			return (ERR_ALLOC);
 		if (!ft_strncmp(formatted, "\0", 1))
 			return (0);
 		ms->error = interpret_line(ms, formatted);
@@ -108,6 +107,7 @@ void	init_ms(t_minishell *ms)
 
 int	main(int argc, char *argv[], char *envp[])
 {
+	printf("%d\n", getpid());
 	t_minishell	ms_data;
 	int			exit_status;
 
