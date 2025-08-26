@@ -49,7 +49,7 @@ int	ft_echo(char **cmd, t_env_lst *env)
 	i = opt;
 	while (i && cmd[i])
 	{
-		printf("ZINZIN%s", cmd[i]);
+		printf("%s", cmd[i]);
 		if (cmd[i] && cmd[i + 1])
 			printf(" ");
 		++i;
