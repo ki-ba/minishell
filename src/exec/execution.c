@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/21 14:04:21 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/27 15:00:27 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ int	wait_processes(pid_t pid, int err)
 			printf("(core dumped)");
 		printf("\n");
 	}
-	// if (err == 0 && status > 0)
-	err = status / 256;
+	if (err == 0 && status > 0)
+		err = status / 256;
 	while (wait(&status) > -1)
 		;
 	return (err);
@@ -71,7 +71,10 @@ int	start_execution(t_minishell *ms)
 	if (!exec_lst->next && is_builtin(node->cmd))
 		update_qm(&ms->error, exec_unique_cmd(ms, &exec_lst), 1);
 	else
+	{
+		update_signals(1);
 		update_qm(&ms->error, wait_processes(exec_pipeline(ms), ms->error), 0);
+	}
 	// if (node->io[0] == -1)
 	// 	ft_putendl_fd("minishell: no such file", 2);
 	return (ms->error);
@@ -91,7 +94,6 @@ int	interpret_line(t_minishell *ms, char *cmd)
 	if (process_tokens(tokens))
 		return (ERR_PARSING);
 	err = parse_tokens(ms, tokens);
-	update_qm(&ms->error, err, 1);
 	ft_lstclear(&tokens, deltoken);
 	if (err == ERR_ALLOC || !(ms->exec_lst))
 		return (ERR_ALLOC);

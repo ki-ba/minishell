@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prompt.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 13:00:55 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/21 14:27:48 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/27 15:24:31 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,43 +23,22 @@ char	*part_one(void)
 	return (prompt);
 }
 
-char	*def_cwd(void)
+char	*def_cwd(t_minishell *ms_data)
 {
 	char	*prompt;
-	char	*cwd;
 
-	cwd = NULL;
-	cwd = getcwd(cwd, PATH_MAX);
-	prompt = ft_concat(5, BOLD, FG_CYAN, cwd, RESET, " % ");
-	free(cwd);
+	prompt = ft_concat(5, BOLD, FG_CYAN, ms_data->cur_wd, RESET, " % ");
 	return (prompt);
 }
 
-char	*err_code(int error)
-{
-	char	*prompt;
-	char	color[9];
-	char	*err;
-
-	err = ft_itoa(error);
-	if (!err)
-		return (NULL);
-	if (error)
-		ft_strlcpy(color, FG_RED, 9);
-	else
-		ft_strlcpy(color, FG_GREEN, 9);
-	prompt = ft_concat(5, "[", color, err, RESET, "]	");
-	free(err);
-	return (prompt);
-}
-char	*create_prompt(void)
+char	*create_prompt(t_minishell *ms_data)
 {
 	char	*first_part;
 	char	*second_part;
 	char	*prompt;
 
 	first_part = part_one();
-	second_part = def_cwd();
+	second_part = def_cwd(ms_data);
 	if (!first_part || !second_part)
 	{
 		free(first_part);
