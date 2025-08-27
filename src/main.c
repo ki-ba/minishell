@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/27 15:21:26 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/27 15:42:33 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ int	readline_loop(t_minishell *ms_data)
 			print_error_msg(ms_data->error);
 			ms_data->error -= 300;
 		}
-		if (ms_data->error)
+		if (ms_data->error && !(ms_data->is_exit))
 			printf("[%s%d%s]  ", FG_RED, ms_data->error, RESET);
-		else
+		else if (!(ms_data->error) && !(ms_data->is_exit))
 			printf("[%s%d%s]  ", FG_GREEN, ms_data->error, RESET);
 	}
 	return (ms_data->error);
@@ -117,7 +117,6 @@ int	main(int argc, char *argv[], char *envp[])
 		exit(1);
 	}
 	exit_status = 1;
-	(void)argc;
 	(void)argv;
 	create_environment(&ms_data, envp);
 	if (ms_data.env)
@@ -125,6 +124,8 @@ int	main(int argc, char *argv[], char *envp[])
 		printf("[%s0%s]  ", FG_GREEN, RESET);
 		exit_status = readline_loop(&ms_data);
 	}
+	if (exit_status > 300)
+		exit_status -= 300;
 	if (exit_status)
 		print_error_msg(exit_status);
 	destroy_env_lst(&ms_data.env);
