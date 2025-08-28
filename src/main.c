@@ -17,13 +17,14 @@
 #include "env.h"
 #include "history.h"
 #include "exec.h"
+#include "parsing.h"
 #include "signals.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "prompt.h"
+#include "color.h"
 #include <errno.h>
 
-void			del_exec_node(void *node);
 static void	print_error_msg(int status)
 {
 	if (status == ERR_ARGS)
@@ -37,6 +38,7 @@ static void	print_error_msg(int status)
 int	handle_line(t_minishell *ms, char cmd[])
 {
 	char	*formatted;
+	int		err;
 
 	if (g_signal == 2)
 		ms->error = 130;
@@ -59,7 +61,18 @@ int	handle_line(t_minishell *ms, char cmd[])
 	}
 	return (ms->error);
 }
-#include "color.h"
+
+
+int	handle_error(int error)
+{
+	if (error > 300)
+	{
+		print_error_msg(error);
+		return (error - 300);
+	}
+	return (error);
+}
+
 int	readline_loop(t_minishell *ms_data)
 {
 	char		*cmd;
@@ -73,7 +86,6 @@ int	readline_loop(t_minishell *ms_data)
 		if (!prompt)
 			return (ERR_ALLOC);
 		init_signals();
-		errno = 0;
 		cmd = readline(prompt);
 		free(prompt);
 		if (!cmd)
@@ -105,7 +117,6 @@ void	init_ms(t_minishell *ms)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	printf("%d\n", getpid());
 	t_minishell	ms_data;
 	int			exit_status;
 
