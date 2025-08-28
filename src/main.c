@@ -117,8 +117,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_ms(&ms_data);
 	if (!DEBUG && (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1))
 	{
-		ft_putstr_fd("error : zinzinshell neither support arguments,", 2);
-		ft_putstr_fd("nor piping/redirecting its input / output.\n", 2);
+		ft_putstr_fd("error : no redirecting/piping pls\n", 2);
 		exit(1);
 	}
 	(void)argv;

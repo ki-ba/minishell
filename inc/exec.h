@@ -13,13 +13,8 @@
 #ifndef EXEC_H
 # define EXEC_H
 
-// # include "data_structures.h"
-// # include <stddef.h>
-// # include "libft.h"
-
 /* EXECUTION */
 
-#include "data_structures.h"
 int		wait_processes(pid_t pid, int err);
 int		start_execution(t_minishell *ms);
 int		interpret_line(t_minishell *ms, char *cmd);
@@ -42,7 +37,7 @@ int		call_cmd(t_minishell *ms, char **cmd);
 
 /* EXECUTE PIPELINE */
 
-int	try_exec(t_minishell *ms, t_list **exec, char **cmd);
+int		try_exec(t_minishell *ms, t_list **exec, char **cmd);
 void	exec_child(t_minishell *ms, t_list **cur, int *next_pipe, int pipe[2]);
 void	exec_parent(t_exec_node *exe, int *nxt_pipe, int pipe[2]);
 int		exec_unique_cmd(t_minishell *ms, t_list **exec_lst);
