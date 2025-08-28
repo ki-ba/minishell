@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:15 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/28 16:23:13 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/28 16:32:36 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ static int	add_pwd_no_env(t_minishell *ms_data)
 		if (!curr_path)
 			return (ERR_ALLOC);
 		ms_data->cur_wd = curr_path;
+		env_add_back(&ms_data->env, new_env_entry("PWD", curr_path));
 	}
-	env_add_back(&ms_data->env, new_env_entry("PWD", curr_path));
 	return (SUCCESS);
 }
 
