@@ -17,13 +17,13 @@
 #include "env.h"
 #include "history.h"
 #include "exec.h"
+#include "parsing.h"
 #include "signals.h"
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "prompt.h"
 #include <errno.h>
 
-void			del_exec_node(void *node);
 static void	print_error_msg(int status)
 {
 	if (status == ERR_ARGS)
@@ -37,6 +37,7 @@ static void	print_error_msg(int status)
 int	handle_line(t_minishell *ms, char cmd[])
 {
 	char	*formatted;
+	int		err;
 
 	if (g_signal == 2)
 		ms->error = 130;
@@ -49,15 +50,22 @@ int	handle_line(t_minishell *ms, char cmd[])
 			return (ERR_PARSING);
 		if (!ft_strncmp(formatted, "\0", 1))
 			return (0);
-		ms->error = interpret_line(ms, formatted);
-		if (ms->error > 300)
-		{
-			print_error_msg(ms->error);
-			ms->error -= 300;
-		}
-		return (0);
+		err = interpret_line(ms, formatted);
+		return (err);
 	}
+	else
+		return (ms->error);
 	return (1);
+}
+
+int	handle_error(int error)
+{
+	if (error > 300)
+	{
+		print_error_msg(error);
+		return (error - 300);
+	}
+	return (error);
 }
 
 int	readline_loop(t_minishell *ms_data)
@@ -74,17 +82,12 @@ int	readline_loop(t_minishell *ms_data)
 		if (!prompt)
 			return (ERR_ALLOC);
 		init_signals();
-		errno = 0;
 		cmd = readline(prompt);
 		free(prompt);
 		if (!cmd)
 			break ;
 		ms_data->error = handle_line(ms_data, cmd);
-		if (ms_data->error > 300)
-		{
-			print_error_msg(ms_data->error);
-			ms_data->error -= 300;
-		}
+		ms_data->error = handle_error(ms_data->error);
 		err_str = err_code(ms_data->error);
 		if (!err_str)
 			return (1);
@@ -107,7 +110,6 @@ void	init_ms(t_minishell *ms)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	printf("%d\n", getpid());
 	t_minishell	ms_data;
 	int			exit_status;
 
@@ -124,7 +126,7 @@ int	main(int argc, char *argv[], char *envp[])
 	create_environment(&ms_data.env, envp);
 	if (ms_data.env)
 	{
-		printf("[\033[0;32m0\033[0m]	");
+		printf("[\001\e[0;32m0\e[0m]	");
 		exit_status = readline_loop(&ms_data);
 	}
 	if (exit_status)

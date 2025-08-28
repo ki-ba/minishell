@@ -89,7 +89,7 @@ char	*get_env_val(t_env_lst *env, char name[], int sh)
 		{
 			if (sh)
 				free(name);
-			return (current->value);
+			return (ft_strdup(current->value));
 		}
 		current = current->next;
 	}

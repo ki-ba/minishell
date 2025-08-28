@@ -18,33 +18,51 @@
 #include <readline/readline.h>
 
 /**
-* @brief creates a random string starting with tmp_ and creates
-* a file with resulting string as filename.
-*/
-
-static int	open_random_file(char **filename)
+ * @brief creates a random filename that doesn't exist in current directory.
+ */
+static char	*create_filename(void)
 {
 	char	*random_str;
-	int		hd_fd;
+	char	*filename;
 
 	random_str = create_random_str(HERE_DOC_LEN);
-	*filename = ft_concat(2, "tmp_", random_str);
-	if (!filename)
-		return (-1);
-	while (!access(*filename, F_OK))
+	filename = ft_concat(2, "tmp_", random_str);
+	free(random_str);
+	random_str = NULL;
+	if (!(*filename))
+		return (NULL);
+	while (!access(filename, F_OK))
 	{
 		ft_multifree(2, 0, random_str, filename);
 		random_str = create_random_str(HERE_DOC_LEN);
-		*filename = ft_concat(2, "tmp_", random_str);
-		if (!filename)
+		filename = ft_concat(2, "tmp_", random_str);
+		if (!(filename))
 		{
 			free(random_str);
-			return (-1 * ERR_ALLOC);
+			return (NULL);
 		}
 	}
-	hd_fd = open(*filename, O_CREAT | O_WRONLY, 0644);
-	free(random_str);
-	return (hd_fd);
+	return (filename);
+}
+
+/**
+ * @brief creates a file with a random name and opens it in reading
+ * @brief and writing, saving the resulting fds in an array.
+*/
+static int	open_random_file(int fd[2])
+{
+	char	*filename;
+
+	filename = create_filename();
+	ft_printf_fd(2, "creating %s\n", filename);
+	if (!filename)
+		return (-1);
+	fd[1] = open(filename, O_CREAT | O_WRONLY, 0644);
+	if (fd[1] > 0)
+		fd[0] = open(filename, O_RDONLY);
+	unlink(filename);
+	free(filename);
+	return (fd[0] < 0 || fd[1] < 0);
 }
 
 int	ft_max(int a, int b)
@@ -92,22 +110,20 @@ static void	fill_input(int fd, char del[], char *prompt)
 
 int	read_input(char *del)
 {
-	int		fd;
-	char	*filename;
+	int		fd[2];
+	int		err;
 
 	update_signals(0);
-	fd = open_random_file(&filename);
-	if (fd < 0)
-		return (fd);
+	err = open_random_file(fd);
+	if (err)
+		return (err);
 	if (g_signal != 2)
-		fill_input(fd, del, "input> ");
-	if (fd > 0)
-		close (fd);
-	if (g_signal != 2)
-		fd = open(filename, O_RDONLY);
-	else
-		fd = open(filename, O_RDWR | O_TRUNC);
-	unlink(filename);
-	free(filename);
-	return (fd);
+		fill_input(fd[1], del, "input> ");
+	if (fd[1] > 0)
+		close (fd[1]);
+	// if (g_signal != 2)
+	// 	fd = open(filename, O_RDONLY);
+	// else
+	// 	fd = open(filename, O_WRONLY | O_TRUNC);
+	return (fd[0]);
 }

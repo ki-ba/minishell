@@ -20,9 +20,14 @@ static int	check_exit_arg(char **cmd);
 int	ft_exit(char **cmd, t_env_lst *env)
 {
 	unsigned int	ret;
+	char			*env_val;
 
 	if (!cmd[1])
-		ret = ft_atoi(get_env_val(env, "?", 0));
+	{
+		env_val = get_env_val(env, "?", 0);
+		ret = ft_atoi(env_val);
+		free(env_val);
+	}
 	else
 	{
 		ret = check_exit_arg(cmd);
