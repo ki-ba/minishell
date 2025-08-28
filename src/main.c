@@ -38,7 +38,6 @@ static void	print_error_msg(int status)
 int	handle_line(t_minishell *ms, char cmd[])
 {
 	char	*formatted;
-	int		err;
 
 	if (g_signal == 2)
 		ms->error = 130;

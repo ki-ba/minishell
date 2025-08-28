@@ -24,7 +24,7 @@ int	ft_exit(char **cmd, t_minishell *ms_data)
 
 	if (!cmd[1])
 	{
-		env_val = get_env_val(env, "?", 0);
+		env_val = get_env_val(ms_data->env, "?", 0);
 		ret = ft_atoi(env_val);
 		free(env_val);
 	}
