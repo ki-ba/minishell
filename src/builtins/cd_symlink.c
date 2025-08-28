@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:22:39 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 15:46:46 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/28 18:21:39 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,14 @@ int	getsymlink_helper(char **path_parts, char *cmd, size_t len)
 		free(path_parts[1]);
 		return (ERR_ALLOC);
 	}
-	if (path_parts[2][0] == '.')
+	if (!ft_strncmp(path_parts[2], "..", 3) || !ft_strncmp(path_parts[2], "../", 4) ||
+		!ft_strncmp(path_parts[2], ".", 2) || !ft_strncmp(path_parts[2], "./", 3))
+	{
 		err = shortcut_path(path_parts, i, cmd);
-	else
-		err = normal_path(path_parts, i);
-	return (SUCCESS);
+		return (err);
+	}
+	err = normal_path(path_parts, i);
+	return (err);
 }
 
 int	setup_path_parts(char **path_parts, char *cmd, t_minishell *ms_data)
