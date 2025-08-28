@@ -82,13 +82,8 @@ int	readline_loop(t_minishell *ms_data)
 		free(prompt);
 		if (!cmd)
 			break ;
-<<<<<<< HEAD
 		handle_line(ms_data, cmd);
-		print_error_msg(&ms_data->error);
-=======
-		ms_data->error = handle_line(ms_data, cmd);
 		error_handler(ms_data);
->>>>>>> 3b596e3a698292caacfb7562c08404e763ed0c4e
 		if (ms_data->error && !(ms_data->is_exit))
 			printf("[%s%d%s]  ", FG_RED, ms_data->error, RESET);
 		else if (!(ms_data->error) && !(ms_data->is_exit))
