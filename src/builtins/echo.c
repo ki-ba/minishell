@@ -6,12 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:04:31 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/26 15:26:02 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 01:21:44 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
 #include <stdio.h>
+#include "libft.h"
 #include "data_structures.h"
 #include "error.h"
 
@@ -49,9 +50,9 @@ int	ft_echo(char **cmd, t_minishell *ms_data)
 	i = opt;
 	while (i && cmd[i])
 	{
-		printf("%s", cmd[i]);
+		ft_putstr_fd(cmd[i], 1);
 		if (cmd[i] && cmd[i + 1])
-			printf(" ");
+			ft_putstr_fd(" ", 1);
 		++i;
 	}
 	if (opt == 1)
