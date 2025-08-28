@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:22:39 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/28 18:21:39 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 01:08:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ int	setup_path_parts(char **path_parts, char *cmd, t_minishell *ms_data)
 		free(path_parts[0]);
 		return (ERR_ALLOC);
 	}
+	path_parts[2] = NULL;
 	return (SUCCESS);
 }
 
@@ -66,8 +67,12 @@ static int	shortcut_path(char **path, ssize_t i, char *cmd)
 	ssize_t	j;
 	int		err;
 
-	if (ft_strlen(path[0]) > 1 && path[0][ft_strlen(path[0]) - 1] == '/')
-		path[0][ft_strlen(path[0]) - 1] = '\0';
+	j = ft_strlen(path[0]);
+	while (j > 0 && path[0][j - 1] == '/')
+	{
+		path[0][j - 1] = '\0';
+		--j;
+	}
 	j = find_char_end(path[0], '/');
 	if (j == -1)
 		j = ft_strlen(cmd);
@@ -96,14 +101,14 @@ static int	prev_dir_shortcut(char **path, ssize_t i)
 	free(path[0]);
 	if (!tmp)
 	{
-		free(path[2]);
+		free(path[1]);
 		return (ERR_ALLOC);
 	}
 	path[0] = ft_strdup(tmp);
 	free(tmp);
 	if (!path[0])
 	{
-		free(path[2]);
+		free(path[1]);
 		return (ERR_ALLOC);
 	}
 	return (SUCCESS);
@@ -113,24 +118,28 @@ static int	normal_path(char **path, ssize_t i)
 {
 	char	*tmp;
 
-	if (path[0][0] == '\0' || path[0][ft_strlen(path[0]) - 1] == '/')
+	if (path[0][0] != '\0' && path[0][ft_strlen(path[0]) - 1] == '/' && path[2][0] == '/')
+		tmp = ft_strdup(path[0]);
+	else if (path[0][0] == '\0' || path[0][ft_strlen(path[0]) - 1] == '/')
 		tmp = ft_concat(2, path[0], path[2]);
 	else
 		tmp = ft_concat(3, path[0], "/", path[2]);
 	free(path[2]);
 	free(path[0]);
 	if (!tmp)
+	{
+		free(path[1]);
 		return (ERR_ALLOC);
+	}
 	path[0] = ft_strdup(tmp);
 	free(tmp);
-	if (!path[0])
-		return (ERR_ALLOC);
 	path[2] = path[1];
 	path[1] = ft_substr(path[2], i, ft_strlen(path[2]));
 	free(path[2]);
-	if (!path[1])
+	if (!path[1] || !path[0])
 	{
 		free(path[0]);
+		free(path[1]);
 		return (ERR_ALLOC);
 	}
 	return (SUCCESS);
