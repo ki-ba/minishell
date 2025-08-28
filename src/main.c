@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/28 15:22:33 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/28 17:25:44 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,19 +25,20 @@
 #include "color.h"
 #include <errno.h>
 
-static void	print_error_msg(int *status)
+static void	error_handler(t_minishell *ms)
 {
-	if (status && *status > 300)
+	if (ms && ms->error > 300)
 	{
-		if (*status == ERR_ARGS)
+		if (ms->error == ERR_ARGS)
 			ft_putstr_fd("ERROR : incorrect arguments\n", 2);
-		if (*status == ERR_PARSING)
+		if (ms->error == ERR_PARSING)
 			ft_putstr_fd("ERROR : wrong syntax\n", 2);
-		if (*status == ERR_ALLOC)
+		if (ms->error == ERR_ALLOC)
+		{
 			ft_putstr_fd("ERROR : memory allocation failed\n", 2);
-		if (*status == ERR_FAIL)
-			ft_putstr_fd("ERROR\n", 2);
-		*status -= 300;
+			ms->is_exit = TRUE;
+		}
+		ms->error -= 300;
 	}
 }
 
@@ -81,8 +82,13 @@ int	readline_loop(t_minishell *ms_data)
 		free(prompt);
 		if (!cmd)
 			break ;
+<<<<<<< HEAD
 		handle_line(ms_data, cmd);
 		print_error_msg(&ms_data->error);
+=======
+		ms_data->error = handle_line(ms_data, cmd);
+		error_handler(ms_data);
+>>>>>>> 3b596e3a698292caacfb7562c08404e763ed0c4e
 		if (ms_data->error && !(ms_data->is_exit))
 			printf("[%s%d%s]  ", FG_RED, ms_data->error, RESET);
 		else if (!(ms_data->error) && !(ms_data->is_exit))
@@ -127,7 +133,7 @@ int	main(int argc, char *argv[], char *envp[])
 		printf("[%s0%s]  ", FG_GREEN, RESET);
 		readline_loop(&ms_data);
 	}
-	print_error_msg(&ms_data.error);
+	error_handler(&ms_data);
 	destroy_ms(&ms_data);
 	printf("exit\n");
 	return (ms_data.error);
