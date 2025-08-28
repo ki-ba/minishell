@@ -6,13 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:03:16 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/26 18:32:37 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/28 16:20:28 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "data_structures.h"
 #include "env.h"
+#include "error.h"
 
 t_env_lst	*create_environment(t_minishell *ms_data, char *envp[])
 {
@@ -36,8 +37,14 @@ t_env_lst	*create_environment(t_minishell *ms_data, char *envp[])
 		}
 		env_add_back(&ms_data->env, new);
 		if (ft_strncmp(name, "PWD", 4))
+		{
 			ms_data->cur_wd = ft_strdup(new->value);
-			//! check MALLOC
+			if (!ms_data->cur_wd)
+			{
+				ms_data->error = ERR_ALLOC;
+				return (ms_data->env);
+			}
+		}
 		++i;
 	}
 	empty_env_check(ms_data);
