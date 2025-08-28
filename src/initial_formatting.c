@@ -17,7 +17,7 @@
 #include "parsing.h"
 
 // TODO document this function
-char	*trim_cmd(char *cmd)
+char	*trim_cmd(int *err, char *cmd)
 {
 	char	*trim;
 	size_t	len;
@@ -26,15 +26,20 @@ char	*trim_cmd(char *cmd)
 	len = ft_strlen(trim);
 	free(cmd);
 	if (!trim)
+	{
+		*err = ERR_ALLOC;
 		return (NULL);
+	}
 	if (trim[0] && (trim[0] == '|' || trim[len - 1] == '|'))
 	{
 		free(trim);
+		*err = ERR_PARSING;
 		return (NULL);
 	}
 	if (trim[0] && (trim[len - 1] == '<' || trim[len - 1] == '>'))
 	{
 		free(trim);
+		*err = ERR_PARSING;
 		return (NULL);
 	}
 	return (trim);
@@ -56,10 +61,11 @@ char	*format_cmd(t_minishell *ms, char *cmd)
 	if (check_meta_validity(cmd) || check_parsing(cmd))
 	{
 		free (cmd);
+		ms->error = ERR_PARSING;
 		return (NULL);
 	}
 	expanded = expand_line(ms, cmd);
 	free(cmd);
-	expanded = trim_cmd(expanded);
+	expanded = trim_cmd(&ms->error, expanded);
 	return (expanded);
 }

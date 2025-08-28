@@ -25,7 +25,7 @@ void	destroy_ms(t_minishell *ms);
 
 /* INITIAL FORMATTING */
 
-char	*trim_cmd(char *cmd);
+char	*trim_cmd(int *err, char *cmd);
 char	*format_cmd(t_minishell *ms, char *cmd);
 
 /* MAIN FUNCTIONS */

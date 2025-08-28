@@ -35,6 +35,8 @@ static void	print_error_msg(int *status)
 			ft_putstr_fd("ERROR : wrong syntax\n", 2);
 		if (*status == ERR_ALLOC)
 			ft_putstr_fd("ERROR : memory allocation failed\n", 2);
+		if (*status == ERR_FAIL)
+			ft_putstr_fd("ERROR\n", 2);
 		*status -= 300;
 	}
 }
@@ -48,10 +50,10 @@ int	handle_line(t_minishell *ms, char cmd[])
 	if (cmd[0])
 	{
 		if (ft_add_history(ms, cmd))
-			return (ERR_ALLOC);
+			return (ERR_FAIL);
 		formatted = format_cmd(ms, cmd);
 		if (!formatted)
-			return (ERR_PARSING);
+			return (ERR_FAIL);
 		if (!ft_strncmp(formatted, "\0", 1))
 			return (ms->error);
 		ms->error = interpret_line(ms, formatted);
@@ -79,7 +81,7 @@ int	readline_loop(t_minishell *ms_data)
 		free(prompt);
 		if (!cmd)
 			break ;
-		ms_data->error = handle_line(ms_data, cmd);
+		handle_line(ms_data, cmd);
 		print_error_msg(&ms_data->error);
 		if (ms_data->error && !(ms_data->is_exit))
 			printf("[%s%d%s]  ", FG_RED, ms_data->error, RESET);
