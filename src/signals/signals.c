@@ -23,7 +23,7 @@ void	sigint_handler(int sig)
 		printf("\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		// printf("%s", err_code(130));
+		printf("%s", err_code(130));
 		rl_redisplay();
 	}
 	g_signal = sig;

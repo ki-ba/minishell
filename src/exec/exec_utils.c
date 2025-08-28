@@ -68,9 +68,24 @@ int	apply_redirections(t_list **cur_node)
 	exe = (t_exec_node *)(*cur_node)->content;
 	if (exe->io[1] != STDOUT_FILENO)
 		err = dup2(exe->io[1], STDOUT_FILENO);
-	if (!err && exe->io[0] != STDIN_FILENO)
+	if (err >= 0 && exe->io[0] != STDIN_FILENO)
 		err = dup2(exe->io[0], STDIN_FILENO);
 	return (err);
+}
+
+void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
+{
+	if ((*cur)->next)
+	{
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		sclose(pipe_fd[0]);
+		sclose(pipe_fd[1]);
+	}
+	if (ms->interface)
+	{
+		dup2(ms->interface, STDIN_FILENO);
+		sclose(ms->interface);
+	}
 }
 
 int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
@@ -83,17 +98,7 @@ int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 	pid = fork();
 	if (pid == 0)
 	{
-		if ((*cur)->next)
-		{
-			dup2(pipe_fd[1], STDOUT_FILENO);
-			sclose(pipe_fd[0]);
-			sclose(pipe_fd[1]);
-		}
-		if (ms->interface)
-		{
-			dup2(ms->interface, STDIN_FILENO);
-			sclose(ms->interface);
-		}
+		set_child_io(ms, cur, pipe_fd);
 		ft_lstclear_but(&ms->exec_lst, del_exec_node, *cur);
 		if (apply_redirections(cur) < 0)
 			exit(1);

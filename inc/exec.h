@@ -30,7 +30,7 @@ void	failed_handler(t_list **exec, t_list **cur, t_env_lst **env, int *pipe);
 pid_t	dup_n_fork(t_minishell *ms, t_list **cur);
 char	*path_to_cmd(char *cmd[], t_env_lst *env);
 int		define_error(char path[], t_env_lst *env);
-void	set_child_io(t_list **exe_ls, t_exec_node *exe, int *nxt_pip, int p[2]);
+void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2]);
 
 /* BUILTINS CALL */
 
