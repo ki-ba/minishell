@@ -15,6 +15,7 @@
 #include "exec.h"
 #include "signals.h"
 #include "env.h"
+#include "minishell.h"
 #include "parsing.h"
 #include <unistd.h>
 
@@ -39,9 +40,9 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 		if (err == 127)
 			ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	}
-	destroy_env_lst(&ms->env);
 	ft_lstdelone(*exec, del_exec_node);
 	exec = NULL;
+	destroy_ms(ms);
 	ft_free_arr(cmd);
 	exit(err);
 	return (err);

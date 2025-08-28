@@ -19,6 +19,10 @@
 # ifndef DEBUG
 #  define DEBUG 0
 # endif
+/* MS DATA */
+
+void	destroy_ms(t_minishell *ms);
+
 /* INITIAL FORMATTING */
 
 char	*trim_cmd(char *cmd);

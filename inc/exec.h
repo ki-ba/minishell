@@ -31,6 +31,7 @@ pid_t	dup_n_fork(t_minishell *ms, t_list **cur);
 char	*path_to_cmd(char *cmd[], t_env_lst *env);
 int		define_error(char path[], t_env_lst *env);
 void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2]);
+int		sclose(int fd);
 
 /* BUILTINS CALL */
 
