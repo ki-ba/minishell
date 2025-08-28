@@ -74,6 +74,8 @@ int	readline_loop(t_minishell *ms_data)
 			return (ERR_ALLOC);
 		init_signals();
 		cmd = readline(prompt);
+		if (g_signal == 2 || g_signal == 3)
+			ms_data->error = g_signal + 128;
 		free(prompt);
 		if (!cmd)
 			break ;
@@ -98,6 +100,14 @@ void	init_ms(t_minishell *ms)
 	ms->is_exit = 0;
 }
 
+void	destroy_ms(t_minishell *ms)
+{
+	sclose(ms->interface);
+	free(ms->last_cmd);
+	destroy_env_lst(&ms->env);
+	free(ms->cur_wd);
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_minishell	ms_data;
@@ -117,7 +127,7 @@ int	main(int argc, char *argv[], char *envp[])
 		readline_loop(&ms_data);
 	}
 	print_error_msg(&ms_data.error);
-	destroy_env_lst(&ms_data.env);
+	destroy_ms(&ms_data);
 	printf("exit\n");
 	return (ms_data.error);
 }

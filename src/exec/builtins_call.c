@@ -27,7 +27,7 @@ char	*check_path_exist(t_env_lst *env)
 		path = ft_strdup(".");
 	else
 	{
-		path = ft_strdup(get_env_val(env, "PATH", 0));
+		path = get_env_val(env, "PATH", 0);
 		if (!path)
 			path = ft_strdup(".");
 	}
