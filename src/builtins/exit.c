@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:04:44 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 15:51:47 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/28 15:38:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,9 @@ static int	check_exit_arg(char **cmd);
 int	ft_exit(char **cmd, t_minishell *ms_data)
 {
 	unsigned int	ret;
-	char			*env_val;
 
 	if (!cmd[1])
-	{
-		env_val = get_env_val(ms_data->env, "?", 0);
-		ret = ft_atoi(env_val);
-		free(env_val);
-	}
+		return (ms_data->error);
 	else
 	{
 		ret = check_exit_arg(cmd);
