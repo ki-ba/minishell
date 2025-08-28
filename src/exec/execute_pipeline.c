@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 17:09:07 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/27 16:03:53 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ pid_t	exec_pipeline(t_minishell *ms)
 
 	g_signal = 0;
 	pid = 0;
+	ms->error = 0;
 	current = ms->exec_lst;
 	while (current && pid > -1)
 	{

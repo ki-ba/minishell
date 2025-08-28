@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:03:49 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:08:01 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 15:26:51 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "builtins.h"
 #include "error.h"
 
-int	ft_env(char **cmd, t_env_lst *env)
+int	ft_env(char **cmd, t_minishell *ms_data)
 {
 	t_env_lst	*tmp;
 
@@ -23,7 +23,7 @@ int	ft_env(char **cmd, t_env_lst *env)
 		ft_putendl_fd("env: too many arguments", 2);
 		return (ERR_ARGS);
 	}
-	tmp = env;
+	tmp = ms_data->env;
 	while (tmp)
 	{
 		if (tmp->value && check_name_validity(tmp->name) == SUCCESS)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/25 13:16:35 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/27 15:42:33 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "prompt.h"
+#include "color.h"
 #include <errno.h>
 
 static void	print_error_msg(int status)
@@ -49,14 +50,18 @@ int	handle_line(t_minishell *ms, char cmd[])
 		if (!formatted)
 			return (ERR_PARSING);
 		if (!ft_strncmp(formatted, "\0", 1))
-			return (0);
-		err = interpret_line(ms, formatted);
-		return (err);
-	}
-	else
+			return (ms->error);
+		ms->error = interpret_line(ms, formatted);
+		if (ms->error > 300)
+		{
+			print_error_msg(ms->error);
+			ms->error -= 300;
+		}
 		return (ms->error);
-	return (1);
+	}
+	return (ms->error);
 }
+
 
 int	handle_error(int error)
 {
@@ -72,7 +77,6 @@ int	readline_loop(t_minishell *ms_data)
 {
 	char		*cmd;
 	char		*prompt;
-	char		*err_str;
 
 	g_signal = 0;
 	while (ms_data->error != ERR_ALLOC && !(ms_data->is_exit))
@@ -87,12 +91,15 @@ int	readline_loop(t_minishell *ms_data)
 		if (!cmd)
 			break ;
 		ms_data->error = handle_line(ms_data, cmd);
-		ms_data->error = handle_error(ms_data->error);
-		err_str = err_code(ms_data->error);
-		if (!err_str)
-			return (1);
-		ft_printf("%s", err_str);
-		free(err_str);
+		if (ms_data->error > 300)
+		{
+			print_error_msg(ms_data->error);
+			ms_data->error -= 300;
+		}
+		if (ms_data->error && !(ms_data->is_exit))
+			printf("[%s%d%s]  ", FG_RED, ms_data->error, RESET);
+		else if (!(ms_data->error) && !(ms_data->is_exit))
+			printf("[%s%d%s]  ", FG_GREEN, ms_data->error, RESET);
 	}
 	return (ms_data->error);
 }
@@ -121,14 +128,15 @@ int	main(int argc, char *argv[], char *envp[])
 		exit(1);
 	}
 	exit_status = 1;
-	(void)argc;
 	(void)argv;
-	create_environment(&ms_data.env, envp);
+	create_environment(&ms_data, envp);
 	if (ms_data.env)
 	{
-		printf("[\001\e[0;32m0\e[0m]	");
+		printf("[%s0%s]  ", FG_GREEN, RESET);
 		exit_status = readline_loop(&ms_data);
 	}
+	if (exit_status > 300)
+		exit_status -= 300;
 	if (exit_status)
 		print_error_msg(exit_status);
 	destroy_env_lst(&ms_data.env);

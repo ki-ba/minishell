@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:22:39 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:07:10 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 15:46:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ int	getsymlink_helper(char **path_parts, char *cmd, size_t len)
 	return (SUCCESS);
 }
 
-int	setup_path_parts(char **path_parts, char *cmd, t_env_lst *env)
+int	setup_path_parts(char **path_parts, char *cmd, t_minishell *ms_data)
 {
 	if (cmd[0] != '/')
-		path_parts[0] = ft_strdup(get_env_val(env, "CURRPATH", 1));
+		path_parts[0] = ft_strdup(ms_data->cur_wd);
 	else
 		path_parts[0] = ft_strdup("");
 	if (!path_parts[0])

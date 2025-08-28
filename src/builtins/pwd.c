@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:33:19 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:11:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 15:28:43 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,9 @@
  * @param cmd is the command, with its options and arguments
  * @return 0 is the directory could be printed, non-zero otherwise
  */
-int	ft_pwd(char **cmd, t_env_lst *env)
+int	ft_pwd(char **cmd, t_minishell *ms_data)
 {
-	char	*path;
-
 	(void)cmd;
-	path = get_env_val(env, "CURRPATH", 1);
-	printf("%s\n", path);
+	printf("%s\n", ms_data->cur_wd);
 	return (SUCCESS);
 }

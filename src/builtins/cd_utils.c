@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 19:49:52 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:03:28 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/26 15:58:56 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "error.h"
 #include "env.h"
 
-static int	update_env_sys(t_env_lst *env_v, char *new_path, t_env_lst *env);
+// static int	update_env_sys(t_env_lst *env_v, char *new_path, t_env_lst *env);
 
 int	check_dir_access(char *new_path)
 {
@@ -27,40 +27,38 @@ int	check_dir_access(char *new_path)
 	return (err);
 }
 
-int	update_env(char *new_path, t_env_lst *env)
+int	update_env(char *new_path, t_minishell *ms_data)
 {
-	t_env_lst	*env_vars[2];
+	t_env_lst	*env_var;
 
-	env_vars[0] = search_env_var(env, "?CURRPATH");
-	env_vars[1] = search_env_var(env, "OLDPWD");
-	if (env_vars[0] && env_vars[1])
+	env_var = search_env_var(ms_data->env, "OLDPWD");
+	if (env_var)
 	{
-		free(env_vars[1]->value);
-		env_vars[1]->value = ft_strdup(env_vars[0]->value);
-		if (!env_vars[1]->value)
-			return (ERR_ALLOC);
+		free(env_var->value);
+		env_var->value = ms_data->cur_wd;
 	}
-	if (update_env_sys(env_vars[0], new_path, env))
+	ms_data->cur_wd = ft_strdup(new_path);
+	if (!ms_data->cur_wd)
 		return (ERR_ALLOC);
-	env_vars[1] = search_env_var(env, "PWD");
-	if (env_vars[1])
+	env_var = search_env_var(ms_data->env, "PWD");
+	if (env_var)
 	{
-		free(env_vars[1]->value);
-		env_vars[1]->value = ft_strdup(env_vars[0]->value);
-		if (!env_vars[1]->value)
+		free(env_var->value);
+		env_var->value = ft_strdup(ms_data->cur_wd);
+		if (!env_var->value)
 			return (ERR_ALLOC);
 	}
 	return (SUCCESS);
 }
 
-static int	update_env_sys(t_env_lst *env_v, char *new_path, t_env_lst *env)
-{
-	env_v = search_env_var(env, "?CURRPATH");
-	if (!env_v)
-		return (ERR_FAIL);
-	free(env_v->value);
-	env_v->value = ft_strdup(new_path);
-	if (!env_v->value)
-		return (ERR_ALLOC);
-	return (SUCCESS);
-}
+// static int	update_env_sys(t_env_lst *env_v, char *new_path, t_minishell *ms_data)
+// {
+// 	env_v = search_env_var(env, "?CURRPATH");
+// 	if (!env_v)
+// 		return (ERR_FAIL);
+// 	free(env_v->value);
+// 	env_v->value = ft_strdup(new_path);
+// 	if (!env_v->value)
+// 		return (ERR_ALLOC);
+// 	return (SUCCESS);
+// }

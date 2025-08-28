@@ -9,3 +9,8 @@ minishell_tester
 .zzsh_history
 build_lib.sh
 *.a
+.gdb_history
+.vscode/
+.zzsh_historyzz
+*.log
+*.sh

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/25 12:55:40 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/08/27 15:04:38 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 			exit(1);
 		cmd = duplicate_arr(exe->cmd);
 		if (cmd)
-			try_exec(ms, &ms->exec_lst, cmd);
+			ms->error = try_exec(ms, &ms->exec_lst, cmd);
 	}
 	return (pid);
 }
