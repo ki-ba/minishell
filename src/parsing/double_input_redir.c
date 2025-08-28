@@ -54,7 +54,6 @@ static int	open_random_file(int fd[2])
 	char	*filename;
 
 	filename = create_filename();
-	ft_printf_fd(2, "creating %s\n", filename);
 	if (!filename)
 		return (-1);
 	fd[1] = open(filename, O_CREAT | O_WRONLY, 0644);
