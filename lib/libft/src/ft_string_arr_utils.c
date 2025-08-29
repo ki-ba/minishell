@@ -59,10 +59,17 @@ char	**duplicate_arr(char **arr)
 	if (!arr)
 		return (NULL);
 	size = get_arr_length(arr);
-	dup = malloc(sizeof(char *) * (size + 1));
+	dup = ft_calloc(size + 1, sizeof(char *));
 	while (++i < size)
+	{
 		dup[i] = ft_strdup(arr[i]);
-	dup[i] = 0;
+		if (!dup[i])
+		{
+			ft_free_arr(dup);
+			return (NULL);
+		}
+	}
+	dup[i] = NULL;
 	return (dup);
 }
 

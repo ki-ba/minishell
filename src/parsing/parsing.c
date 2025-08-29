@@ -60,16 +60,16 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
  **/
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
-	char	**old_arr;
+	// char	**old_arr;
 
 	if (!node || !token || !exec_list)
 		return (ERR_ALLOC);
-	old_arr = node->cmd;
+	// old_arr = node->cmd;
 	node->cmd = add_to_array(node->cmd, token->token);
 	if (!node->cmd)
 	{
-		if (old_arr)
-			ft_free_arr(old_arr);
+		// if (old_arr)
+		// 	ft_free_arr(old_arr);
 		ft_lstclear(exec_list, del_exec_node);
 		return (ERR_ALLOC);
 	}

@@ -37,7 +37,6 @@ char	**add_to_array(char **arr, char *str)
 		arr2[i] = arr[i];
 		++i;
 	}
-	free(arr);
 	arr2[initial_size] = ft_strdup(str);
 	arr2[initial_size + 1] = NULL;
 	if (!arr2[initial_size])
@@ -45,6 +44,7 @@ char	**add_to_array(char **arr, char *str)
 		ft_free_arr(arr2);
 		return (NULL);
 	}
+	free(arr);
 	return (arr2);
 }
 
