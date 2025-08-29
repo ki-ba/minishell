@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 13:00:55 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/27 15:40:10 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 04:14:45 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,16 @@
 #include "color.h"
 #include <linux/limits.h>
 #include "signals.h"
+#include "env.h"
 
 char	*def_cwd(t_minishell *ms_data)
 {
 	char	*prompt;
 
-	prompt = ft_concat(5, BOLD, FG_CYAN, ms_data->cur_wd, RESET, " % ");
+	if (!search_env_var(ms_data->env, "TERM"))
+		prompt = ft_concat(2, ms_data->cur_wd, " % ");
+	else
+		prompt = ft_concat(5, BOLD, FG_CYAN, ms_data->cur_wd, RESET, " % ");
 	return (prompt);
 }
 
@@ -29,7 +33,10 @@ char	*create_prompt(t_minishell *ms_data)
 	char	*second_part;
 	char	*prompt;
 
-	first_part = ft_concat(4, BG_BLUE, "zzsh", RESET, " ");
+	if (!search_env_var(ms_data->env, "TERM"))
+		first_part = ft_strdup("zzsh ");
+	else
+		first_part = ft_concat(4, BG_BLUE, "zzsh", RESET, " ");
 	second_part = def_cwd(ms_data);
 	if (!first_part || !second_part)
 	{
