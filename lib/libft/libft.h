@@ -119,7 +119,7 @@ char				**duplicate_arr(char **arr);
 void				str_arr_suffix(char **arr, char *suffix);
 void				ft_multifree(int n_simple, int n_arr, ...);
 char				*ft_concat(size_t n, ...);
-void				heap_add_suffix(const char *suffix, char **s1);
+int					heap_add_suffix(const char *suffix, char **s1);
 char				*create_random_str(size_t len);
 
 /* get_next_line.c */

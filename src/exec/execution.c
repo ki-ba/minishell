@@ -89,7 +89,7 @@ int	interpret_line(t_minishell *ms, char *cmd)
 	err = ms->error;
 	tokens = NULL;
 	if (tokenize(&tokens, cmd) != 0)
-		return (ERR_FAIL);
+		return (ERR_ALLOC);
 	free(cmd);
 	if (process_tokens(tokens))
 		return (ERR_PARSING);

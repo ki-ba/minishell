@@ -23,7 +23,10 @@ t_exec_node	*create_exec_node(void)
 		return (NULL);
 	new->cmd = ft_calloc(1, sizeof(char *));
 	if (!new->cmd)
+	{
+		free(new);
 		return (NULL);
+	}
 	new->io[0] = STDIN_FILENO;
 	new->io[1] = STDOUT_FILENO;
 	new->status = 0;
@@ -35,6 +38,8 @@ void	del_exec_node(void *node)
 {
 	t_exec_node	*nnode;
 
+	if (!node)
+		return ;
 	nnode = (t_exec_node *) node;
 	if (nnode->cmd)
 		ft_free_arr(nnode->cmd);

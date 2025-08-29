@@ -24,7 +24,8 @@ int	ft_add_history(t_minishell *ms_data, char entry[])
 	{
 		if (!last_cmd || ft_strncmp(entry, last_cmd, ft_strlen(entry) + 1))
 		{
-			add_history(entry);
+			if (!DEBUG)
+				add_history(entry);
 			free(last_cmd);
 			ms_data->last_cmd = ft_strdup(entry);
 			if (ms_data->last_cmd == NULL)

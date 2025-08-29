@@ -15,6 +15,8 @@
 #include "minishell.h"
 #include <limits.h>
 
+void	del_env_entry(t_env_lst *env_entry);
+
 int	handle_shlvl(t_env_lst *new)
 {
 	int	prev_shlvl;
@@ -25,6 +27,7 @@ int	handle_shlvl(t_env_lst *new)
 	{
 		return (ft_putstr_fd("ERROR : SHLVL too high\n", 2));
 		free(new->value);
+		new->value = NULL;
 	}
 	else
 		return (new->value == NULL);
@@ -34,25 +37,22 @@ t_env_lst	*create_env_lst(char name[])
 {
 	t_env_lst	*new;
 
-	if (!name)
-		return (NULL);
-	new = malloc(sizeof(t_env_lst));
+	new = ft_calloc(1, sizeof(t_env_lst));
 	if (!new)
 		return (NULL);
-	new->name = name;
-	if (!ft_strncmp(name, "SHLVL", 6))
-	{
-		if (handle_shlvl(new))
-		{
-			free(new);
-			return (NULL);
-		}
-	}
+	new->name = ft_substr(name, 0, ft_strlen_c(name, '='));
+	if (new->name && !ft_strncmp(new->name, "SHLVL", 6))
+		handle_shlvl(new);
 	else
-		new->value = ft_strdup(getenv(name));
-	if (!new->value)
 	{
-		free(new);
+		if (!new->name)
+			new->value = NULL;
+		else
+			new->value = ft_strdup(getenv(new->name));
+	}
+	if (!new->name || !new->value)
+	{
+		del_env_entry(new);
 		return (NULL);
 	}
 	new->next = NULL;
