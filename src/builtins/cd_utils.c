@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 19:49:52 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/28 22:31:21 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 07:05:09 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,23 @@
 #include "error.h"
 #include "env.h"
 
-// static int	update_env_sys(t_env_lst *env_v, char *new_path, t_env_lst *env);
-
 int	check_dir_access(char *new_path)
 {
 	if (access(new_path, R_OK | X_OK))
 		return (ERR_ARGS);
 	return (SUCCESS);
+}
+
+void	skip_slashes(char *str)
+{
+	size_t	i;
+
+	i = ft_strlen(str);
+	while (i > 0 && str[i - 1] == '/')
+	{
+		str[i - 1] = '\0';
+		--i;
+	}
 }
 
 int	update_env(char *new_path, t_minishell *ms_data)
@@ -48,4 +58,18 @@ int	update_env(char *new_path, t_minishell *ms_data)
 			return (ERR_ALLOC);
 	}
 	return (SUCCESS);
+}
+
+char	*setup_path0(char **path)
+{
+	char	*tmp;
+
+	if (path[0][0] != '\0' && path[0][ft_strlen(path[0]) - 1] == '/' &&
+		path[2][0] == '/')
+		tmp = ft_strdup(path[0]);
+	else if (path[0][0] == '\0' || path[0][ft_strlen(path[0]) - 1] == '/')
+		tmp = ft_concat(2, path[0], path[2]);
+	else
+		tmp = ft_concat(3, path[0], "/", path[2]);
+	return (tmp);
 }

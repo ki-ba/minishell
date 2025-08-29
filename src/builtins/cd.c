@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 20:41:42 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/29 00:59:32 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 07:05:35 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,19 +38,13 @@ int	ft_cd(char **cmd, t_minishell *ms_data)
 
 static int	change_dir(char **cmd, t_minishell *ms_data)
 {
-	size_t		i;
 	int			err;
 	char		*path;
 
 	path = NULL;
 	if (cmd[1][0] == '\0')
 		return (SUCCESS);
-	i = ft_strlen(cmd[1]) - 1;
-	while (i > 0 && cmd[1][i] == '/')
-	{
-		cmd[1][i] = '\0';
-		--i;
-	}
+	skip_slashes(cmd[1]);
 	path = getsymlink(cmd[1], ms_data);
 	if (!path)
 		return (ERR_ALLOC);
@@ -63,8 +57,7 @@ static int	change_dir(char **cmd, t_minishell *ms_data)
 		perror("minishell: cd");
 		return (ERR_ARGS);
 	}
-	if (err == SUCCESS)
-		err = update_env(path, ms_data);
+	err = update_env(path, ms_data);
 	free(path);
 	return (err);
 }
@@ -95,13 +88,6 @@ static char	*getsymlink(char *cmd, t_minishell *ms_data)
 	}
 	if (path_parts[1])
 		free(path_parts[1]);
-	// if (path_parts[0][0] == '\0')
-	// {
-	// 	free(path_parts[0]);
-	// 	path_parts[0] = ft_strdup("/");
-	// 	if (!path_parts[0])
-	// 		return (NULL);
-	// }
 	return (path_parts[0]);
 }
 

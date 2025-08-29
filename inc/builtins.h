@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:39:50 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 17:45:20 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 06:59:21 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@
 
 int			ft_cd(char **cmd, t_minishell *ms_data);
 int			getsymlink_helper(char **path_parts, char *cmd, size_t len);
-int			setup_path_parts(char **path_parts, char *cmd, t_minishell *ms_data);
+int			setup_path_parts(char **path_parts, char *cmd, t_minishell *ms);
 int			update_env(char *new_path, t_minishell *ms_data);
 int			check_dir_access(char *new_path);
+void		skip_slashes(char *str);
+char		*setup_path0(char **path);
 
 /* ECHO */
 

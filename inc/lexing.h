@@ -6,13 +6,14 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:17:03 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 14:20:10 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 07:01:03 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "data_structures.h"
-// #include "libft.h"
-// # include <stddef.h>
+#ifndef LEXING_H
+# define LEXING_H
+
+# include "data_structures.h"
 
 /* LEXING */
 
@@ -53,3 +54,5 @@ void			deltoken(void *token);
 t_token_type	determine_redirect(char token_str[]);
 t_bool			determine_option(char token_str[]);
 t_bool			determine_pipe(char token_str[]);
+
+#endif

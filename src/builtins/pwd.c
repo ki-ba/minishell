@@ -6,14 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:33:19 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 15:28:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 07:09:09 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "data_structures.h"
 #include "error.h"
-#include "env.h"
 
 /**
  * @brief print the current directory

@@ -6,14 +6,12 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:08:47 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/26 18:31:59 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 06:59:34 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DATA_STRUCTURES_H
 # define DATA_STRUCTURES_H
-
-// # include <stddef.h>
 
 typedef struct s_list	t_list;
 /* note : a TOKEN_FILE can only be after a redirection.
