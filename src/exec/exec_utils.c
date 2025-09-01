@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 14:17:36 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 16:22:57 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	define_error(char path[], t_env_lst *env)
 
 int	sclose(int fd)
 {
-	if (fd >= 0 && fd <= 2)
+	if (fd <= STDERR_FILENO)
 		return (1);
 	else
 		return (close(fd));

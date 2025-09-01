@@ -6,12 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:46 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 14:24:51 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 16:32:42 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "data_structures.h"
+#include "exec.h"
 
 /** @brief create a new empty t_exec_node structure */
 t_exec_node	*create_exec_node(void)
@@ -44,9 +45,9 @@ void	del_exec_node(void *node)
 	if (nnode->cmd)
 		ft_free_arr(nnode->cmd);
 	if (nnode->io[0] != STDIN_FILENO && nnode->io[0] > 0)
-		close(nnode->io[0]);
+		sclose(nnode->io[0]);
 	if (nnode->io[1] != STDOUT_FILENO && nnode->io[1] > 0)
-		close(nnode->io[1]);
+		sclose(nnode->io[1]);
 	if (nnode)
 		free(nnode);
 }
