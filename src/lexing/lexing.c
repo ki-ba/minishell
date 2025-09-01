@@ -45,8 +45,10 @@ t_token	*token(t_list **tokens, char *token_str, t_bool *cmd_bool)
 	t_list			*last_lst;
 	t_token			*new_token;
 
+	if (!token_str)
+		return (NULL);
 	new_token = malloc(sizeof(t_token));
-	if (!token_str || !new_token)
+	if (!new_token)
 	{
 		free(token_str);
 		return (NULL);
@@ -77,7 +79,9 @@ int	tokenize(t_list **tokens, char *line)
 		new = ft_lstnew(cur_token);
 		if (!cur_token || !new)
 		{
+			free(line);
 			ft_lstclear(tokens, deltoken);
+			deltoken(cur_token);
 			return (ERR_ALLOC);
 		}
 		ft_lstadd_back(tokens, new);

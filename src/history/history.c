@@ -15,20 +15,24 @@
 #include <readline/history.h>
 #include "data_structures.h"
 
-int	ft_add_history(t_minishell *minishell_data, char entry[])
+int	ft_add_history(t_minishell *ms_data, char entry[])
 {
 	char	*last_cmd;
 
-	last_cmd = minishell_data->last_cmd;
+	last_cmd = ms_data->last_cmd;
 	if (entry)
 	{
 		if (!last_cmd || ft_strncmp(entry, last_cmd, ft_strlen(entry) + 1))
 		{
-			add_history(entry);
+			if (!DEBUG)
+				add_history(entry);
 			free(last_cmd);
-			minishell_data->last_cmd = ft_strdup(entry);
-			if (minishell_data->last_cmd == NULL)
+			ms_data->last_cmd = ft_strdup(entry);
+			if (ms_data->last_cmd == NULL)
+			{
+				ms_data->error = ERR_ALLOC;
 				return (ERR_ALLOC);
+			}
 		}
 	}
 	return (SUCCESS);

@@ -51,10 +51,10 @@ int	handle_line(t_minishell *ms, char cmd[])
 	if (cmd[0])
 	{
 		if (ft_add_history(ms, cmd))
-			return (ERR_ALLOC);
+			return (ERR_FAIL);
 		formatted = format_cmd(ms, cmd);
 		if (!formatted)
-			return (ERR_PARSING);
+			return (ERR_FAIL);
 		if (!ft_strncmp(formatted, "\0", 1))
 			return (ms->error);
 		ms->error = interpret_line(ms, formatted);
@@ -82,7 +82,7 @@ int	readline_loop(t_minishell *ms_data)
 		free(prompt);
 		if (!cmd)
 			break ;
-		ms_data->error = handle_line(ms_data, cmd);
+		handle_line(ms_data, cmd);
 		error_handler(ms_data);
 		if (ms_data->error && !(ms_data->is_exit))
 			printf("[%s%d%s]  ", FG_RED, ms_data->error, RESET);
@@ -118,8 +118,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_ms(&ms_data);
 	if (!DEBUG && (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1))
 	{
-		ft_putstr_fd("error : zinzinshell neither support arguments,", 2);
-		ft_putstr_fd("nor piping/redirecting its input / output.\n", 2);
+		ft_putstr_fd("error : no redirecting/piping pls\n", 2);
 		exit(1);
 	}
 	(void)argv;

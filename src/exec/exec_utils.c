@@ -14,8 +14,6 @@
 #include "data_structures.h"
 #include "exec.h"
 #include "parsing.h"
-#include "env.h"
-#include "signals.h"
 #include <sys/stat.h>
 #include "minishell.h"
 #include <unistd.h>
@@ -57,6 +55,7 @@ int	sclose(int fd)
 	else
 		return (close(fd));
 }
+
 int	apply_redirections(t_list **cur_node)
 {
 	t_exec_node	*exe;
@@ -136,6 +135,5 @@ int	dup_n_fork(t_minishell *ms, t_list **cur)
 		sclose(pipe_fd[0]);
 		sclose(pipe_fd[1]);
 	}
-	// if (((t_exec_node *)(*cur)->content)->io[0] != STDIN_FILENO)
 	return (pid);
 }

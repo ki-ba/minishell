@@ -38,7 +38,7 @@ char	**envlist_to_arr(t_env_lst *env_lst)
 	tmp = env_lst;
 	env = ft_calloc(envlist_len(env_lst), sizeof(char *));
 	i = 0;
-	while (tmp->next)
+	while (env && tmp->next)
 	{
 		env[i] = ft_concat(3, tmp->name, "=", tmp->value);
 		if (!env[i])

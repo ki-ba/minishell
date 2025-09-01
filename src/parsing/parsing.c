@@ -60,16 +60,16 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
  **/
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
-	char	**old_arr;
+	// char	**old_arr;
 
 	if (!node || !token || !exec_list)
 		return (ERR_ALLOC);
-	old_arr = node->cmd;
+	// old_arr = node->cmd;
 	node->cmd = add_to_array(node->cmd, token->token);
 	if (!node->cmd)
 	{
-		if (old_arr)
-			ft_free_arr(old_arr);
+		// if (old_arr)
+		// 	ft_free_arr(old_arr);
 		ft_lstclear(exec_list, del_exec_node);
 		return (ERR_ALLOC);
 	}
@@ -90,7 +90,9 @@ static int	new_node(t_list **exec_lst)
 	new_list_node = ft_lstnew(new_node);
 	if (!new_node || !new_list_node)
 	{
-		ft_multifree(2, 0, new_node, new_list_node);
+		del_exec_node(new_node);
+		ft_lstdelone(new_list_node, del_exec_node);
+		ft_lstclear(exec_lst, del_exec_node);
 		return (ERR_ALLOC);
 	}
 	ft_lstadd_back(exec_lst, new_list_node);
@@ -123,7 +125,7 @@ int	parse_tokens(t_minishell *ms, t_list *tokens)
 			redir_type = token->type;
 		else if (token->type == T_FILE)
 			status = handle_file(node, token, redir_type);
-		if (node && !node->status && status != 0)
+		if (node && status != ERR_ALLOC && !node->status && status)
 			node->status = status;
 		tokens = tokens->next;
 	}

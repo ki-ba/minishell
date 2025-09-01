@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "data_structures.h"
+#include "error.h"
 #include "libft.h"
 #include "lexing.h"
 #include "env.h"
@@ -29,7 +30,10 @@ char	*expand_line(t_minishell *ms, char str[])
 	i = 0;
 	expanded = ft_calloc(1, sizeof(char));
 	if (!expanded)
+	{
+		ms->error = ERR_ALLOC;
 		return (NULL);
+	}
 	while (str[i])
 	{
 		part_len = get_part_len(&str[i]);
