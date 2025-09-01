@@ -30,7 +30,7 @@
 * @brief only works with custom minishell errors (> 300)
 * then substracts 300 to have a correct exit status to return.
 */
-static void	error_handler(t_minishell *ms)
+void	error_handler(t_minishell *ms)
 {
 	if (ms && ms->error > 300)
 	{

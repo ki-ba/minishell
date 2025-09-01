@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "error.h"
 #include "libft.h"
 #include "data_structures.h"
 #include "exec.h"
@@ -19,33 +20,47 @@
 #include "parsing.h"
 #include <unistd.h>
 
+/**
+ * @brief cleans memory before exit()ing.
+ * Should only be called in children processes, after execve has failed or 
+ * a builtin has been executed.
+ */
+int	clean_exit_child(t_minishell *ms, t_list **node, char **cmd)
+{
+	ft_lstdelone(*node, del_exec_node);
+	destroy_ms(ms);
+	if (ms->error == ERR_ALLOC)
+		error_handler(ms);
+	ft_free_arr(cmd);
+	return (ms->error);
+}
+
+/** tries to execute the current exec node. determines a path to the wanted
+ * command and creates an env. array, then execve. exits on failure.
+ */
 int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 {
 	char		*path;
 	char		**env_arr;
-	int			err;
 
-	err = 127;
+	ms->error = 127;
 	if (is_builtin(cmd))
-		err = call_cmd(ms, cmd);
+		ms->error = call_cmd(ms, cmd);
 	else
 	{
 		env_arr = envlist_to_arr(ms->env);
 		path = path_to_cmd(cmd, ms->env);
-		err = define_error(path, ms->env);
-		if (path && env_arr && err == 0)
+		ms->error = define_error(path, ms->env);
+		if (path && env_arr && ms->error == 0)
 			execve(path, cmd, env_arr);
-		ft_free_arr(env_arr);
-		free(path);
-		if (err == 127)
+		else
+			ms->error = ERR_ALLOC;
+		ft_multifree(1, 1, path, env_arr);
+		if (ms->error == 127)
 			ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	}
-	ft_lstdelone(*exec, del_exec_node);
-	exec = NULL;
-	destroy_ms(ms);
-	ft_free_arr(cmd);
-	exit(err);
-	return (err);
+	clean_exit_child(ms, exec, cmd);
+	exit(ms->error);
 }
 
 int	exec_unique_cmd(t_minishell *ms_data, t_list **exec_lst)
