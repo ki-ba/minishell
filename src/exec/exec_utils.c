@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 14:17:36 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:52:59 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,30 +48,6 @@ int	define_error(char path[], t_env_lst *env)
 	}
 	else
 		err = 0;
-	return (err);
-}
-
-int	sclose(int fd)
-{
-	if (fd >= 0 && fd <= 2)
-		return (1);
-	else
-		return (close(fd));
-}
-
-static int	apply_redirections(t_list **cur_node)
-{
-	t_exec_node	*exe;
-	int			err;
-
-	err = 0;
-	exe = (t_exec_node *)(*cur_node)->content;
-	if (exe->io[1] != STDOUT_FILENO)
-		err = dup2(exe->io[1], STDOUT_FILENO);
-	if (err >= 0 && exe->io[0] != STDIN_FILENO)
-		err = dup2(exe->io[0], STDIN_FILENO);
-	sclose (exe->io[0]);
-	sclose (exe->io[1]);
 	return (err);
 }
 
