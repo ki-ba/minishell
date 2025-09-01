@@ -6,18 +6,17 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:13 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 12:27:29 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 13:24:43 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "data_structures.h"
 #include "minishell.h"
+#include "env.h"
 #include <limits.h>
 
-void	del_env_entry(t_env_lst *env_entry);
-
-int	handle_shlvl(t_env_lst *new)
+static int	handle_shlvl(t_env_lst *new)
 {
 	int	prev_shlvl;
 
@@ -74,27 +73,19 @@ void	env_add_back(t_env_lst **head, t_env_lst *new)
 	}
 }
 
-char	*get_env_val(t_env_lst *env, char name[], int sh)
+char	*get_env_val(t_env_lst *env, char name[])
 {
 	t_env_lst	*current;
 
-	if (sh)
-		name = ft_concat(2, "?", name);
 	current = env;
 	if (!name)
 		return (NULL);
 	while (current)
 	{
 		if (!ft_strncmp(name, current->name, ft_strlen(name) + 1))
-		{
-			if (sh)
-				free(name);
 			return (ft_strdup(current->value));
-		}
 		current = current->next;
 	}
-	if (sh)
-		free(name);
 	return (ft_strdup(""));
 }
 

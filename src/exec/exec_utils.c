@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "error.h"
 #include "libft.h"
 #include "data_structures.h"
 #include "exec.h"
@@ -34,6 +35,8 @@ int	define_error(char path[], t_env_lst *env)
 	int			err;
 	struct stat	fi;
 
+	if (!path)
+		return (ERR_ALLOC);
 	(void)env;
 	stat(path, &fi);
 	if (access(path, F_OK))

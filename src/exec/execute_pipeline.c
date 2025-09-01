@@ -33,7 +33,7 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 		env_arr = envlist_to_arr(ms->env);
 		path = path_to_cmd(cmd, ms->env);
 		err = define_error(path, ms->env);
-		if (path && env_arr && !err)
+		if (path && env_arr && err == 0)
 			execve(path, cmd, env_arr);
 		ft_free_arr(env_arr);
 		free(path);
