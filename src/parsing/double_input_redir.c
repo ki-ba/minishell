@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 15:59:38 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 19:20:38 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ static void	fill_input(int fd, char del[], char *prompt)
 
 	line = NULL;
 	rl_event_hook = rl_help;
-	errno = 0;
 	line = readline(prompt);
 	len = ft_strlen(line);
 	while (g_signal != 2

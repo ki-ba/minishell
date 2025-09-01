@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:55 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 19:22:41 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 19:33:28 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	check_meta_validity(char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i])
+	while (str && str[i])
 	{
 		if (is_metachar(str[i]) && !is_inquote(str, i))
 		{
@@ -79,7 +79,7 @@ int	check_meta_validity(char *str)
 		}
 		++i;
 	}
-	if (i > 0 && is_metachar(str[i - 1]) && !is_inquote(str, i - 1))
+	if (str && i > 0 && is_metachar(str[i - 1]) && !is_inquote(str, i - 1))
 		return (ERR_PARSING);
 	return (SUCCESS);
 }

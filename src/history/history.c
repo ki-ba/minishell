@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:28 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/25 13:04:36 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/01 20:00:52 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	ft_add_history(t_minishell *ms_data, char entry[])
 			ms_data->last_cmd = ft_strdup(entry);
 			if (ms_data->last_cmd == NULL)
 			{
+				free(entry);
 				ms_data->error = ERR_ALLOC;
 				return (ERR_ALLOC);
 			}

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 18:20:11 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 19:56:38 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,8 @@ static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len)
 	if (!varname)
 		return (NULL);
 	if (str[i + 1] == '?')
-		return (ft_itoa(ms->error));
-	if (ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?')
+		next_chunk = ft_itoa(ms->error);
+	else if (ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?')
 	{
 		tmp = search_env_var(ms->env, varname);
 		if (tmp)

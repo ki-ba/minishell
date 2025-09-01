@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 16:50:13 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 19:43:32 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,10 @@ int	readline_loop(t_minishell *ms_data)
 		ft_lstclear(&ms_data->exec_lst, del_exec_node);
 		prompt = create_prompt(ms_data);
 		if (!prompt)
+		{
+			ms_data->error = ERR_ALLOC;
 			return (ERR_ALLOC);
+		}
 		init_signals();
 		cmd = readline(prompt);
 		if (g_signal == 2 || g_signal == 3)
@@ -113,7 +116,6 @@ void	destroy_ms(t_minishell *ms)
 	sclose(ms->interface);
 	free(ms->last_cmd);
 	destroy_env_lst(&ms->env);
-	// ft_lstclear(&ms->exec_lst, del_exec_node);
 	free(ms->cur_wd);
 }
 
