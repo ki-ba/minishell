@@ -24,6 +24,11 @@ int				check_parsing(char str[]);
 int				process_tokens(t_list *tokens);
 int				def_redir_type(t_token_type type);
 
+/* PARSING UTILS 2 */
+
+int				sclose(int fd);
+int				apply_redirections(t_list **cur_node);
+
 /* EXEC NODE */
 
 t_exec_node		*create_exec_node(void);

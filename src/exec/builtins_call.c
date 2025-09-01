@@ -52,10 +52,10 @@ char	*find_path(char *cmd, t_env_lst *env)
 
 	path = check_path_exist(env);
 	paths = ft_split(path, ':');
-	if (!paths)
-		return (NULL);
 	if (path)
 		free(path);
+	if (!paths)
+		return (NULL);
 	i = 0;
 	path = NULL;
 	while (paths[i])

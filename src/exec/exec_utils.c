@@ -51,30 +51,6 @@ int	define_error(char path[], t_env_lst *env)
 	return (err);
 }
 
-int	sclose(int fd)
-{
-	if (fd <= STDERR_FILENO)
-		return (1);
-	else
-		return (close(fd));
-}
-
-static int	apply_redirections(t_list **cur_node)
-{
-	t_exec_node	*exe;
-	int			err;
-
-	err = 0;
-	exe = (t_exec_node *)(*cur_node)->content;
-	if (exe->io[1] != STDOUT_FILENO)
-		err = dup2(exe->io[1], STDOUT_FILENO);
-	if (err >= 0 && exe->io[0] != STDIN_FILENO)
-		err = dup2(exe->io[0], STDIN_FILENO);
-	sclose (exe->io[0]);
-	sclose (exe->io[1]);
-	return (err);
-}
-
 static void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
 {
 	if ((*cur)->next)
