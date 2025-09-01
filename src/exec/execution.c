@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 14:19:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 17:11:23 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,28 +72,27 @@ static int	start_execution(t_minishell *ms)
 int	interpret_line(t_minishell *ms, char *cmd)
 {
 	t_list		*tokens;
-	int			err;
 
 	update_qm(&ms->error, 0, 1);
-	err = ms->error;
 	tokens = NULL;
 	if (tokenize(&tokens, cmd) != 0)
 		return (ERR_ALLOC);
 	free(cmd);
 	if (process_tokens(tokens))
 		return (ERR_PARSING);
-	err = parse_tokens(ms, tokens);
+	ms->error = parse_tokens(ms, tokens);
 	ft_lstclear(&tokens, deltoken);
-	if (err == ERR_ALLOC || !(ms->exec_lst))
-		return (ERR_ALLOC);
-	if (g_signal == 2)
+	if (ms->error == ERR_ALLOC || !(ms->exec_lst))
 	{
-		err = (130);
-		ms->error = 130;
+		if (ms->exec_lst)
+			ft_lstclear(&ms->exec_lst, del_exec_node);
+		return (ERR_ALLOC);
 	}
+	if (g_signal == 2)
+		ms->error = 130;
 	else
-		err = start_execution(ms);
+		ms->error = start_execution(ms);
 	if (ms->exec_lst)
 		ft_lstclear(&ms->exec_lst, del_exec_node);
-	return (err);
+	return (ms->error);
 }

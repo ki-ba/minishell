@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/27 16:03:53 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 16:51:23 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 		ms->error = define_error(path, ms->env);
 		if (path && env_arr && ms->error == 0)
 			execve(path, cmd, env_arr);
-		else
+		else if (!path || !env_arr)
 			ms->error = ERR_ALLOC;
 		ft_multifree(1, 1, path, env_arr);
 		if (ms->error == 127)
