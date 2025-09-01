@@ -29,6 +29,7 @@ char			*format_cmd(t_minishell *ms, char *cmd);
 
 /* MAIN FUNCTIONS */
 
+void				error_handler(t_minishell *ms);
 int				handle_line(t_minishell *ms_data, char cmd[]);
 int				readline_loop(t_minishell *minishell_data);
 
