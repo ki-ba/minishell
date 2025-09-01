@@ -21,22 +21,22 @@
 # endif
 /* MS DATA */
 
-void	destroy_ms(t_minishell *ms);
+void			destroy_ms(t_minishell *ms);
 
 /* INITIAL FORMATTING */
 
-char	*trim_cmd(int *err, char *cmd);
-char	*format_cmd(t_minishell *ms, char *cmd);
+char			*trim_cmd(int *err, char *cmd);
+char			*format_cmd(t_minishell *ms, char *cmd);
 
 /* MAIN FUNCTIONS */
 
-int		handle_line(t_minishell *ms_data, char cmd[]);
-int		readline_loop(t_minishell *minishell_data);
+int				handle_line(t_minishell *ms_data, char cmd[]);
+int				readline_loop(t_minishell *minishell_data);
 
 /* DEBUG */ // TODO: REMOVE THESE
 
-t_exec_node	getnode(t_list *exec_lst);
-void	print_exec_lst(t_list *exec_lst);
+t_exec_node		getnode(t_list *exec_lst);
+void			print_exec_lst(t_list *exec_lst);
 # ifndef HERE_DOC_LEN
 #  define HERE_DOC_LEN 8
 # endif
