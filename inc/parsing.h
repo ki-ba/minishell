@@ -25,6 +25,7 @@ int				parse_tokens(t_minishell *ms, t_list *tokens);
 char			**add_to_array(char **arr, char *str);
 int				check_parsing(char str[]);
 int				process_tokens(t_list *tokens);
+int				def_redir_type(t_token_type type);
 
 /* EXEC NODE */
 

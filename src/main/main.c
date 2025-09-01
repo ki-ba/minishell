@@ -25,6 +25,11 @@
 #include "color.h"
 #include <errno.h>
 
+/**
+* @brief displays the correct error msg according to the error code.
+* @brief only works with custom minishell errors (> 300)
+* then substracts 300 to have a correct exit status to return.
+*/
 static void	error_handler(t_minishell *ms)
 {
 	if (ms && ms->error > 300)
@@ -42,6 +47,10 @@ static void	error_handler(t_minishell *ms)
 	}
 }
 
+/**
+	* @brief adds the line to history, formats it and looks for syntax errors.
+	* @brief then sends it for tokenizing / executing.
+*/
 int	handle_line(t_minishell *ms, char cmd[])
 {
 	char	*formatted;
