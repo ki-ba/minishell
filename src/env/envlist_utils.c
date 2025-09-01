@@ -32,37 +32,42 @@ void	update_qm(int *qm, int status, int conditionnal)
 size_t	envlist_len(t_env_lst *env)
 {
 	size_t		i;
-	t_env_lst	*tmp;
 
+	if (!env)
+		return (0);
 	i = 1;
-	tmp = env;
-	while (tmp->next)
+	while (env->next)
 	{
 		i++;
-		tmp = tmp->next;
+		env = env->next;
 	}
 	return (i);
 }
 
+/**
+* @brief takes the env as a linked list and duplicates it into
+* @brief a 2D array, usable when calling execve().
+* @brief as the array is heap allocated, it must be freed.
+*/
 char	**envlist_to_arr(t_env_lst *env_lst)
 {
 	char		**env;
-	t_env_lst	*tmp;
 	size_t		i;
 
-	tmp = env_lst;
 	env = ft_calloc(envlist_len(env_lst), sizeof(char *));
+	if (!env)
+		return (NULL);
 	i = 0;
-	while (env && tmp->next)
+	while (env && env_lst->next)
 	{
-		env[i] = ft_concat(3, tmp->name, "=", tmp->value);
+		env[i] = ft_concat(3, env_lst->name, "=", env_lst->value);
 		if (!env[i])
 		{
 			ft_putstr_fd("error converting env to array\n", 2);
 			ft_free_arr(env);
-			break ;
+			return (NULL);
 		}
-		tmp = tmp->next;
+		env_lst = env_lst->next;
 		i++;
 	}
 	return (env);

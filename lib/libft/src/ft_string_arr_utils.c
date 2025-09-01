@@ -60,6 +60,8 @@ char	**duplicate_arr(char **arr)
 		return (NULL);
 	size = get_arr_length(arr);
 	dup = ft_calloc(size + 1, sizeof(char *));
+	if (!dup)
+		return (NULL);
 	while (++i < size)
 	{
 		dup[i] = ft_strdup(arr[i]);

@@ -14,6 +14,7 @@
 #include "data_structures.h"
 #include "parsing.h"
 #include "error.h"
+#include "exec.h"
 
 static int	define_open_flags(t_token_type type)
 {
@@ -43,7 +44,10 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
 	if (!node || !token)
 		return (ERR_ALLOC);
 	if (redir == T_HD)
+	{
+		sclose(node->io[0]);
 		node->io[0] = read_input(token->token);
+	}
 	else if (node->status == 0)
 	{
 		oflags = define_open_flags(redir);

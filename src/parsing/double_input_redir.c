@@ -94,10 +94,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);
-		errno = 0;
 		line = readline(prompt);
-		if (errno)
-			break ;
 		len = ft_strlen(line);
 	}
 	rl_done = 0;
@@ -115,14 +112,14 @@ int	read_input(char *del)
 	update_signals(0);
 	err = open_random_file(fd);
 	if (err)
+	{
+		// sclose(fd[0]);
+		// sclose(fd[1]);
 		return (err);
+	}
 	if (g_signal != 2)
 		fill_input(fd[1], del, "input> ");
 	if (fd[1] > 0)
 		close (fd[1]);
-	// if (g_signal != 2)
-	// 	fd = open(filename, O_RDONLY);
-	// else
-	// 	fd = open(filename, O_WRONLY | O_TRUNC);
 	return (fd[0]);
 }

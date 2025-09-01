@@ -17,6 +17,12 @@
 #include "env.h"
 
 void	print_cmd(t_list *exec); //TODO remove;
+
+/**
+* @brief returns the content of the PATH env var
+* @brief as a string. If undefined, returns "." as in "current wd",
+* @brief so that executables are only looked for in the cwd.
+*/
 char	*check_path_exist(t_env_lst *env)
 {
 	t_env_lst	*var;
@@ -34,6 +40,12 @@ char	*check_path_exist(t_env_lst *env)
 	return (path);
 }
 
+/**
+* @brief returns the first path found to a given executable.
+* @brief looks first in PATH env var, then in current directory.
+* @brief should not be given relative / absolute paths, only
+* @brief simple commands (i.e 'cat').
+*/
 char	*find_path(char *cmd, t_env_lst *env)
 {
 	char	**paths;
@@ -51,7 +63,7 @@ char	*find_path(char *cmd, t_env_lst *env)
 	while (paths[i])
 	{
 		path = ft_concat(3, paths[i], "/", cmd);
-		if (!path || !access(path, F_OK & X_OK))
+		if (!path || access(path, F_OK & X_OK) == 0)
 			break ;
 		free(path);
 		path = NULL;
