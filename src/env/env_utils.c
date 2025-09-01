@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:13 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:13:09 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 12:27:29 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,15 +98,15 @@ char	*get_env_val(t_env_lst *env, char name[], int sh)
 	return (ft_strdup(""));
 }
 
-size_t	get_env_size(t_env_lst *env_lst)
+size_t	envlist_len(t_env_lst *env)
 {
 	size_t	i;
 
 	i = 0;
-	while (env_lst)
+	while (env)
 	{
 		++i;
-		env_lst = env_lst->next;
+		env = env->next;
 	}
 	return (i);
 }

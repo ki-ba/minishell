@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:03:16 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/28 16:40:31 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 12:28:42 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ t_env_lst	*create_environment(t_minishell *ms_data, char *envp[])
 	while (envp[i])
 	{
 		name = ft_substr(envp[i], 0, ft_strlen_c(envp[i], '='));
-		//! check MALLOC
 		new = create_env_lst(name);
 		if (!name || !new)
 		{
@@ -60,7 +59,7 @@ char	**create_env_arr(t_env_lst *env_lst)
 
 	i = 0;
 	current = env_lst;
-	env_size = get_env_size(env_lst);
+	env_size = envlist_len(env_lst);
 	env_arr = ft_calloc(env_size, sizeof(char *));
 	if (!env_arr)
 		return (NULL);

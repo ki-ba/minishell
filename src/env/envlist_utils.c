@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:24 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:13:36 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 12:25:02 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,6 @@ void	update_qm(int *qm, int status, int conditionnal)
 	if (conditionnal && (status == 0 || *qm > 0))
 		return ;
 	*qm = status;
-}
-
-size_t	envlist_len(t_env_lst *env)
-{
-	size_t		i;
-	t_env_lst	*tmp;
-
-	i = 1;
-	tmp = env;
-	while (tmp->next)
-	{
-		i++;
-		tmp = tmp->next;
-	}
-	return (i);
 }
 
 char	**envlist_to_arr(t_env_lst *env_lst)
