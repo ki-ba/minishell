@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/09 11:05:42 by kiba              #+#    #+#             */
-/*   Updated: 2025/07/22 17:48:46 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 15:56:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ char	*create_random_str(size_t len)
 	char	*random_str;
 
 	random_str = ft_calloc((len + 1), sizeof(char));
-	random_str[0] = '\0';
+	if (!random_str)
+		return (NULL);
 	urandom = open("/dev/urandom", O_RDONLY);
 	if (urandom < 0)
 		return (NULL);
