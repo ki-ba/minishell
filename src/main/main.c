@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 13:06:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:09:08 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@
 #include "color.h"
 #include <errno.h>
 
+/**
+* @brief displays the correct error msg according to the error code.
+* @brief only works with custom minishell errors (> 300)
+* then substracts 300 to have a correct exit status to return.
+*/
 static void	error_handler(t_minishell *ms)
 {
 	if (ms && ms->error > 300)
@@ -42,6 +47,10 @@ static void	error_handler(t_minishell *ms)
 	}
 }
 
+/**
+	* @brief adds the line to history, formats it and looks for syntax errors.
+	* @brief then sends it for tokenizing / executing.
+*/
 int	handle_line(t_minishell *ms, char cmd[])
 {
 	char	*formatted;
@@ -84,10 +93,6 @@ int	readline_loop(t_minishell *ms_data)
 			break ;
 		handle_line(ms_data, cmd);
 		error_handler(ms_data);
-		if (ms_data->error && !(ms_data->is_exit))
-			printf("[%s%d%s]  ", FG_RED, ms_data->error, RESET);
-		else if (!(ms_data->error) && !(ms_data->is_exit))
-			printf("[%s%d%s]  ", FG_GREEN, ms_data->error, RESET);
 	}
 	return (ms_data->error);
 }
@@ -124,10 +129,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	create_environment(&ms_data, envp);
 	if (ms_data.env)
-	{
-		printf("[%s0%s]  ", FG_GREEN, RESET);
 		readline_loop(&ms_data);
-	}
 	else
 	{
 		ft_putstr_fd("error creating environment\n", 2);

@@ -16,6 +16,9 @@
 #include "error.h"
 #include "exec.h"
 
+/**
+ * @brief returns the correct open flags according to the token type.
+ */
 static int	define_open_flags(t_token_type type)
 {
 	if (type == T_REDIR_OUT)
@@ -26,15 +29,10 @@ static int	define_open_flags(t_token_type type)
 		return (O_RDONLY);
 }
 
-static int	def_redir_type(t_token_type type)
-{
-	if (type == T_REDIR_IN || type == T_HD)
-		return (INFILE);
-	else if (type == T_REDIR_OUT || type == T_APPEND)
-		return (OUTFILE);
-	return (-1);
-}
-
+/**
+ * @brief handles current TOKEN_FILE.
+ * opens the file / heredoc on the correct case of the exec_node->io[] array.
+ */
 static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
 {
 	int	oflags;
@@ -51,6 +49,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
 	else if (node->status == 0)
 	{
 		oflags = define_open_flags(redir);
+		sclose(node->io[redir_type]);
 		node->io[redir_type] = open(token->token, oflags, 0644);
 		if (node->io[def_redir_type(redir)] < 0)
 			perror("open");
@@ -64,16 +63,11 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
  **/
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
-	// char	**old_arr;
-
 	if (!node || !token || !exec_list)
 		return (ERR_ALLOC);
-	// old_arr = node->cmd;
 	node->cmd = add_to_array(node->cmd, token->token);
 	if (!node->cmd)
 	{
-		// if (old_arr)
-		// 	ft_free_arr(old_arr);
 		ft_lstclear(exec_list, del_exec_node);
 		return (ERR_ALLOC);
 	}

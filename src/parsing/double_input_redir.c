@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/27 14:51:53 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 13:32:45 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,6 @@ static int	open_random_file(int fd[2])
 	return (fd[0] < 0 || fd[1] < 0);
 }
 
-int	ft_max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	return (b);
-}
-
 int	rl_help(void)
 {
 	if (g_signal == SIGINT)
@@ -112,11 +105,7 @@ int	read_input(char *del)
 	update_signals(0);
 	err = open_random_file(fd);
 	if (err)
-	{
-		// sclose(fd[0]);
-		// sclose(fd[1]);
 		return (err);
-	}
 	if (g_signal != 2)
 		fill_input(fd[1], del, "input> ");
 	if (fd[1] > 0)

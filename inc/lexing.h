@@ -48,6 +48,7 @@ void			remove_quotes(void *item);
 
 /* TOKEN */
 
+int				delete_tokens(t_list **tokens, t_token *cur_token);
 void			deltoken(void *token);
 
 /* ID TOKEN */

@@ -66,6 +66,18 @@ static int	is_a_redirect(t_token_type type)
 	return (type >= T_REDIR_IN && type <= T_HD);
 }
 
+/* @brief defines if current token types is an infile or outfile.
+ * @brief used to change the correct case of exec_node->io[] array.
+ */
+int	def_redir_type(t_token_type type)
+{
+	if (type == T_REDIR_IN || type == T_HD)
+		return (INFILE);
+	else if (type == T_REDIR_OUT || type == T_APPEND)
+		return (OUTFILE);
+	return (-1);
+}
+
 /**
 	* @brief attributes a type to every token on the list, then removes quotes
 	* @brief inside tokens.
@@ -93,5 +105,5 @@ int	process_tokens(t_list *tokens)
 	if (!tokens->next && (token->type == T_PIPE || is_a_redirect(token->type)))
 		return (ERR_PARSING);
 	ft_lstiter(tokens, remove_quotes);
-	return (0);
+	return (SUCCESS);
 }

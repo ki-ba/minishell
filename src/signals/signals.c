@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:09:11 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/27 15:17:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:09:21 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	sigint_handler(int sig)
 		printf("\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
-		printf("[%s130%s]  ", FG_RED, RESET);
 		rl_redisplay();
 	}
 	g_signal = sig;

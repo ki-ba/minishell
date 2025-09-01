@@ -15,12 +15,18 @@
 #include "minishell.h"
 #include "env.h"
 #include <limits.h>
+#include <stdlib.h>
 
 static int	handle_shlvl(t_env_lst *new)
 {
-	int	prev_shlvl;
+	int		prev_shlvl;
+	char	*env_ret;
 
-	prev_shlvl = ft_atoi(getenv("SHLVL"));
+	env_ret = getenv("SHLVL");
+	if (env_ret)
+		prev_shlvl = ft_atoi(env_ret);
+	else
+		prev_shlvl = 0;
 	new->value = ft_itoa(prev_shlvl + 1);
 	if (prev_shlvl < 0 || prev_shlvl >= INT_MAX)
 	{

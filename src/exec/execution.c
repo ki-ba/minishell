@@ -75,8 +75,6 @@ int	start_execution(t_minishell *ms)
 		update_signals(1);
 		update_qm(&ms->error, wait_processes(exec_pipeline(ms), ms->error), 0);
 	}
-	// if (node->io[0] == -1)
-	// 	ft_putendl_fd("minishell: no such file", 2);
 	return (ms->error);
 }
 
