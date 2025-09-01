@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 13:32:45 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/01 14:41:03 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static int	open_random_file(int fd[2])
 	return (fd[0] < 0 || fd[1] < 0);
 }
 
-int	rl_help(void)
+static int	rl_help(void)
 {
 	if (g_signal == SIGINT)
 		rl_done = 1;

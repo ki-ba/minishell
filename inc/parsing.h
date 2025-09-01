@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:29:30 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/29 05:03:32 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:40:53 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void			ft_lstclear_but(t_list **lst, void (*f)(void *), t_list *item);
 /* DOUBLE INPUT REDIR */
 
 int				ft_max(int a, int b);
-int				rl_help(void);
 int				read_input(char *del);
 
 #endif
