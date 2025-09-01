@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 14:41:03 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 15:59:38 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,19 @@ static char	*create_filename(void)
 	char	*filename;
 
 	random_str = create_random_str(HERE_DOC_LEN);
+	if (!random_str)
+		return (NULL);
 	filename = ft_concat(2, "tmp_", random_str);
 	free(random_str);
 	random_str = NULL;
-	if (!(*filename))
+	if (!filename)
 		return (NULL);
 	while (!access(filename, F_OK))
 	{
 		ft_multifree(2, 0, random_str, filename);
 		random_str = create_random_str(HERE_DOC_LEN);
+		if (!random_str)
+			return (NULL);
 		filename = ft_concat(2, "tmp_", random_str);
 		if (!(filename))
 		{

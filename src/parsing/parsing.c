@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:41 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/25 12:26:31 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/01 15:24:23 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
 	{
 		sclose(node->io[0]);
 		node->io[0] = read_input(token->token);
+		if (node->io[0] < 0)
+			return (ERR_ALLOC);
 	}
 	else if (node->status == 0)
 	{
@@ -63,11 +65,15 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
  **/
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
+	char **old_cmd;
+
 	if (!node || !token || !exec_list)
 		return (ERR_ALLOC);
+	old_cmd = node->cmd;
 	node->cmd = add_to_array(node->cmd, token->token);
 	if (!node->cmd)
 	{
+		ft_free_arr(old_cmd);
 		ft_lstclear(exec_list, del_exec_node);
 		return (ERR_ALLOC);
 	}
