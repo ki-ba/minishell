@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/20 13:40:44 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/01 18:20:11 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len)
 {
 	char		*next_chunk;
 
+	if (must_expand(str, i) && i == 0 && is_metachar(str[i]))
+	{
+		next_chunk = ft_strdup(" ");
+		return (next_chunk);
+	}
 	if (i == 0 && is_metachar(str[i]))
 	{
 		++i;

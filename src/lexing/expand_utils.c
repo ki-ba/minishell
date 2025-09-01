@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:00:13 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 14:24:39 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 18:16:02 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ size_t	get_part_len(char str[])
 		i = varnamelen(str);
 	else
 		i = ft_strlen_c(str, '$');
+	if (i == ft_strlen(str) && is_metachar(str[0]))
+		return (0);
 	tmp = ft_strlen_c(str, '|');
 	if (!is_inquote(str, tmp) && i > tmp && tmp > 0)
 		i = tmp;
