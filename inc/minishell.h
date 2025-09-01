@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:21 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/19 16:29:08 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/01 14:28:48 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void			destroy_ms(t_minishell *ms);
 
 /* INITIAL FORMATTING */
 
-char			*trim_cmd(int *err, char *cmd);
 char			*format_cmd(t_minishell *ms, char *cmd);
 
 /* MAIN FUNCTIONS */

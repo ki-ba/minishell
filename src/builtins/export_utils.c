@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:31:12 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 18:01:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/08/29 04:09:57 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ t_env_lst	*dup_env(t_env_lst *env)
 		if (tmp->name)
 		{
 			cpy = new_env_entry(tmp->name, tmp->value);
+			if (!cpy)
+			{
+				destroy_env_lst(&dup);
+				return (NULL);
+			}
 			env_add_back(&dup, cpy);
 		}
 		tmp = tmp->next;

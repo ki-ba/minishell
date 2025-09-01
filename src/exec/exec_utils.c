@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/27 15:04:38 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:17:36 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	sclose(int fd)
 		return (close(fd));
 }
 
-int	apply_redirections(t_list **cur_node)
+static int	apply_redirections(t_list **cur_node)
 {
 	t_exec_node	*exe;
 	int			err;
@@ -75,7 +75,7 @@ int	apply_redirections(t_list **cur_node)
 	return (err);
 }
 
-void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
+static void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
 {
 	if ((*cur)->next)
 	{
@@ -90,7 +90,7 @@ void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
 	}
 }
 
-int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
+static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 {
 	int			pid;
 	char		**cmd;

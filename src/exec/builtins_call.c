@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:04 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 15:22:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:18:36 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include "error.h"
 #include "builtins.h"
 #include "env.h"
-
-void	print_cmd(t_list *exec); //TODO remove;
 
 /**
 * @brief returns the content of the PATH env var
@@ -33,7 +31,7 @@ char	*check_path_exist(t_env_lst *env)
 		path = ft_strdup(".");
 	else
 	{
-		path = get_env_val(env, "PATH", 0);
+		path = get_env_val(env, "PATH");
 		if (!path)
 			path = ft_strdup(".");
 	}

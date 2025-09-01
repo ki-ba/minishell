@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/28 17:25:44 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:09:08 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,6 @@ int	readline_loop(t_minishell *ms_data)
 			break ;
 		handle_line(ms_data, cmd);
 		error_handler(ms_data);
-		if (ms_data->error && !(ms_data->is_exit))
-			printf("[%s%d%s]  ", FG_RED, ms_data->error, RESET);
-		else if (!(ms_data->error) && !(ms_data->is_exit))
-			printf("[%s%d%s]  ", FG_GREEN, ms_data->error, RESET);
 	}
 	return (ms_data->error);
 }
@@ -133,9 +129,11 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	create_environment(&ms_data, envp);
 	if (ms_data.env)
-	{
-		printf("[%s0%s]  ", FG_GREEN, RESET);
 		readline_loop(&ms_data);
+	else
+	{
+		ft_putstr_fd("error creating environment\n", 2);
+		ms_data.error = ERR_ALLOC;
 	}
 	error_handler(&ms_data);
 	destroy_ms(&ms_data);

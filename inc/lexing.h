@@ -6,18 +6,17 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:17:03 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 14:20:10 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:27:40 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "data_structures.h"
-// #include "libft.h"
-// # include <stddef.h>
+#ifndef LEXING_H
+# define LEXING_H
+
+# include "data_structures.h"
 
 /* LEXING */
 
-t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b);
-t_token			*token(t_list **tokens, char *token_str, t_bool *cmd_bool);
 int				tokenize(t_list **tokens, char *line);
 
 /* LEXING UTILS */
@@ -31,7 +30,6 @@ char			*expand_line(t_minishell *ms, char str[]);
 /* EXPAND UTILS */
 
 void			join_in_place(char **s1, char *s2);
-size_t			varnamelen(char str[]);
 size_t			get_part_len(char str[]);
 
 /* EXPAND CHECK */
@@ -54,3 +52,5 @@ void			deltoken(void *token);
 t_token_type	determine_redirect(char token_str[]);
 t_bool			determine_option(char token_str[]);
 t_bool			determine_pipe(char token_str[]);
+
+#endif

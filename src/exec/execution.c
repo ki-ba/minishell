@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/27 15:00:27 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:19:23 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,7 @@
 #include "signals.h"
 #include <sys/wait.h>
 
-void	print_cmd(t_list *exec)
-{
-	t_exec_node	*node;
-
-	node = ((t_exec_node *)exec->content);
-	ft_print_arr(node->cmd);
-	ft_printf("END\n");
-}
-
-int	wait_processes(pid_t pid, int err)
+static int	wait_processes(pid_t pid, int err)
 {
 	int	status;
 
@@ -57,7 +48,7 @@ int	wait_processes(pid_t pid, int err)
 	return (err);
 }
 
-int	start_execution(t_minishell *ms)
+static int	start_execution(t_minishell *ms)
 {
 	t_exec_node	*node;
 	t_list		*exec_lst;

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:24 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:13:36 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 13:08:51 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,6 @@ void	update_qm(int *qm, int status, int conditionnal)
 	if (conditionnal && (status == 0 || *qm > 0))
 		return ;
 	*qm = status;
-}
-
-size_t	envlist_len(t_env_lst *env)
-{
-	size_t		i;
-
-	if (!env)
-		return (0);
-	i = 1;
-	while (env->next)
-	{
-		i++;
-		env = env->next;
-	}
-	return (i);
 }
 
 /**
@@ -89,4 +74,37 @@ t_env_lst	*search_env_var(t_env_lst *env, char *var)
 		tmp = tmp->next;
 	}
 	return (NULL);
+}
+
+void	del_env_entry(t_env_lst *entry)
+{
+	if (!entry)
+		return ;
+	free(entry->name);
+	entry->name = NULL;
+	free(entry->value);
+	entry->value = NULL;
+	free(entry);
+}
+
+void	destroy_env_lst(t_env_lst **env_lst)
+{
+	t_env_lst	*tmp;
+	t_env_lst	*cur;
+
+	cur = *env_lst;
+	while (cur)
+	{
+		tmp = cur->next;
+		if (cur->value)
+		{
+			free(cur->value);
+			cur->value = NULL;
+		}
+		free(cur->name);
+		cur->name = NULL;
+		free(cur);
+		cur = tmp;
+	}
+	*env_lst = NULL;
 }

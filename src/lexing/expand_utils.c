@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:00:13 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/04 14:20:52 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:24:39 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	join_in_place(char **s1, char *s2)
 	*s1 = s3;
 }
 
-size_t	varnamelen(char str[])
+static size_t	varnamelen(char str[])
 {
 	size_t	i;
 
