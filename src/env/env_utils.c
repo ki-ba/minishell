@@ -14,14 +14,20 @@
 #include "data_structures.h"
 #include "minishell.h"
 #include <limits.h>
+#include <stdlib.h>
 
 void	del_env_entry(t_env_lst *env_entry);
 
 int	handle_shlvl(t_env_lst *new)
 {
-	int	prev_shlvl;
+	int		prev_shlvl;
+	char	*env_ret;
 
-	prev_shlvl = ft_atoi(getenv("SHLVL"));
+	env_ret = getenv("SHLVL");
+	if (env_ret)
+		prev_shlvl = ft_atoi(env_ret);
+	else
+		prev_shlvl = 0;
 	new->value = ft_itoa(prev_shlvl + 1);
 	if (prev_shlvl < 0 || prev_shlvl >= INT_MAX)
 	{
