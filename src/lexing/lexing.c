@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:47 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 18:28:41 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:27:34 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
  * @brief determines given string token type, according to the string's value
  * brief  and its position (if its after a cmd token)
 */
-t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b)
+static t_token_type	token_type(
+	char val[], t_token_type *last_type, t_bool *cmd_b)
 {
 	int	redir_type;
 
@@ -48,7 +49,7 @@ t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b)
  * @param token_str the value of the new token.
  * @param cmd_bool boolean : is a cmd already present?
  */
-t_token	*token(t_list **tokens, char *token_str, t_bool *cmd_bool)
+static t_token	*token(t_list **tokens, char *token_str, t_bool *cmd_bool)
 {
 	t_token_type	last_type;
 	t_list			*last_lst;

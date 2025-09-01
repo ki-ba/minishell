@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:38:13 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 12:35:14 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:21:08 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,14 @@
 
 /* EXECUTION */
 
-int		wait_processes(pid_t pid, int err);
-int		start_execution(t_minishell *ms);
 int		interpret_line(t_minishell *ms, char *cmd);
 
 /* EXEC UTILS */
 
-pid_t	dup_n_fork(t_minishell *ms, t_list **cur);
 char	*path_to_cmd(char *cmd[], t_env_lst *env);
 int		define_error(char path[], t_env_lst *env);
-void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2]);
 int		sclose(int fd);
+pid_t	dup_n_fork(t_minishell *ms, t_list **cur);
 
 /* BUILTINS CALL */
 

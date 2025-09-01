@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/24 17:09:11 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 14:09:21 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:30:18 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 int	g_signal;
 
-void	sigint_handler(int sig)
+static void	sigint_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
@@ -29,13 +29,13 @@ void	sigint_handler(int sig)
 	g_signal = sig;
 }
 
-void	sig_handler_cmd(int sig)
+static void	sig_handler_cmd(int sig)
 {
 	g_signal = sig;
 	rl_on_new_line();
 }
 
-void	sig_handler_redir(int sig)
+static void	sig_handler_redir(int sig)
 {
 	if (sig == SIGINT)
 	{

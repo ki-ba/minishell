@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 13:00:55 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/29 04:14:45 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:29:16 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include "signals.h"
 #include "env.h"
 
-char	*def_cwd(t_minishell *ms_data)
+static char	*def_cwd(t_minishell *ms_data)
 {
 	char	*prompt;
 

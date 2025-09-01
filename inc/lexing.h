@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:17:03 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/29 07:01:03 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 14:27:40 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 
 /* LEXING */
 
-t_token_type	token_type(char val[], t_token_type *last_type, t_bool *cmd_b);
-t_token			*token(t_list **tokens, char *token_str, t_bool *cmd_bool);
 int				tokenize(t_list **tokens, char *line);
 
 /* LEXING UTILS */
@@ -32,7 +30,6 @@ char			*expand_line(t_minishell *ms, char str[]);
 /* EXPAND UTILS */
 
 void			join_in_place(char **s1, char *s2);
-size_t			varnamelen(char str[]);
 size_t			get_part_len(char str[]);
 
 /* EXPAND CHECK */
