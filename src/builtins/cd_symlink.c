@@ -6,14 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 16:22:39 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 15:46:46 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:35:52 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "data_structures.h"
 #include "error.h"
-#include "env.h"
+#include "builtins.h"
 
 static int	shortcut_path(char **path, ssize_t i, char *cmd);
 static int	normal_path(char **path, ssize_t i);
@@ -34,11 +33,16 @@ int	getsymlink_helper(char **path_parts, char *cmd, size_t len)
 		free(path_parts[1]);
 		return (ERR_ALLOC);
 	}
-	if (path_parts[2][0] == '.')
+	if (!ft_strncmp(path_parts[2], "..", 3)
+		|| !ft_strncmp(path_parts[2], "../", 4)
+		|| !ft_strncmp(path_parts[2], ".", 2)
+		|| !ft_strncmp(path_parts[2], "./", 3))
+	{
 		err = shortcut_path(path_parts, i, cmd);
-	else
-		err = normal_path(path_parts, i);
-	return (SUCCESS);
+		return (err);
+	}
+	err = normal_path(path_parts, i);
+	return (err);
 }
 
 int	setup_path_parts(char **path_parts, char *cmd, t_minishell *ms_data)
@@ -55,6 +59,7 @@ int	setup_path_parts(char **path_parts, char *cmd, t_minishell *ms_data)
 		free(path_parts[0]);
 		return (ERR_ALLOC);
 	}
+	path_parts[2] = NULL;
 	return (SUCCESS);
 }
 
@@ -63,14 +68,11 @@ static int	shortcut_path(char **path, ssize_t i, char *cmd)
 	ssize_t	j;
 	int		err;
 
-	if (ft_strlen(path[0]) > 1 && path[0][ft_strlen(path[0]) - 1] == '/')
-		path[0][ft_strlen(path[0]) - 1] = '\0';
+	skip_slashes(path[0]);
 	j = find_char_end(path[0], '/');
 	if (j == -1)
 		j = ft_strlen(cmd);
-	err = SUCCESS;
-	if (!ft_strncmp(path[2], "..", 3) || !ft_strncmp(path[2], "../", 4))
-		err = prev_dir_shortcut(path, j);
+	err = prev_dir_shortcut(path, j);
 	free(path[2]);
 	if (err)
 		return (ERR_ALLOC);
@@ -89,19 +91,22 @@ static int	prev_dir_shortcut(char **path, ssize_t i)
 {
 	char	*tmp;
 
-	tmp = ft_substr(path[0], 0, i);
-	free(path[0]);
-	if (!tmp)
+	if (!ft_strncmp(path[2], "..", 3) || !ft_strncmp(path[2], "../", 4))
 	{
-		free(path[2]);
-		return (ERR_ALLOC);
-	}
-	path[0] = ft_strdup(tmp);
-	free(tmp);
-	if (!path[0])
-	{
-		free(path[2]);
-		return (ERR_ALLOC);
+		tmp = ft_substr(path[0], 0, i);
+		free(path[0]);
+		if (!tmp)
+		{
+			free(path[1]);
+			return (ERR_ALLOC);
+		}
+		path[0] = ft_strdup(tmp);
+		free(tmp);
+		if (!path[0])
+		{
+			free(path[1]);
+			return (ERR_ALLOC);
+		}
 	}
 	return (SUCCESS);
 }
@@ -110,24 +115,23 @@ static int	normal_path(char **path, ssize_t i)
 {
 	char	*tmp;
 
-	if (path[0][0] == '\0' || path[0][ft_strlen(path[0]) - 1] == '/')
-		tmp = ft_concat(2, path[0], path[2]);
-	else
-		tmp = ft_concat(3, path[0], "/", path[2]);
+	tmp = setup_path0(path);
 	free(path[2]);
 	free(path[0]);
 	if (!tmp)
+	{
+		free(path[1]);
 		return (ERR_ALLOC);
+	}
 	path[0] = ft_strdup(tmp);
 	free(tmp);
-	if (!path[0])
-		return (ERR_ALLOC);
 	path[2] = path[1];
 	path[1] = ft_substr(path[2], i, ft_strlen(path[2]));
 	free(path[2]);
-	if (!path[1])
+	if (!path[1] || !path[0])
 	{
 		free(path[0]);
+		free(path[1]);
 		return (ERR_ALLOC);
 	}
 	return (SUCCESS);

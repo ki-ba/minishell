@@ -26,6 +26,7 @@ char	*ft_concat(size_t n, ...)
 	va_list	lst;
 	size_t	i;
 	char	*string;
+	int		err;
 
 	i = 0;
 	string = malloc(sizeof(char));
@@ -35,7 +36,13 @@ char	*ft_concat(size_t n, ...)
 	va_start(lst, n);
 	while (i < n)
 	{
-		heap_add_suffix(va_arg(lst, char *), &string);
+		err = heap_add_suffix(va_arg(lst, char *), &string);
+		if (err)
+		{
+			free(string);
+			va_end(lst);
+			return (NULL);
+		}
 		++i;
 	}
 	va_end(lst);

@@ -6,42 +6,41 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:15 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 15:44:37 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:43:25 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "data_structures.h"
 #include "env.h"
-#include <limits.h>
+#include "error.h"
 
-static void	add_pwd(t_minishell *ms_data)
+static int	check_n_add(t_minishell *ms_data, char *name, char *val)
 {
 	t_env_lst	*check;
-	char		*curr_path;
+	t_env_lst	*new;
 
-	curr_path = NULL;
-	curr_path = getcwd(curr_path, PATH_MAX);
-	//! check MALLOC
-	ms_data->cur_wd = curr_path;
-	check = search_env_var(ms_data->env, "PWD");
+	check = search_env_var(ms_data->env, name);
 	if (!check)
-		env_add_back(&ms_data->env, new_env_entry("PWD", curr_path));
-	// free(curr_path);
+	{
+		new = new_env_entry(name, val);
+		if (!new)
+		{
+			destroy_env_lst(&ms_data->env);
+			return (ERR_ALLOC);
+		}
+		env_add_back(&ms_data->env, new);
+	}
+	return (SUCCESS);
 }
 
 t_env_lst	**empty_env_check(t_minishell *ms_data)
 {
-	t_env_lst	*check;
-
-	// check = search_env_var(*env_lst, "?CURRPATH");
-	// if (!check)
-	add_pwd(ms_data);
-	check = search_env_var(ms_data->env, "OLDPWD");
-	if (!check)
-		env_add_back(&ms_data->env, new_env_entry("OLDPWD", NULL));
-	check = search_env_var(ms_data->env, "SHLVL");
-	if (!check)
-		env_add_back(&ms_data->env, new_env_entry("SHLVL", "1"));
+	if (check_n_add(ms_data, "PWD", ms_data->cur_wd))
+		return (NULL);
+	if (check_n_add(ms_data, "OLDPWD", NULL))
+		return (NULL);
+	if (check_n_add(ms_data, "SHLVL", "1"))
+		return (NULL);
 	return (&ms_data->env);
 }

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:06:45 by kbarru            #+#    #+#             */
-/*   Updated: 2025/07/16 12:46:04 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 13:31:37 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,9 @@ char				**duplicate_arr(char **arr);
 void				str_arr_suffix(char **arr, char *suffix);
 void				ft_multifree(int n_simple, int n_arr, ...);
 char				*ft_concat(size_t n, ...);
-void				heap_add_suffix(const char *suffix, char **s1);
+int					heap_add_suffix(const char *suffix, char **s1);
 char				*create_random_str(size_t len);
+int					ft_max(int a, int b);
 
 /* get_next_line.c */
 char				*join_to_line(char *line[], char buffer[]);

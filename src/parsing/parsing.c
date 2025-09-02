@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:41 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/25 12:26:31 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/02 11:06:15 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include "parsing.h"
 #include "error.h"
 
+/**
+ * @brief returns the correct open flags according to the token type.
+ */
 static int	define_open_flags(t_token_type type)
 {
 	if (type == T_REDIR_OUT)
@@ -25,15 +28,10 @@ static int	define_open_flags(t_token_type type)
 		return (O_RDONLY);
 }
 
-static int	def_redir_type(t_token_type type)
-{
-	if (type == T_REDIR_IN || type == T_HD)
-		return (INFILE);
-	else if (type == T_REDIR_OUT || type == T_APPEND)
-		return (OUTFILE);
-	return (-1);
-}
-
+/**
+ * @brief handles current TOKEN_FILE.
+ * opens the file / heredoc on the correct case of the exec_node->io[] array.
+ */
 static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
 {
 	int	oflags;
@@ -43,10 +41,16 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
 	if (!node || !token)
 		return (ERR_ALLOC);
 	if (redir == T_HD)
+	{
+		sclose(node->io[0]);
 		node->io[0] = read_input(token->token);
+		if (node->io[0] < 0)
+			return (ERR_ALLOC);
+	}
 	else if (node->status == 0)
 	{
 		oflags = define_open_flags(redir);
+		sclose(node->io[redir_type]);
 		node->io[redir_type] = open(token->token, oflags, 0644);
 		if (node->io[def_redir_type(redir)] < 0)
 			perror("open");
@@ -60,16 +64,15 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
  **/
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
-	char	**old_arr;
+	char	**old_cmd;
 
 	if (!node || !token || !exec_list)
 		return (ERR_ALLOC);
-	old_arr = node->cmd;
+	old_cmd = node->cmd;
 	node->cmd = add_to_array(node->cmd, token->token);
 	if (!node->cmd)
 	{
-		if (old_arr)
-			ft_free_arr(old_arr);
+		ft_free_arr(old_cmd);
 		ft_lstclear(exec_list, del_exec_node);
 		return (ERR_ALLOC);
 	}
@@ -90,7 +93,9 @@ static int	new_node(t_list **exec_lst)
 	new_list_node = ft_lstnew(new_node);
 	if (!new_node || !new_list_node)
 	{
-		ft_multifree(2, 0, new_node, new_list_node);
+		del_exec_node(new_node);
+		ft_lstdelone(new_list_node, del_exec_node);
+		ft_lstclear(exec_lst, del_exec_node);
 		return (ERR_ALLOC);
 	}
 	ft_lstadd_back(exec_lst, new_list_node);
@@ -123,7 +128,7 @@ int	parse_tokens(t_minishell *ms, t_list *tokens)
 			redir_type = token->type;
 		else if (token->type == T_FILE)
 			status = handle_file(node, token, redir_type);
-		if (node && !node->status && status != 0)
+		if (node && status != ERR_ALLOC && !node->status && status)
 			node->status = status;
 		tokens = tokens->next;
 	}

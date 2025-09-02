@@ -6,11 +6,12 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/20 13:40:44 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/02 12:24:55 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "data_structures.h"
+#include "error.h"
 #include "libft.h"
 #include "lexing.h"
 #include "env.h"
@@ -29,7 +30,10 @@ char	*expand_line(t_minishell *ms, char str[])
 	i = 0;
 	expanded = ft_calloc(1, sizeof(char));
 	if (!expanded)
+	{
+		ms->error = ERR_ALLOC;
 		return (NULL);
+	}
 	while (str[i])
 	{
 		part_len = get_part_len(&str[i]);
@@ -48,6 +52,11 @@ static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len)
 {
 	char		*next_chunk;
 
+	if (must_expand(str, i) && i == 0 && is_metachar(str[i]))
+	{
+		next_chunk = ft_strdup(" ");
+		return (next_chunk);
+	}
 	if (i == 0 && is_metachar(str[i]))
 	{
 		++i;
@@ -58,10 +67,10 @@ static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len)
 			--len;
 		}
 	}
-	if (str[i] == '$' && must_expand(str, i))
-		next_chunk = expand_dollar(ms, str, i, len);
-	else if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
+	if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
 		next_chunk = expand_metachar(str, i, len);
+	else if (str[i] == '$' && must_expand(str, i))
+		next_chunk = expand_dollar(ms, str, i, len);
 	else
 		next_chunk = ft_substr(str, i, len);
 	return (next_chunk);
@@ -77,8 +86,8 @@ static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len)
 	if (!varname)
 		return (NULL);
 	if (str[i + 1] == '?')
-		return (ft_itoa(ms->error));
-	if (ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?')
+		next_chunk = ft_itoa(ms->error);
+	else if (ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?')
 	{
 		tmp = search_env_var(ms->env, varname);
 		if (tmp)

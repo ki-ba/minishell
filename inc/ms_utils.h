@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   history.h                                          :+:      :+:    :+:   */
+/*   ms_utils.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/30 12:54:23 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/29 07:00:02 by mlouis           ###   ########.fr       */
+/*   Created: 2025/09/02 10:36:21 by kbarru            #+#    #+#             */
+/*   Updated: 2025/09/02 10:37:09 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef HISTORY_H
-# define HISTORY_H
+#ifndef MS_UTILS_H
+# define MS_UTILS_H
 
-int	ft_add_history(t_minishell *ms, char entry[]);
+void	init_ms(t_minishell *ms);
+void	destroy_ms(t_minishell *ms);
 
 #endif

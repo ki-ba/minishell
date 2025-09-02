@@ -6,25 +6,30 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:13 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/04 14:13:09 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:42:40 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "data_structures.h"
 #include "minishell.h"
+#include "env.h"
 #include <limits.h>
 
-int	handle_shlvl(t_env_lst *new)
+static int	handle_shlvl(t_env_lst *new)
 {
-	int	prev_shlvl;
+	int		prev_shlvl;
+	char	*env_ret;
 
-	prev_shlvl = ft_atoi(getenv("SHLVL"));
+	env_ret = getenv("SHLVL");
+	if (env_ret)
+		prev_shlvl = ft_atoi(env_ret);
+	else
+		prev_shlvl = 0;
 	new->value = ft_itoa(prev_shlvl + 1);
 	if (prev_shlvl < 0 || prev_shlvl >= INT_MAX)
 	{
 		return (ft_putstr_fd("ERROR : SHLVL too high\n", 2));
 		free(new->value);
+		new->value = NULL;
 	}
 	else
 		return (new->value == NULL);
@@ -34,25 +39,22 @@ t_env_lst	*create_env_lst(char name[])
 {
 	t_env_lst	*new;
 
-	if (!name)
-		return (NULL);
-	new = malloc(sizeof(t_env_lst));
+	new = ft_calloc(1, sizeof(t_env_lst));
 	if (!new)
 		return (NULL);
-	new->name = name;
-	if (!ft_strncmp(name, "SHLVL", 6))
-	{
-		if (handle_shlvl(new))
-		{
-			free(new);
-			return (NULL);
-		}
-	}
+	new->name = ft_substr(name, 0, ft_strlen_c(name, '='));
+	if (new->name && !ft_strncmp(new->name, "SHLVL", 6))
+		handle_shlvl(new);
 	else
-		new->value = ft_strdup(getenv(name));
-	if (!new->value)
 	{
-		free(new);
+		if (!new->name)
+			new->value = NULL;
+		else
+			new->value = ft_strdup(getenv(new->name));
+	}
+	if (!new->name || !new->value)
+	{
+		del_env_entry(new);
 		return (NULL);
 	}
 	new->next = NULL;
@@ -74,39 +76,31 @@ void	env_add_back(t_env_lst **head, t_env_lst *new)
 	}
 }
 
-char	*get_env_val(t_env_lst *env, char name[], int sh)
+char	*get_env_val(t_env_lst *env, char name[])
 {
 	t_env_lst	*current;
 
-	if (sh)
-		name = ft_concat(2, "?", name);
 	current = env;
 	if (!name)
 		return (NULL);
 	while (current)
 	{
 		if (!ft_strncmp(name, current->name, ft_strlen(name) + 1))
-		{
-			if (sh)
-				free(name);
 			return (ft_strdup(current->value));
-		}
 		current = current->next;
 	}
-	if (sh)
-		free(name);
 	return (ft_strdup(""));
 }
 
-size_t	get_env_size(t_env_lst *env_lst)
+size_t	envlist_len(t_env_lst *env)
 {
 	size_t	i;
 
 	i = 0;
-	while (env_lst)
+	while (env)
 	{
 		++i;
-		env_lst = env_lst->next;
+		env = env->next;
 	}
 	return (i);
 }

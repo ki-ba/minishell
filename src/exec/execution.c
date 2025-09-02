@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/27 15:00:27 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:51:11 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,13 @@
 #include "exec.h"
 #include "error.h"
 #include "parsing.h"
-#include "minishell.h"
 #include "env.h"
 #include "lexing.h"
 #include "builtins.h"
 #include "signals.h"
 #include <sys/wait.h>
 
-void	print_cmd(t_list *exec)
-{
-	t_exec_node	*node;
-
-	node = ((t_exec_node *)exec->content);
-	ft_print_arr(node->cmd);
-	ft_printf("END\n");
-}
-
-int	wait_processes(pid_t pid, int err)
+static int	wait_processes(pid_t pid, int err)
 {
 	int	status;
 
@@ -57,7 +47,7 @@ int	wait_processes(pid_t pid, int err)
 	return (err);
 }
 
-int	start_execution(t_minishell *ms)
+static int	start_execution(t_minishell *ms)
 {
 	t_exec_node	*node;
 	t_list		*exec_lst;
@@ -75,36 +65,33 @@ int	start_execution(t_minishell *ms)
 		update_signals(1);
 		update_qm(&ms->error, wait_processes(exec_pipeline(ms), ms->error), 0);
 	}
-	// if (node->io[0] == -1)
-	// 	ft_putendl_fd("minishell: no such file", 2);
 	return (ms->error);
 }
 
 int	interpret_line(t_minishell *ms, char *cmd)
 {
 	t_list		*tokens;
-	int			err;
 
 	update_qm(&ms->error, 0, 1);
-	err = ms->error;
 	tokens = NULL;
 	if (tokenize(&tokens, cmd) != 0)
-		return (ERR_FAIL);
+		return (ERR_ALLOC);
 	free(cmd);
 	if (process_tokens(tokens))
 		return (ERR_PARSING);
-	err = parse_tokens(ms, tokens);
+	ms->error = parse_tokens(ms, tokens);
 	ft_lstclear(&tokens, deltoken);
-	if (err == ERR_ALLOC || !(ms->exec_lst))
-		return (ERR_ALLOC);
-	if (g_signal == 2)
+	if (ms->error == ERR_ALLOC || !(ms->exec_lst))
 	{
-		err = (130);
-		ms->error = 130;
+		if (ms->exec_lst)
+			ft_lstclear(&ms->exec_lst, del_exec_node);
+		return (ERR_ALLOC);
 	}
+	if (g_signal == 2)
+		ms->error = 130;
 	else
-		err = start_execution(ms);
+		ms->error = start_execution(ms);
 	if (ms->exec_lst)
 		ft_lstclear(&ms->exec_lst, del_exec_node);
-	return (err);
+	return (ms->error);
 }

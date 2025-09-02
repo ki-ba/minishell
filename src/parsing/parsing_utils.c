@@ -39,6 +39,11 @@ char	**add_to_array(char **arr, char *str)
 	}
 	arr2[initial_size] = ft_strdup(str);
 	arr2[initial_size + 1] = NULL;
+	if (!arr2[initial_size])
+	{
+		ft_free_arr(arr2);
+		return (NULL);
+	}
 	free(arr);
 	return (arr2);
 }
@@ -61,6 +66,18 @@ static int	is_a_redirect(t_token_type type)
 	return (type >= T_REDIR_IN && type <= T_HD);
 }
 
+/* @brief defines if current token types is an infile or outfile.
+ * @brief used to change the correct case of exec_node->io[] array.
+ */
+int	def_redir_type(t_token_type type)
+{
+	if (type == T_REDIR_IN || type == T_HD)
+		return (INFILE);
+	else if (type == T_REDIR_OUT || type == T_APPEND)
+		return (OUTFILE);
+	return (-1);
+}
+
 /**
 	* @brief attributes a type to every token on the list, then removes quotes
 	* @brief inside tokens.
@@ -69,24 +86,26 @@ static int	is_a_redirect(t_token_type type)
 */
 int	process_tokens(t_list *tokens)
 {
+	t_list	*current;
 	t_token	*token;
 	t_token	*token2;
 
-	while (tokens->next)
+	current = tokens;
+	while (current->next)
 	{
-		token = (t_token *) tokens->content;
-		token2 = (t_token *) tokens->next->content;
+		token = (t_token *) current->content;
+		token2 = (t_token *) current->next->content;
 		if (is_a_redirect(token->type) && is_a_redirect(token2->type))
 			return (ERR_PARSING);
 		if (is_a_redirect(token->type) && token2->type == T_PIPE)
 			return (ERR_PARSING);
 		if (token->type == T_PIPE && token2->type == T_PIPE)
 			return (ERR_PARSING);
-		tokens = tokens->next;
+		current = current->next;
 	}
-	token = (t_token *) tokens->content;
-	if (!tokens->next && (token->type == T_PIPE || is_a_redirect(token->type)))
+	token = (t_token *) current->content;
+	if (!current->next && (token->type == T_PIPE || is_a_redirect(token->type)))
 		return (ERR_PARSING);
 	ft_lstiter(tokens, remove_quotes);
-	return (0);
+	return (SUCCESS);
 }

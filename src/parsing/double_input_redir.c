@@ -6,15 +6,12 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:35 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/27 14:51:53 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 11:01:51 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "data_structures.h"
-#include "error.h"
 #include "signals.h"
 #include "minishell.h"
-#include <errno.h>
 #include <readline/readline.h>
 
 /**
@@ -26,15 +23,19 @@ static char	*create_filename(void)
 	char	*filename;
 
 	random_str = create_random_str(HERE_DOC_LEN);
+	if (!random_str)
+		return (NULL);
 	filename = ft_concat(2, "tmp_", random_str);
 	free(random_str);
 	random_str = NULL;
-	if (!(*filename))
+	if (!filename)
 		return (NULL);
 	while (!access(filename, F_OK))
 	{
 		ft_multifree(2, 0, random_str, filename);
 		random_str = create_random_str(HERE_DOC_LEN);
+		if (!random_str)
+			return (NULL);
 		filename = ft_concat(2, "tmp_", random_str);
 		if (!(filename))
 		{
@@ -54,7 +55,6 @@ static int	open_random_file(int fd[2])
 	char	*filename;
 
 	filename = create_filename();
-	ft_printf_fd(2, "creating %s\n", filename);
 	if (!filename)
 		return (-1);
 	fd[1] = open(filename, O_CREAT | O_WRONLY, 0644);
@@ -65,14 +65,7 @@ static int	open_random_file(int fd[2])
 	return (fd[0] < 0 || fd[1] < 0);
 }
 
-int	ft_max(int a, int b)
-{
-	if (a > b)
-		return (a);
-	return (b);
-}
-
-int	rl_help(void)
+static int	rl_help(void)
 {
 	if (g_signal == SIGINT)
 		rl_done = 1;
@@ -86,7 +79,6 @@ static void	fill_input(int fd, char del[], char *prompt)
 
 	line = NULL;
 	rl_event_hook = rl_help;
-	errno = 0;
 	line = readline(prompt);
 	len = ft_strlen(line);
 	while (g_signal != 2
@@ -95,10 +87,7 @@ static void	fill_input(int fd, char del[], char *prompt)
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 		free(line);
-		errno = 0;
 		line = readline(prompt);
-		if (errno)
-			break ;
 		len = ft_strlen(line);
 	}
 	rl_done = 0;
@@ -121,9 +110,5 @@ int	read_input(char *del)
 		fill_input(fd[1], del, "input> ");
 	if (fd[1] > 0)
 		close (fd[1]);
-	// if (g_signal != 2)
-	// 	fd = open(filename, O_RDONLY);
-	// else
-	// 	fd = open(filename, O_WRONLY | O_TRUNC);
 	return (fd[0]);
 }

@@ -6,17 +6,20 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:04 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/26 15:22:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:44:50 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "data_structures.h"
 #include "libft.h"
 #include "error.h"
 #include "builtins.h"
 #include "env.h"
 
-void	print_cmd(t_list *exec); //TODO remove;
+/**
+* @brief returns the content of the PATH env var
+* @brief as a string. If undefined, returns "." as in "current wd",
+* @brief so that executables are only looked for in the cwd.
+*/
 char	*check_path_exist(t_env_lst *env)
 {
 	t_env_lst	*var;
@@ -27,13 +30,19 @@ char	*check_path_exist(t_env_lst *env)
 		path = ft_strdup(".");
 	else
 	{
-		path = ft_strdup(get_env_val(env, "PATH", 0));
+		path = get_env_val(env, "PATH");
 		if (!path)
 			path = ft_strdup(".");
 	}
 	return (path);
 }
 
+/**
+* @brief returns the first path found to a given executable.
+* @brief looks first in PATH env var, then in current directory.
+* @brief should not be given relative / absolute paths, only
+* @brief simple commands (i.e 'cat').
+*/
 char	*find_path(char *cmd, t_env_lst *env)
 {
 	char	**paths;
@@ -42,16 +51,16 @@ char	*find_path(char *cmd, t_env_lst *env)
 
 	path = check_path_exist(env);
 	paths = ft_split(path, ':');
-	if (!paths)
-		return (NULL);
 	if (path)
 		free(path);
+	if (!paths)
+		return (NULL);
 	i = 0;
 	path = NULL;
 	while (paths[i])
 	{
 		path = ft_concat(3, paths[i], "/", cmd);
-		if (!path || !access(path, F_OK & X_OK))
+		if (!path || access(path, F_OK & X_OK) == 0)
 			break ;
 		free(path);
 		path = NULL;
