@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:00:13 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 19:26:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 20:48:22 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ void	join_in_place(char **s1, char *s2)
 	char	*s3;
 
 	s3 = ft_strjoin(*s1, s2);
-	free(s2);
-	free(*s1);
+	if (s2)
+		free(s2);
+	if (*s1)
+		free(*s1);
 	*s1 = s3;
 }
 
@@ -62,7 +64,6 @@ size_t	get_part_len_metachar(char str[])
 	size_t	tmp;
 
 	i = ft_strlen_c(str, '|');
-	printf("iii= %zu\n", i);
 	tmp = ft_strlen_c(str, '<');
 	if (!is_inquote(str, tmp) && i > tmp && tmp >= 0)
 		i = tmp;

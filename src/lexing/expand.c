@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/02 19:50:16 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 20:49:26 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,8 @@ char	*expand_line(t_minishell *ms, char str[], int option)
 			++i;
 		if (option == METACHAR && (str[i] == '<' || str[i] == '>'))
 			++i;
-		join_in_place(&expanded, next_chunk);
-		if (option == METACHAR)
-			printf("WW i: %zu(%c) ; pl: %zu(%c)\n", i, str[i], part_len, str[part_len + 1]);
+		if (next_chunk)
+			join_in_place(&expanded, next_chunk);
 	}
 	return (expanded);
 }
@@ -72,20 +71,12 @@ static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len, int
 	// TODO:
 	//! echo '$PWD' not working
 	//! echo "bim|bam" | rev not working (double meta char)
-	if (str[i] == '$' || is_metachar(str[i + len]))
+	if ((str[i] == '$' && must_expand(str, i)) || (is_metachar(str[i + len]) && must_expand(str, i + len)))
 	{
 		if (option == DOLLAR && str[i] == '$' && must_expand(str, i))
 			next_chunk = expand_dollar(ms, str, i, len);
 		if (option == METACHAR && is_metachar(str[i + len]) && must_expand(str, i + len))
 			next_chunk = expand_metachar(str, i, len);
-		if (option == METACHAR)
-		{
-			printf("str[len]= %c ; i= %zu ; len= %zu\n", str[i+len], i, len);
-			if (is_metachar(str[i + len]))
-				printf("META\n");
-			if (must_expand(str, i + len))
-				printf("EXPANDABLE\n");
-		}
 	}
 	else
 		next_chunk = ft_substr(str, i, len);
@@ -127,7 +118,6 @@ static char	*expand_metachar(char *str, size_t i, size_t len)
 	size_t	pos;
 
 	pos = i + len;
-	printf("i: %zu(%c) ; len: %zu(%c)\n", i, str[i], len, str[len]);
 	varname = ft_substr(str, i, len);
 	if (!varname)
 		return (NULL);
