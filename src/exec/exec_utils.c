@@ -6,11 +6,10 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 14:52:56 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 20:15:02 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:46:07 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "error.h"
 #include "libft.h"
 #include "data_structures.h"

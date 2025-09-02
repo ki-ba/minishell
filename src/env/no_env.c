@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:15 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 13:02:33 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:43:25 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "data_structures.h"
 #include "env.h"
 #include "error.h"
-#include <limits.h>
 
 static int	check_n_add(t_minishell *ms_data, char *name, char *val)
 {

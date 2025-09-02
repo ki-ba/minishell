@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 17:11:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:51:11 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "exec.h"
 #include "error.h"
 #include "parsing.h"
-#include "minishell.h"
 #include "env.h"
 #include "lexing.h"
 #include "builtins.h"

@@ -6,16 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:13 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 13:24:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:42:40 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "data_structures.h"
 #include "minishell.h"
 #include "env.h"
 #include <limits.h>
-#include <stdlib.h>
 
 static int	handle_shlvl(t_env_lst *new)
 {

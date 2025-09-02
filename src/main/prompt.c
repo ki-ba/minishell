@@ -6,14 +6,12 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 13:00:55 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 14:29:16 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 11:01:07 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include "color.h"
-#include <linux/limits.h>
-#include "signals.h"
 #include "env.h"
 
 static char	*def_cwd(t_minishell *ms_data)

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 20:15:16 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:46:58 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 #include "env.h"
 #include "minishell.h"
 #include "parsing.h"
-#include <unistd.h>
 
 /**
  * @brief cleans memory before exit()ing.

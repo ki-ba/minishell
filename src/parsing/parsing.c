@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:41 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 15:24:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 11:06:15 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "data_structures.h"
 #include "parsing.h"
 #include "error.h"
-#include "exec.h"
 
 /**
  * @brief returns the correct open flags according to the token type.
@@ -65,7 +64,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
  **/
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
-	char **old_cmd;
+	char	**old_cmd;
 
 	if (!node || !token || !exec_list)
 		return (ERR_ALLOC);

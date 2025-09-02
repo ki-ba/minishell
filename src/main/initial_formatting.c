@@ -6,11 +6,10 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:12:18 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 14:28:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 11:00:29 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "data_structures.h"
 #include "error.h"
 #include "minishell.h"
 #include "lexing.h"

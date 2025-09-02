@@ -6,11 +6,10 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:04 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 14:18:36 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:44:50 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "data_structures.h"
 #include "libft.h"
 #include "error.h"
 #include "builtins.h"

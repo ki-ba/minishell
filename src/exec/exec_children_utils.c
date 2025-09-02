@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/02 10:01:42 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:45:34 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,6 @@
 #include "data_structures.h"
 #include "exec.h"
 #include "parsing.h"
-#include <sys/stat.h>
-#include "minishell.h"
-#include <unistd.h>
 
 static void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
 {
