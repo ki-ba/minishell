@@ -6,12 +6,11 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 10:38:09 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/02 12:30:35 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "data_structures.h"
-#include "libft.h"
 #include "ms_utils.h"
 #include "minishell.h"
 #include "error.h"
@@ -21,10 +20,7 @@
 #include "parsing.h"
 #include "signals.h"
 #include <readline/readline.h>
-#include <readline/history.h>
 #include "prompt.h"
-#include "color.h"
-#include <errno.h>
 
 /**
 * @brief displays the correct error msg according to the error code.

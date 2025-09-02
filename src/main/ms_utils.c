@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ms_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/02 10:35:28 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 10:37:40 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/02 12:29:10 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "stddef.h"
 #include "parsing.h"
 #include "env.h"
-#include "ms_utils.h"
 #include "minishell.h"
 
 void	init_ms(t_minishell *ms)
