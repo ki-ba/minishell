@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 14:52:56 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 18:49:43 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 20:15:02 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,13 @@ char	*path_to_cmd(char *cmd[], t_env_lst *env)
 	return (path);
 }
 
-int	define_error(char path[], t_env_lst *env)
+int	define_error(char path[])
 {
 	int			err;
 	struct stat	fi;
 
 	if (!path)
 		return (ERR_ALLOC);
-	(void)env;
 	stat(path, &fi);
 	if (access(path, F_OK))
 		err = 127;

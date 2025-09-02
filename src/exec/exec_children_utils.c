@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 20:09:58 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:01:42 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,18 @@ static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 	{
 		set_child_io(ms, cur, pipe_fd);
 		ft_lstclear_but(&ms->exec_lst, del_exec_node, *cur);
-		if (apply_redirections(cur) < 0)
+		cmd = duplicate_arr(exe->cmd);
+		if (apply_redirections(cur) < 0 || !cmd)
 		{
-			destroy_ms(ms);
-			exit(1);
+			ms->error = 1;
+			if (!cmd)
+				ms->error = ERR_ALLOC;
+			else
+				perror("minishell");
+			clean_exit_child(ms, cur, cmd);
+			exit(ms->error);
 		}
-		cmd = duplicate_arr(exe->cmd); //! LEAK && INV READ
-		if (cmd)
-			ms->error = try_exec(ms, &ms->exec_lst, cmd);
+		ms->error = try_exec(ms, &ms->exec_lst, cmd);
 	}
 	sclose(exe->io[0]);
 	return (pid);

@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:21 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 14:28:48 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:19:40 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char			*format_cmd(t_minishell *ms, char *cmd);
 
 /* MAIN FUNCTIONS */
 
-void				error_handler(t_minishell *ms);
+void			error_handler(t_minishell *ms);
 int				handle_line(t_minishell *ms_data, char cmd[]);
 int				readline_loop(t_minishell *minishell_data);
 

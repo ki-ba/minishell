@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 16:51:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/01 20:15:16 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 	{
 		env_arr = envlist_to_arr(ms->env);
 		path = path_to_cmd(cmd, ms->env);
-		ms->error = define_error(path, ms->env);
+		ms->error = define_error(path);
 		if (path && env_arr && ms->error == 0)
 			execve(path, cmd, env_arr);
 		else if (!path || !env_arr)
