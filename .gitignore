@@ -9,6 +9,7 @@ minishell_tester
 .zzsh_history
 build_lib.sh
 *.a
+src/main/main2.c
 .gdb_history
 .vscode/
 .zzsh_historyzz

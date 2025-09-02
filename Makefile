@@ -18,7 +18,7 @@ LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c expand_check.c toke
 BUILTINS_SRC = echo.c cd.c pwd.c export.c unset.c env.c exit.c export_utils.c cd_utils.c cd_symlink.c
 PARSING_SRC = parsing.c parsing_utils.c exec_node.c double_input_redir.c
 EXEC_SRC = builtins_call.c execute_pipeline.c exec_utils.c exec_children_utils.c execution.c
-MAIN_SRC = initial_formatting.c main.c prompt.c debug.c
+MAIN_SRC = initial_formatting.c main.c prompt.c debug.c ms_utils.c
 SIGNALS_SRC = signals.c
 
 ENV_SRC_DIR = env/
@@ -43,7 +43,7 @@ P_MAIN = $(addprefix $(MAIN_DIR), $(MAIN_SRC))
 SRC = $(P_ENV) $(P_HISTORY) $(P_LEXING) $(P_BUILTINS) $(P_PARSING) $(P_EXEC) $(P_SIGNALS) $(P_MAIN)
 TEST_SRC = test.c
 LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
-R_INCLUDES = minishell.h color.h exec.h parsing.h lexing.h history.h signals.h builtins.h data_structures.h env.h error.h prompt.h
+R_INCLUDES = minishell.h color.h exec.h parsing.h lexing.h history.h signals.h builtins.h data_structures.h env.h error.h prompt.h ms_utils.h
 INCLUDES = $(addprefix $(INC_DIR), $(R_INCLUDES))
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:%.c=%.o)) 
 TOBJ = $(filter-out $(OBJ_DIR)main.o, $(OBJ))
