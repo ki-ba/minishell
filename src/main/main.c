@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 12:30:35 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 16:49:51 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,15 @@ int	handle_line(t_minishell *ms, char cmd[])
 		if (!formatted)
 			return (ERR_FAIL);
 		if (!ft_strncmp(formatted, "\0", 1))
+		{
+			free(formatted);
 			return (ms->error);
+		}
 		ms->error = interpret_line(ms, formatted);
 		return (ms->error);
 	}
+	else if (cmd)
+		free(cmd);
 	return (ms->error);
 }
 
