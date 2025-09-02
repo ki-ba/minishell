@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 19:56:38 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 12:24:55 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@ static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len)
 			--len;
 		}
 	}
-	if (str[i] == '$' && must_expand(str, i))
-		next_chunk = expand_dollar(ms, str, i, len);
-	else if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
+	if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
 		next_chunk = expand_metachar(str, i, len);
+	else if (str[i] == '$' && must_expand(str, i))
+		next_chunk = expand_dollar(ms, str, i, len);
 	else
 		next_chunk = ft_substr(str, i, len);
 	return (next_chunk);
