@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 10:51:11 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 17:11:05 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "builtins.h"
 #include "signals.h"
 #include <sys/wait.h>
+#include "minishell.h"
 
 static int	wait_processes(pid_t pid, int err)
 {

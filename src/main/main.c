@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 12:30:35 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 17:11:51 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	handle_line(t_minishell *ms, char cmd[])
 			return (ERR_FAIL);
 		if (!ft_strncmp(formatted, "\0", 1))
 			return (ms->error);
+		// ft_printf("%s\n", formatted);
 		ms->error = interpret_line(ms, formatted);
 		return (ms->error);
 	}
@@ -77,6 +78,7 @@ int	readline_loop(t_minishell *ms_data)
 	g_signal = 0;
 	while (ms_data->error != ERR_ALLOC && !(ms_data->is_exit))
 	{
+		ms_data->interface = 0;
 		ft_lstclear(&ms_data->exec_lst, del_exec_node);
 		prompt = create_prompt(ms_data);
 		if (!prompt)
@@ -104,7 +106,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_ms(&ms_data);
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
 	{
-		ft_putstr_fd("error : no redirecting/piping pls\n", 2);
+		ft_putstr_fd("error : no redirecting/piping/args pls\n", 2);
 		exit(1);
 	}
 	(void)argv;

@@ -1,5 +1,6 @@
 minishell
 .unity_obj/
+.gitignore
 runtest
 .cache
 .build

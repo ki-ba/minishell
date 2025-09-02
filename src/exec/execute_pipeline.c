@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 10:46:58 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 17:05:57 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 	char		**env_arr;
 
 	ms->error = 127;
-	if (is_builtin(cmd))
+	if (ft_strlen(cmd[0]) != 0 && is_builtin(cmd))
 		ms->error = call_cmd(ms, cmd);
-	else
+	else if (ft_strlen(cmd[0]) != 0)
 	{
 		env_arr = envlist_to_arr(ms->env);
 		path = path_to_cmd(cmd, ms->env);
@@ -59,6 +59,8 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 		if (ms->error == 127)
 			ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	}
+	else if (ft_strlen(cmd[0]) == 0)
+		ft_printf_fd(2, "minishell : \"\" : command not found\n", cmd[0]);
 	clean_exit_child(ms, exec, cmd);
 	exit(ms->error);
 }
