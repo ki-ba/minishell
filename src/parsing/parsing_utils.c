@@ -86,23 +86,25 @@ int	def_redir_type(t_token_type type)
 */
 int	process_tokens(t_list *tokens)
 {
+	t_list	*current;
 	t_token	*token;
 	t_token	*token2;
 
-	while (tokens->next)
+	current = tokens;
+	while (current->next)
 	{
-		token = (t_token *) tokens->content;
-		token2 = (t_token *) tokens->next->content;
+		token = (t_token *) current->content;
+		token2 = (t_token *) current->next->content;
 		if (is_a_redirect(token->type) && is_a_redirect(token2->type))
 			return (ERR_PARSING);
 		if (is_a_redirect(token->type) && token2->type == T_PIPE)
 			return (ERR_PARSING);
 		if (token->type == T_PIPE && token2->type == T_PIPE)
 			return (ERR_PARSING);
-		tokens = tokens->next;
+		current = current->next;
 	}
-	token = (t_token *) tokens->content;
-	if (!tokens->next && (token->type == T_PIPE || is_a_redirect(token->type)))
+	token = (t_token *) current->content;
+	if (!current->next && (token->type == T_PIPE || is_a_redirect(token->type)))
 		return (ERR_PARSING);
 	ft_lstiter(tokens, remove_quotes);
 	return (SUCCESS);
