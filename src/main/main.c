@@ -104,7 +104,7 @@ int	main(int argc, char *argv[], char *envp[])
 	t_minishell	ms_data;
 
 	init_ms(&ms_data);
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1)
+	if (!DEBUG && (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO) || argc > 1))
 	{
 		ft_putstr_fd("error : no redirecting/piping/args pls\n", 2);
 		exit(1);

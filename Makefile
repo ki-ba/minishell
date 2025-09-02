@@ -2,7 +2,7 @@ DEPS = $(OBJ:.o=.d)
 NAME = minishell
 DEBUG = 1
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -D DEBUG
 CPPFLAGS = -Iinc/ -Ilib/libft/inc -MMD -MP
 
 ###### SOURCE AND OBJ #####

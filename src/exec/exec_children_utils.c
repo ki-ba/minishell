@@ -51,8 +51,8 @@ static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 			ms->error = 1;
 			if (!cmd)
 				ms->error = ERR_ALLOC;
-			else
-				perror("zidf");
+			// else
+			// 	perror("zidf");
 			clean_exit_child(ms, cur, cmd);
 			exit(ms->error);
 		}
