@@ -65,7 +65,7 @@ static int	handle_file(t_exec_node *node, t_token *token, t_token_type redir)
  **/
 static int	handle_cmd(t_exec_node *node, t_token *token, t_list **exec_list)
 {
-	char **old_cmd;
+	char	**old_cmd;
 
 	if (!node || !token || !exec_list)
 		return (ERR_ALLOC);
