@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:12:18 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 11:00:29 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 17:48:31 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ static char	*trim_cmd(int *err, char *cmd)
 char	*format_cmd(t_minishell *ms, char *cmd)
 {
 	char	*expanded;
+	char	*tmp;
 
 	if (!cmd)
 		return (NULL);
@@ -62,8 +63,13 @@ char	*format_cmd(t_minishell *ms, char *cmd)
 		ms->error = ERR_PARSING;
 		return (NULL);
 	}
-	expanded = expand_line(ms, cmd);
+	tmp = expand_line(ms, cmd, DOLLAR);
 	free(cmd);
+	if (!tmp)
+		return (NULL);
+	expanded = expand_line(ms, tmp, METACHAR);
+	printf("TMP= [%s]\nEXPA= [%s]\n", tmp, expanded);
+	free(tmp);
 	expanded = trim_cmd(&ms->error, expanded);
 	return (expanded);
 }
