@@ -6,14 +6,15 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/17 15:08:47 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/29 06:59:34 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 16:46:49 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DATA_STRUCTURES_H
 # define DATA_STRUCTURES_H
 
-typedef struct s_list	t_list;
+# include "libft.h"
+
 /* note : a TOKEN_FILE can only be after a redirection.
  * in other cases, it is considered a TOKEN_STR,
  * even when it is supposed to refer to a file
