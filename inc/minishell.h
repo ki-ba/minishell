@@ -33,10 +33,6 @@ void			error_handler(t_minishell *ms);
 int				handle_line(t_minishell *ms_data, char cmd[]);
 int				readline_loop(t_minishell *minishell_data);
 
-/* DEBUG */ // TODO: REMOVE THESE
-
-t_exec_node		getnode(t_list *exec_lst);
-void			print_exec_lst(t_list *exec_lst);
 # ifndef HERE_DOC_LEN
 #  define HERE_DOC_LEN 8
 # endif

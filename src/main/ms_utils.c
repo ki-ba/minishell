@@ -1,39 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   debug.c                                            :+:      :+:    :+:   */
+/*   ms_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kbarru <kbarru@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/19 16:27:50 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/19 16:28:20 by kbarru           ###   ########lyon.fr   */
+/*   Created: 2025/09/02 10:35:28 by kbarru            #+#    #+#             */
+/*   Updated: 2025/09/02 10:37:40 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "data_structures.h"
+#include "stddef.h"
+#include "parsing.h"
+#include "env.h"
+#include "ms_utils.h"
 #include "minishell.h"
 
-// TODO: REMOVE THIS FILE
-
-t_exec_node	getnode(t_list *exec_lst)
+void	init_ms(t_minishell *ms)
 {
-	t_exec_node	node;
-
-	node = *((t_exec_node *)(exec_lst->content));
-	return (node);
+	ms->interface = 0;
+	ms->last_cmd = NULL;
+	ms->error = 0;
+	ms->env = NULL;
+	ms->cur_wd = NULL;
+	ms->exec_lst = NULL;
+	ms->is_exit = 0;
 }
 
-void	print_exec_lst(t_list *exec_lst)
+void	destroy_ms(t_minishell *ms)
 {
-	t_list		*current;
-	t_exec_node	node;
-
-	current = exec_lst;
-	while (current)
-	{
-		node = getnode(current);
-		ft_print_arr(node.cmd);
-		ft_printf("io : %d ; %d\n", node.io[0], node.io[1]);
-		current = current->next;
-	}
+	sclose(ms->interface);
+	free(ms->last_cmd);
+	destroy_env_lst(&ms->env);
+	free(ms->cur_wd);
 }

@@ -6,12 +6,13 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 19:43:32 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 10:38:09 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "data_structures.h"
 #include "libft.h"
+#include "ms_utils.h"
 #include "minishell.h"
 #include "error.h"
 #include "env.h"
@@ -98,25 +99,6 @@ int	readline_loop(t_minishell *ms_data)
 		error_handler(ms_data);
 	}
 	return (ms_data->error);
-}
-
-void	init_ms(t_minishell *ms)
-{
-	ms->interface = 0;
-	ms->last_cmd = NULL;
-	ms->error = 0;
-	ms->env = NULL;
-	ms->cur_wd = NULL;
-	ms->exec_lst = NULL;
-	ms->is_exit = 0;
-}
-
-void	destroy_ms(t_minishell *ms)
-{
-	sclose(ms->interface);
-	free(ms->last_cmd);
-	destroy_env_lst(&ms->env);
-	free(ms->cur_wd);
 }
 
 int	main(int argc, char *argv[], char *envp[])

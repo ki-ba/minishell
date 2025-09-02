@@ -15,7 +15,6 @@
 #include "lexing.h"
 #include "parsing.h"
 
-// TODO document this function
 static char	*trim_cmd(int *err, char *cmd)
 {
 	char	*trim;

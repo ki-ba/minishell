@@ -13,6 +13,7 @@
 #include "error.h"
 #include "libft.h"
 #include "data_structures.h"
+#include "ms_utils.h"
 #include "exec.h"
 #include "signals.h"
 #include "env.h"

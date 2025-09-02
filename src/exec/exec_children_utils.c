@@ -20,13 +20,15 @@ static void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
 {
 	if ((*cur)->next)
 	{
-		dup2(pipe_fd[1], STDOUT_FILENO);
+		if (dup2(pipe_fd[1], STDOUT_FILENO))
+			ms->error = ERR_FAIL;
 		sclose(pipe_fd[0]);
 		sclose(pipe_fd[1]);
 	}
 	if (ms->interface)
 	{
-		dup2(ms->interface, STDIN_FILENO);
+		if (dup2(ms->interface, STDIN_FILENO))
+			ms->error = ERR_FAIL;
 		sclose(ms->interface);
 	}
 }
@@ -44,7 +46,7 @@ static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 		set_child_io(ms, cur, pipe_fd);
 		ft_lstclear_but(&ms->exec_lst, del_exec_node, *cur);
 		cmd = duplicate_arr(exe->cmd);
-		if (apply_redirections(cur) < 0 || !cmd)
+		if (ms->error == ERR_FAIL || apply_redirections(cur) < 0 || !cmd)
 		{
 			ms->error = 1;
 			if (!cmd)
