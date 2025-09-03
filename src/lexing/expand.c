@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/03 13:21:02 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/03 14:24:16 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "env.h"
 
 static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len);
-static char	*expand_metachar(char *str, size_t i, size_t len);
+static char	*expand_metachar(char *str, size_t *i, size_t len);
 
 char	*expand_line_dollar(t_minishell *ms, char str[], char *expanded)
 {
@@ -49,15 +49,15 @@ char	*expand_line_metachar(char str[], char *expanded)
 	while (str[i])
 	{
 		part_len = get_part_len_metachar(&str[i]);
-		if (is_metachar(str[i + part_len]) && must_expand(str, i + part_len))
-			next_chunk = expand_metachar(str, i, part_len);
+		if (is_metachar(str[i + part_len]))
+			next_chunk = expand_metachar(str, &i, part_len);
 		else
 			next_chunk = ft_substr(str, i, part_len);
 		i += part_len;
 		if (is_metachar(str[i]))
 			++i;
-		if (str[i] == '<' || str[i] == '>')
-			++i;
+		// if (i > 0 && str[i - 1] != '|' && (str[i] == '<' || str[i] == '>'))
+		// 	++i;
 		join_in_place(&expanded, next_chunk);
 	}
 	return (expanded);
@@ -107,21 +107,24 @@ static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len)
 	return (next_chunk);
 }
 
-static char	*expand_metachar(char *str, size_t i, size_t len)
+static char	*expand_metachar(char *str, size_t *i, size_t len)
 {
 	char	*varname;
 	char	*next_chunk;
 	char	meta[3];
 	size_t	pos;
 
-	pos = i + len;
-	varname = ft_substr(str, i, len);
+	pos = *i + len;
+	varname = ft_substr(str, *i, len);
 	if (!varname)
 		return (NULL);
 	ft_bzero(meta, 3);
 	meta[0] = str[pos];
 	if (str[pos] != '|' && str[pos] == str[pos + 1])
+	{
 		meta[1] = meta[0];
+		(*i) = (*i) + 1;
+	}
 	if (is_inquote(str, pos))
 		next_chunk = ft_concat(2, varname, meta);
 	else
