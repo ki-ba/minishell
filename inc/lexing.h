@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 12:17:03 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 17:16:15 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/03 11:15:18 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ char			*expand_line(t_minishell *ms, char str[], int option);
 /* EXPAND UTILS */
 
 void			join_in_place(char **s1, char *s2);
-size_t			get_part_len(char str[], int option);
+size_t			get_part_len_dollar(char str[]);
+size_t			get_part_len_metachar(char str[]);
+// size_t			get_part_len(char str[], int option);
 
 /* EXPAND CHECK */
 

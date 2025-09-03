@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/02 20:49:26 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/03 11:43:41 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,69 +18,66 @@
 
 static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len);
 static char	*expand_metachar(char *str, size_t i, size_t len);
-static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len, int option);
 
-char	*expand_line(t_minishell *ms, char str[], int option)
+char	*expand_line_dollar(t_minishell *ms, char str[], char *expanded)
 {
 	size_t	i;
 	size_t	part_len;
-	char	*expanded;
 	char	*next_chunk;
 
 	i = 0;
+	while (str[i])
+	{
+		part_len = get_part_len_dollar(&str[i]);
+		if (str[i] == '$' && must_expand(str, i))
+			next_chunk = expand_dollar(ms, str, i, part_len);
+		else
+			next_chunk = ft_substr(str, i, part_len);
+		i += part_len;
+		join_in_place(&expanded, next_chunk);
+	}
+	return (expanded);
+}
+
+char	*expand_line_metachar(char str[], char *expanded)
+{
+	size_t	i;
+	size_t	part_len;
+	char	*next_chunk;
+
+	i = 0;
+	while (str[i])
+	{
+		part_len = get_part_len_metachar(&str[i]);
+		if (is_metachar(str[i + part_len]) && must_expand(str, i + part_len))
+			next_chunk = expand_metachar(str, i, part_len);
+		else
+			next_chunk = ft_substr(str, i, part_len);
+		i += part_len;
+		if (is_metachar(str[i]))
+			++i;
+		if (str[i] == '<' || str[i] == '>')
+			++i;
+		join_in_place(&expanded, next_chunk);
+	}
+	return (expanded);
+}
+
+char	*expand_line(t_minishell *ms, char str[], int option)
+{
+	char	*expanded;
+
 	expanded = ft_calloc(1, sizeof(char));
 	if (!expanded)
 	{
 		ms->error = ERR_ALLOC;
 		return (NULL);
 	}
-	while (str[i])
-	{
-		part_len = get_part_len(&str[i], option);
-		next_chunk = set_chunk_val(ms, str, i, part_len, option);
-		i += part_len;
-		if (option == METACHAR && is_metachar(str[i]))
-			++i;
-		if (option == METACHAR && (str[i] == '<' || str[i] == '>'))
-			++i;
-		if (next_chunk)
-			join_in_place(&expanded, next_chunk);
-	}
+	if (option == DOLLAR)
+		return (expand_line_dollar(ms, str, expanded));
+	if (option == METACHAR)
+		return (expand_line_metachar(str, expanded));
 	return (expanded);
-}
-
-static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len, int option)
-{
-	char		*next_chunk;
-
-	// if (option == METACHAR && must_expand(str, i) && i == 0 && is_metachar(str[i]))
-	// {
-	// 	next_chunk = ft_strdup(" ");
-	// 	return (next_chunk);
-	// }
-	// if (option == METACHAR && i == 0 && is_metachar(str[i]))
-	// {
-	// 	++i;
-	// 	--len;
-	// 	if (str[i] == '<' || str[i] == '>')
-	// 	{
-	// 		++i;
-	// 		--len;
-	// 	}
-	// }
-	// TODO:
-	//! echo '$PWD' not working
-	//! echo "bim|bam" | rev not working (double meta char)
-	if ((str[i] == '$' && must_expand(str, i)) || (is_metachar(str[i + len]) && must_expand(str, i + len)))
-	{
-		if (option == DOLLAR && str[i] == '$' && must_expand(str, i))
-			next_chunk = expand_dollar(ms, str, i, len);
-		if (option == METACHAR && is_metachar(str[i + len]) && must_expand(str, i + len))
-			next_chunk = expand_metachar(str, i, len);
-	}
-	else
-		next_chunk = ft_substr(str, i, len);
-	return (next_chunk);
 }
 
 static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len)
@@ -91,7 +88,7 @@ static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len)
 
 	varname = ft_substr(str, i + 1, len - (len > 1));
 	if (!varname)
-	return (NULL);
+		return (NULL);
 	if (str[i + 1] == '?')
 		next_chunk = ft_itoa(ms->error);
 	else if (ft_isalnum(str[i + 1]) || str[i + 1] == '_' || str[i + 1] == '?')

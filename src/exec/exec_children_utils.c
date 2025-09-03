@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/02 20:54:46 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/03 11:47:38 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,6 @@ static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 			ms->error = 1;
 			if (!cmd)
 				ms->error = ERR_ALLOC;
-			// else
-			// 	perror("zidf");
 			clean_exit_child(ms, cur, cmd);
 			exit(ms->error);
 		}

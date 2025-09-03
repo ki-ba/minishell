@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 20:59:23 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/03 10:46:52 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 			ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	}
 	else if (ft_strlen(cmd[0]) == 0)
-		ft_printf_fd(2, "minishell : \"\" : command not found\n", cmd[0]);
+		ft_printf_fd(2, "minishell : '' : command not found\n", cmd[0]);
 	clean_exit_child(ms, exec, cmd);
 	exit(ms->error);
 }

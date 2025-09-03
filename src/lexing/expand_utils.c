@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:00:13 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 20:48:22 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/03 11:14:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ size_t	get_part_len_metachar(char str[])
 	return (i);
 }
 
-size_t	get_part_len(char str[], int option)
-{
-	size_t	i;
+// size_t	get_part_len(char str[], int option)
+// {
+// 	size_t	i;
 
-	if (option == DOLLAR)
-		i = get_part_len_dollar(str);
-	if (option == METACHAR)
-		i = get_part_len_metachar(str);
-	return (i);
-}
+// 	if (option == DOLLAR)
+// 		i = get_part_len_dollar(str);
+// 	if (option == METACHAR)
+// 		i = get_part_len_metachar(str);
+// 	return (i);
+// }
