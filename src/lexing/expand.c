@@ -37,7 +37,7 @@ char	*expand_line(t_minishell *ms, char str[])
 	while (str[i])
 	{
 		part_len = get_part_len(&str[i]);
-		next_chunk = set_chunk_val(ms, str, i, part_len);
+		next_chunk = set_chunk_val(ms, str, i, part_len); //FIXME: return value of set_chunk_val is not tested (NULL undetected)
 		i += part_len;
 		if (!is_inquote(str, i) && is_metachar(str[i]))
 			++i;

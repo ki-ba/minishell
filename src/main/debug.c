@@ -30,6 +30,7 @@ void	print_arr_oneline(char **arr)
 		++i;
 	}
 }
+
 void	print_tokens(t_list *tokens)
 {
 	t_list	*current;
