@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:04 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/03 10:06:27 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/03 10:06:23 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,35 +38,30 @@ char	*check_path_exist(t_env_lst *env)
 }
 
 /**
-* @brief returns the first path found to a given executable.
-* @brief looks first in PATH env var, then in current directory.
-* @brief should not be given relative / absolute paths, only
-* @brief simple commands (i.e 'cat').
-*/
-char	*find_path(char *cmd, t_env_lst *env)
+ * @brief takes a list of possible paths and a cmd, and returns the first
+ * possible path that leads to an existing and executable file within the
+ * directories listed in `paths`.
+ * @return the first correct path if found
+ * @return an empty string if no path is found
+ * @return NULL in case of error.
+ */
+char	*find_executable(char	**paths, char *cmd)
 {
-	char	**paths;
-	char	*path;
 	size_t	i;
+	char	*path;
 
-	path = check_path_exist(env);
-	paths = ft_split(path, ':');
-	if (path)
-		free(path);
-	if (!paths)
-		return (NULL);
 	i = 0;
-	path = NULL;
 	while (paths[i])
 	{
 		path = ft_concat(3, paths[i], "/", cmd);
-		if (!path || access(path, F_OK & X_OK) == 0)
+		if (!path)
+			return (NULL);
+		else if (access(path, F_OK & X_OK) == 0)
 			break ;
 		free(path);
 		path = NULL;
-		i++;
+		++i;
 	}
-	ft_free_arr(paths);
 	if (!path)
 		return (ft_strdup(""));
 	return (path);

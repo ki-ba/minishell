@@ -35,27 +35,43 @@ int	clean_exit_child(t_minishell *ms, t_list **node, char **cmd)
 	return (ms->error);
 }
 
+//NOTE: commented part looks to be already covered by define_error() in try_exec().
+int	prepare_exec(t_minishell *ms, t_list **exec, char **cmd)
+{
+	t_exec_node	*node;
+
+	node = ((t_exec_node *)(*exec)->content);
+	node->env_arr = envlist_to_arr(ms->env);
+	if (!node->env_arr)
+		return (ERR_ALLOC);
+	node->path = path_to_cmd(cmd, ms->env);
+	if (!node->path)
+		ms->error = ERR_ALLOC;
+	// if (ft_strlen(node->path) == 0)
+	// 	ms->error = 0;
+	return (ms->error);
+}
+
 /** tries to execute the current exec node. determines a path to the wanted
  * command and creates an env. array, then execve. exits on failure.
  */
 int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 {
-	char		*path;
-	char		**env_arr;
+	t_exec_node	*node;
 
+	node = ((t_exec_node *)(*exec)->content);
 	ms->error = 127;
 	if (ft_strlen(cmd[0]) != 0 && is_builtin(cmd))
 		ms->error = call_cmd(ms, cmd);
 	else if (ft_strlen(cmd[0]) != 0)
 	{
-		env_arr = envlist_to_arr(ms->env);
-		path = path_to_cmd(cmd, ms->env);
-		ms->error = define_error(path);
-		if (path && env_arr && ms->error == 0)
-			execve(path, cmd, env_arr);
-		else if (!path || !env_arr)
+		prepare_exec(ms, exec, cmd);
+		ms->error = define_error(node->path);
+		if (node->path && node->env_arr && ms->error == 0)
+			execve(node->path, cmd, node->env_arr);
+		else if (!node->path || !node->env_arr)
 			ms->error = ERR_ALLOC;
-		ft_multifree(1, 1, path, env_arr);
+		ft_multifree(1, 1, node->path, node->env_arr);
 		if (ms->error == 127)
 			ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	}

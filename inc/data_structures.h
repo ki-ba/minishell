@@ -58,6 +58,8 @@ typedef struct s_token
 typedef struct s_exec_node
 {
 	char				**cmd;
+	char				*path;
+	char				**env_arr;
 	int					io[2];
 	int					status;
 }						t_exec_node;

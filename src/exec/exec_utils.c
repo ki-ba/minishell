@@ -40,14 +40,34 @@ int	apply_redirections(t_list **cur_node)
 	return (err);
 }
 
+/**
+* @brief returns the first path found to a given executable.
+* @brief looks first in PATH env var, then in current directory.
+* @brief if `cmd` contains a / (its a relative / absolute path),
+* @brief do not look in PATH and simply return the path which was given.
+* @brief
+*/
 char	*path_to_cmd(char *cmd[], t_env_lst *env)
 {
+	char	**paths;
 	char	*path;
 
 	if (ft_strnstr(cmd[0], "/", ft_strlen(cmd[0])))
 		path = ft_strdup(cmd[0]);
 	else
-		path = find_path(cmd[0], env);
+	{
+		path = check_path_exist(env);
+		if (!path)
+			return (NULL);
+		paths = ft_split(path, ':');
+		if (!paths)
+		{
+			free(path);
+			return (NULL);
+		}
+		path = find_executable(paths, cmd[0]);
+		ft_free_arr(paths);
+	}
 	return (path);
 }
 
