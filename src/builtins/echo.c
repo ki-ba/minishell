@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:04:31 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/29 07:06:14 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/03 13:24:09 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,6 @@ int	ft_echo(char **cmd, t_minishell *ms_data)
 		++i;
 	}
 	if (opt == 1)
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 	return (SUCCESS);
 }
