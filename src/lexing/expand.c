@@ -56,8 +56,6 @@ char	*expand_line_metachar(char str[], char *expanded)
 		i += part_len;
 		if (is_metachar(str[i]))
 			++i;
-		// if (i > 0 && str[i - 1] != '|' && (str[i] == '<' || str[i] == '>'))
-		// 	++i;
 		join_in_place(&expanded, next_chunk);
 	}
 	return (expanded);

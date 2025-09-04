@@ -35,7 +35,6 @@ int	clean_exit_child(t_minishell *ms, t_list **node, char **cmd)
 	return (ms->error);
 }
 
-//NOTE: commented part looks to be already covered by define_error() in try_exec().
 int	prepare_exec(t_minishell *ms, t_list **exec, char **cmd)
 {
 	t_exec_node	*node;
@@ -47,8 +46,6 @@ int	prepare_exec(t_minishell *ms, t_list **exec, char **cmd)
 	node->path = path_to_cmd(cmd, ms->env);
 	if (!node->path)
 		ms->error = ERR_ALLOC;
-	// if (ft_strlen(node->path) == 0)
-	// 	ms->error = 0;
 	return (ms->error);
 }
 
