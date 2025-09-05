@@ -65,6 +65,7 @@ char	*path_to_cmd(char *cmd[], t_env_lst *env)
 			free(path);
 			return (NULL);
 		}
+		free(path);
 		path = find_executable(paths, cmd[0]);
 		ft_free_arr(paths);
 	}

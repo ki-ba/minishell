@@ -38,6 +38,24 @@ t_bool	is_inquote(char *str, size_t pos)
 	return ((sq % 2) + (dq % 2) % 2);
 }
 
+static t_bool	look_for_hd(char str[], size_t pos)
+{
+	size_t	i;
+	size_t	n;
+
+	i = 0;
+	n = 0;
+	while (i < pos)
+	{
+		if (str[i] == '<')
+			++n;
+		else if (!ft_iswhitespace(str[i]))
+			n = 0;
+		++i;
+	}
+	return (n == 2);
+}
+
 t_bool	must_expand(char str[], size_t pos)
 {
 	char	quote;
@@ -53,7 +71,7 @@ t_bool	must_expand(char str[], size_t pos)
 			quote = '\0';
 		++i;
 	}
-	return (quote != '\'');
+	return (!look_for_hd(str, pos) && quote != '\'');
 }
 
 int	check_meta_validity(char *str)

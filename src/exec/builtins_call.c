@@ -31,8 +31,11 @@ char	*check_path_exist(t_env_lst *env)
 	else
 	{
 		path = get_env_val(env, "PATH");
-		if (!path)
+		if (path && ft_strlen(path) == 0)
+		{
+			free(path);
 			path = ft_strdup(".");
+		}
 	}
 	return (path);
 }
