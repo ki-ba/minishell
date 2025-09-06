@@ -20,7 +20,8 @@ enum e_error
 	ERR_PARSING,
 	ERR_ALLOC,
 	ERR_PRINT,
-	ERR_FAIL
+	ERR_FAIL,
+	ERR_DUP
 };
 
 #endif

@@ -49,7 +49,7 @@ static t_bool	look_for_hd(char str[], size_t pos)
 	{
 		if (str[i] == '<')
 			++n;
-		else if (!ft_iswhitespace(str[i]))
+		else if (str[i] != '\"' && !ft_iswhitespace(str[i]))
 			n = 0;
 		++i;
 	}

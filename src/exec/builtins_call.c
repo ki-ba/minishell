@@ -108,6 +108,6 @@ int	call_cmd(t_minishell *ms_data, char **cmd)
 		err = ft_env(cmd, ms_data);
 	if (err > 300 && err != ERR_ALLOC)
 		err -= 300;
-	update_qm(&ms_data->error, err, 0);
+	update_qm(ms_data, err, 0);
 	return (err);
 }
