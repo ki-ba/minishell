@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/03 10:46:52 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 11:19:12 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "env.h"
 #include "minishell.h"
 #include "parsing.h"
+#include <readline/readline.h>
 
 /**
  * @brief cleans memory before exit()ing.
@@ -27,6 +28,7 @@
  */
 int	clean_exit_child(t_minishell *ms, t_list **node, char **cmd)
 {
+	rl_clear_history();
 	ft_lstdelone(*node, del_exec_node);
 	destroy_ms(ms);
 	if (ms->error == ERR_ALLOC)
