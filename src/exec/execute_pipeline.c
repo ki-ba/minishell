@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/06 19:03:19 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 19:12:20 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@
  */
 int	clean_exit_child(t_minishell *ms, t_list **node, char **cmd)
 {
-
 	rl_clear_history();
 	ft_lstdelone(*node, del_exec_node);
 	destroy_ms(ms);

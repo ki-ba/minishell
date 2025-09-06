@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/06 19:03:27 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 19:12:07 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 static void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
 {
-	
 	if ((*cur)->next)
 	{
 		if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
