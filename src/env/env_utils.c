@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:13 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/06 13:31:15 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 14:13:59 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,12 @@ char	*get_env_val(t_env_lst *env, char name[])
 	while (current)
 	{
 		if (!ft_strncmp(name, current->name, ft_strlen(name) + 1))
-			return (ft_strdup(current->value));
+		{
+			if (current->value)
+				return (ft_strdup(current->value));
+			else
+				return (ft_strdup(""));
+		}
 		current = current->next;
 	}
 	return (ft_strdup(""));

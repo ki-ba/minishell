@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/01 14:52:56 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/03 10:06:51 by kbarru           ###   ########lyon.fr   */
+/*   Updated: 2025/09/06 16:33:49 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 int	sclose(int fd)
 {
-	if (fd >= 0 && fd <= 2)
+	if (fd <= 2)
 		return (1);
 	else
 		return (close(fd));

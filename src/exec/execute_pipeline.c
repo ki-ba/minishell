@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/06 11:51:33 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 16:54:10 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,13 @@ int	exec_unique_cmd(t_minishell *ms_data, t_list **exec_lst)
 	{
 		dup2(exe->io[1], STDOUT_FILENO);
 		if (exe->io[1] != STDOUT_FILENO && exe->io[1] > 0)
-			close(exe->io[1]);
+			sclose(exe->io[1]);
 	}
 	err = call_cmd(ms_data, exe->cmd);
 	if (exe->io[1] != STDOUT_FILENO)
 		dup2(saved, STDOUT_FILENO);
 	if (saved > STDOUT_FILENO)
-		close (saved);
+		sclose (saved);
 	return (err);
 }
 
@@ -121,6 +121,6 @@ pid_t	exec_pipeline(t_minishell *ms)
 		current = current->next;
 	}
 	if (pid == -1)
-		ft_printf_fd(2, "error : failed to create process");
+		ft_printf_fd(2, "error : failed to create process\n");
 	return (pid);
 }
