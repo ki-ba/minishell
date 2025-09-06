@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/03 14:24:16 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 13:33:59 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,18 @@ char	*expand_line_dollar(t_minishell *ms, char str[], char *expanded)
 			next_chunk = expand_dollar(ms, str, i, part_len);
 		else
 			next_chunk = ft_substr(str, i, part_len);
+		if (!next_chunk)
+		{
+			ms->error = ERR_ALLOC;
+			return (NULL);
+		}
 		i += part_len;
 		join_in_place(&expanded, next_chunk);
 	}
 	return (expanded);
 }
 
-char	*expand_line_metachar(char str[], char *expanded)
+char	*expand_line_metachar(t_minishell *ms, char str[], char *expanded)
 {
 	size_t	i;
 	size_t	part_len;
@@ -53,6 +58,11 @@ char	*expand_line_metachar(char str[], char *expanded)
 			next_chunk = expand_metachar(str, &i, part_len);
 		else
 			next_chunk = ft_substr(str, i, part_len);
+		if (!next_chunk)
+		{
+			ms->error = ERR_ALLOC;
+			return (NULL);
+		}
 		i += part_len;
 		if (is_metachar(str[i]))
 			++i;
@@ -74,7 +84,7 @@ char	*expand_line(t_minishell *ms, char str[], int option)
 	if (option == DOLLAR)
 		return (expand_line_dollar(ms, str, expanded));
 	if (option == METACHAR)
-		return (expand_line_metachar(str, expanded));
+		return (expand_line_metachar(ms, str, expanded));
 	return (expanded);
 }
 

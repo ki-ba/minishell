@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/06 11:58:03 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 13:36:54 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 			clean_exit_child(ms, cur, cmd);
 			exit(ms->error);
 		}
-
 		ms->error = try_exec(ms, &ms->exec_lst, cmd);
 	}
 	sclose(exe->io[0]);

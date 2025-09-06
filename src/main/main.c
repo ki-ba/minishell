@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 13:16:33 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/06 11:15:33 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 13:31:46 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,8 @@ int	main(int argc, char *argv[], char *envp[])
 	else
 	{
 		ft_putstr_fd("error creating environment\n", 2);
-		ms_data.error = ERR_ALLOC;
+		if (ms_data.error != 1)
+			ms_data.error = ERR_ALLOC;
 	}
 	rl_clear_history();
 	error_handler(&ms_data);
