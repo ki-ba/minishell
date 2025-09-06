@@ -54,6 +54,7 @@ char	*find_executable(char	**paths, char *cmd)
 	char	*path;
 
 	i = 0;
+	path = NULL;
 	while (paths[i])
 	{
 		path = ft_concat(3, paths[i], "/", cmd);

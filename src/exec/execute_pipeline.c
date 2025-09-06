@@ -64,7 +64,7 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 	{
 		prepare_exec(ms, exec, cmd);
 		ms->error = define_error(node->path);
-		if (node->path && node->env_arr && ms->error == 0)
+		if (ms->error == 0 && node->path && node->env_arr)
 			execve(node->path, cmd, node->env_arr);
 		else if (!node->path || !node->env_arr)
 			ms->error = ERR_ALLOC;

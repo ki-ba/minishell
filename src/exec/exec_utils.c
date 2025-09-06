@@ -14,6 +14,7 @@
 #include "libft.h"
 #include "data_structures.h"
 #include "exec.h"
+#include "minishell.h"
 #include <sys/stat.h>
 
 int	sclose(int fd)
