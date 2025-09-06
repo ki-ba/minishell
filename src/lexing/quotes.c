@@ -12,30 +12,49 @@
 
 #include "libft.h"
 #include "lexing.h"
+#include <sys/types.h>
 
 static int	is_quote(char c)
 {
 	return (c == '\'' || c == '"');
 }
 
+static ssize_t	look_for_next_quote(char str[], ssize_t q)
+{
+	ssize_t	i;
+
+	i = q + 1;
+	while (str[i])
+	{
+		if (str[i] == str[q])
+			return (i);
+		++i;
+	}
+	return (-1);
+}
+
+/**
+	* @brief removes quotes from the given string in-place.
+	* @brief the string is re-null-terminated accordingly.
+	* @brief exceeding space is not freed.
+*/
 static void	remove_quotes_str(char str[])
 {
-	char	quote;
-	size_t	i;
-	size_t	j;
+	ssize_t	i;
+	ssize_t	j;
+	ssize_t	next_quote;
 
 	i = 0;
 	j = 0;
-	quote = '\0';
+	next_quote = -1;
 	while (str[i])
 	{
-		if (is_quote(str[i]))
+		if (i == next_quote)
+			next_quote = -1;
+		else if (next_quote == -1 && is_quote(str[i]))
 		{
-			if (str[i] == quote)
-				quote = '\0';
-			else if (quote == 0)
-				quote = str[i];
-			else
+			next_quote = look_for_next_quote(str, i);
+			if (next_quote == -1)
 				str[j++] = str[i];
 		}
 		else
@@ -45,11 +64,6 @@ static void	remove_quotes_str(char str[])
 	str[j] = '\0';
 }
 
-/**
-	* @brief removes quotes from the given string in-place.
-	* @brief the string is re-null-terminated accordingly.
-	* @brief exceeding space is not freed.
-*/
 void	remove_quotes(void *item)
 {
 	char	*str;

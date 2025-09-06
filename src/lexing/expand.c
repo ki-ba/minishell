@@ -93,7 +93,6 @@ static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len)
 	{
 		tmp = search_env_var(ms->env, varname);
 		if (tmp)
-			// next_chunk = ft_strdup(tmp->value);
 			next_chunk = ft_concat(3, "\"", tmp->value, "\"");
 		else
 			next_chunk = ft_strdup("");
