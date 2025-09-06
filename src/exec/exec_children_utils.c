@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/03 11:47:38 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 11:58:03 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "data_structures.h"
 #include "exec.h"
 #include "parsing.h"
+#include <readline/readline.h>
 
 static void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
 {
@@ -43,6 +44,7 @@ static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 	pid = fork();
 	if (pid == 0)
 	{
+		rl_clear_history();
 		set_child_io(ms, cur, pipe_fd);
 		ft_lstclear_but(&ms->exec_lst, del_exec_node, *cur);
 		cmd = duplicate_arr(exe->cmd);
@@ -54,6 +56,7 @@ static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 			clean_exit_child(ms, cur, cmd);
 			exit(ms->error);
 		}
+
 		ms->error = try_exec(ms, &ms->exec_lst, cmd);
 	}
 	sclose(exe->io[0]);
