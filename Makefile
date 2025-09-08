@@ -1,8 +1,7 @@
 DEPS = $(OBJ:.o=.d)
 NAME = minishell
-DEBUG = 1
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -D DEBUG
+CFLAGS = -Wall -Wextra -Werror -g
 CPPFLAGS = -Iinc/ -Ilib/libft/inc -MMD -MP
 
 ###### SOURCE AND OBJ #####
@@ -18,7 +17,7 @@ LEXING_SRC = lexing.c lexing_utils.c expand.c expand_utils.c expand_check.c toke
 BUILTINS_SRC = echo.c cd.c pwd.c export.c unset.c env.c exit.c export_utils.c cd_utils.c cd_symlink.c
 PARSING_SRC = parsing.c parsing_utils.c exec_node.c double_input_redir.c
 EXEC_SRC = builtins_call.c execute_pipeline.c exec_utils.c exec_children_utils.c execution.c
-MAIN_SRC = initial_formatting.c main.c prompt.c ms_utils.c debug.c
+MAIN_SRC = initial_formatting.c main.c prompt.c ms_utils.c
 SIGNALS_SRC = signals.c
 
 ENV_SRC_DIR = env/
@@ -46,7 +45,6 @@ LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 R_INCLUDES = minishell.h color.h exec.h parsing.h lexing.h history.h signals.h builtins.h data_structures.h env.h error.h prompt.h ms_utils.h
 INCLUDES = $(addprefix $(INC_DIR), $(R_INCLUDES))
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:%.c=%.o)) 
-TOBJ = $(filter-out $(OBJ_DIR)main.o, $(OBJ))
 
 .PHONY = all clean fclean re lib test
 
@@ -87,7 +85,6 @@ $(LIB_DIR)libft.a :
 clean :
 	$(MAKE) -C $(LIB_DIR) clean
 	rm -rf $(OBJ_DIR)
-	rm -rf $(UNITY_OBJ_DIR)
 
 fclean :	clean
 	$(MAKE) -C $(LIB_DIR) fclean
