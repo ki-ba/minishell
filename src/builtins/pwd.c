@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/23 10:33:19 by mlouis            #+#    #+#             */
-/*   Updated: 2025/08/29 07:09:09 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 17:53:19 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 int	ft_pwd(char **cmd, t_minishell *ms_data)
 {
 	(void)cmd;
-	printf("%s\n", ms_data->cur_wd);
+	if (printf("%s\n", ms_data->cur_wd) < 0)
+		return (ERR_PRINT);
 	return (SUCCESS);
 }

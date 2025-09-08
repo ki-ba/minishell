@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/06 13:33:59 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 17:37:33 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len);
 static char	*expand_metachar(char *str, size_t *i, size_t len);
 
-char	*expand_line_dollar(t_minishell *ms, char str[], char *expanded)
+static char	*expand_line_dollar(t_minishell *ms, char str[], char *expanded)
 {
 	size_t	i;
 	size_t	part_len;
@@ -44,7 +44,7 @@ char	*expand_line_dollar(t_minishell *ms, char str[], char *expanded)
 	return (expanded);
 }
 
-char	*expand_line_metachar(t_minishell *ms, char str[], char *expanded)
+static char	*expand_line_metachar(t_minishell *ms, char str[], char *expanded)
 {
 	size_t	i;
 	size_t	part_len;
