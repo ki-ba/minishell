@@ -65,21 +65,10 @@ size_t	get_part_len_metachar(char str[])
 
 	i = ft_strlen_c(str, '|');
 	tmp = ft_strlen_c(str, '<');
-	if (!is_inquote(str, tmp) && i > tmp && tmp >= 0)
+	if (!is_inquote(str, tmp) && i > tmp)
 		i = tmp;
 	tmp = ft_strlen_c(str, '>');
-	if (!is_inquote(str, tmp) && i > tmp && tmp >= 0)
+	if (!is_inquote(str, tmp) && i > tmp)
 		i = tmp;
 	return (i);
 }
-
-// size_t	get_part_len(char str[], int option)
-// {
-// 	size_t	i;
-
-// 	if (option == DOLLAR)
-// 		i = get_part_len_dollar(str);
-// 	if (option == METACHAR)
-// 		i = get_part_len_metachar(str);
-// 	return (i);
-// }
