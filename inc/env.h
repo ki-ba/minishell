@@ -27,7 +27,7 @@ size_t			envlist_len(t_env_lst *env);
 
 /* ENVLIST UTILS */
 
-void			update_qm(int *qm, int status, int conditionnal);
+void			update_qm(t_minishell *ms, int status, int conditionnal);
 char			**envlist_to_arr(t_env_lst *env_lst);
 t_env_lst		*search_env_var(t_env_lst *env, char *var);
 void			del_env_entry(t_env_lst *env_entry);

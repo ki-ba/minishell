@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "data_structures.h"
+#include "libft.h"
 #include "ms_utils.h"
 #include "minishell.h"
 #include "error.h"
@@ -39,6 +40,12 @@ void	error_handler(t_minishell *ms)
 		{
 			ft_putstr_fd("ERROR : memory allocation failed\n", 2);
 			ms->is_exit = TRUE;
+		}
+		if (ms->error == ERR_DUP)
+		{
+			ms->error = 1;
+			ms->is_exit = TRUE;
+			return ;
 		}
 		ms->error -= 300;
 	}
@@ -80,7 +87,7 @@ int	readline_loop(t_minishell *ms_data)
 	char		*prompt;
 
 	g_signal = 0;
-	while (ms_data->error != ERR_ALLOC && !(ms_data->is_exit))
+	while (ms_data->error < ERR_ALLOC && !(ms_data->is_exit))
 	{
 		ms_data->interface = 0;
 		ft_lstclear(&ms_data->exec_lst, del_exec_node);

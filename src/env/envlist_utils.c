@@ -10,13 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "error.h"
 #include "libft.h"
 #include "data_structures.h"
 #include "env.h"
 #include "signals.h"
 
-void	update_qm(int *qm, int status, int conditionnal)
+void	update_qm(t_minishell *ms, int status, int conditionnal)
 {
+	int	*qm;
+
+	qm = &ms->error;
 	if (!qm)
 		return ;
 	if (g_signal == 2)

@@ -14,6 +14,7 @@
 #include "libft.h"
 #include "data_structures.h"
 #include "exec.h"
+#include "minishell.h"
 #include <sys/stat.h>
 
 int	sclose(int fd)
@@ -24,19 +25,26 @@ int	sclose(int fd)
 		return (close(fd));
 }
 
-int	apply_redirections(t_list **cur_node)
+int	apply_redirections(t_minishell *ms, t_list **cur_node)
 {
 	t_exec_node	*exe;
 	int			err;
 
 	err = 0;
 	exe = (t_exec_node *)(*cur_node)->content;
-	if (exe->io[1] != STDOUT_FILENO)
-		err = dup2(exe->io[1], STDOUT_FILENO);
-	if (err >= 0 && exe->io[0] != STDIN_FILENO)
-		err = dup2(exe->io[0], STDIN_FILENO);
-	sclose (exe->io[0]);
-	sclose (exe->io[1]);
+	if (ms->error != ERR_DUP)
+	{
+		if (exe->io[1] != STDOUT_FILENO)
+			err = dup2(exe->io[1], STDOUT_FILENO);
+		if (err >= 0 && exe->io[0] != STDIN_FILENO)
+			err = dup2(exe->io[0], STDIN_FILENO);
+		sclose (exe->io[0]);
+		sclose (exe->io[1]);
+		if (err == -1)
+			return (ERR_DUP);
+	}
+	else
+		return (ERR_DUP);
 	return (err);
 }
 

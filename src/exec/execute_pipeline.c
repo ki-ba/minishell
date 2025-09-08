@@ -31,7 +31,7 @@ int	clean_exit_child(t_minishell *ms, t_list **node, char **cmd)
 	rl_clear_history();
 	ft_lstdelone(*node, del_exec_node);
 	destroy_ms(ms);
-	if (ms->error == ERR_ALLOC)
+	if (ms->error >= ERR_ALLOC)
 		error_handler(ms);
 	ft_free_arr(cmd);
 	return (ms->error);
@@ -66,7 +66,7 @@ int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 	{
 		prepare_exec(ms, exec, cmd);
 		ms->error = define_error(node->path);
-		if (node->path && node->env_arr && ms->error == 0)
+		if (ms->error == 0 && node->path && node->env_arr)
 			execve(node->path, cmd, node->env_arr);
 		else if (!node->path || !node->env_arr)
 			ms->error = ERR_ALLOC;
@@ -86,21 +86,23 @@ int	exec_unique_cmd(t_minishell *ms_data, t_list **exec_lst)
 	int			saved;
 	int			err;
 
+	err = ms_data->error;
 	exe = (t_exec_node *)(*exec_lst)->content;
 	if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
 		return (1);
 	saved = dup(STDOUT_FILENO);
-	if (exe->io[1])
-	{
-		dup2(exe->io[1], STDOUT_FILENO);
-		if (exe->io[1] != STDOUT_FILENO && exe->io[1] > 0)
-			sclose(exe->io[1]);
-	}
-	err = call_cmd(ms_data, exe->cmd);
 	if (exe->io[1] != STDOUT_FILENO)
-		dup2(saved, STDOUT_FILENO);
-	if (saved > STDOUT_FILENO)
-		sclose (saved);
+	{
+		if (dup2(exe->io[1], STDOUT_FILENO) < 0)
+			err = ERR_DUP;
+		sclose(exe->io[1]);
+	}
+	if (err != ERR_DUP)
+		err = call_cmd(ms_data, exe->cmd);
+	if (exe->io[1] != STDOUT_FILENO)
+		if (dup2(saved, STDOUT_FILENO) < 0)
+			err = ERR_DUP;
+	sclose (saved);
 	return (err);
 }
 
