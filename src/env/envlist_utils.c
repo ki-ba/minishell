@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:24 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/02 10:15:39 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/08 11:56:35 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	**envlist_to_arr(t_env_lst *env_lst)
 	char		**env;
 	size_t		i;
 
-	env = ft_calloc(envlist_len(env_lst), sizeof(char *));
+	env = ft_calloc(envlist_len(env_lst) + 1, sizeof(char *));
 	if (!env)
 	{
 		ft_putstr_fd("error converting env to array\n", 2);
@@ -52,7 +52,10 @@ char	**envlist_to_arr(t_env_lst *env_lst)
 	i = 0;
 	while (env && env_lst->next)
 	{
-		env[i] = ft_concat(3, env_lst->name, "=", env_lst->value);
+		if (env_lst->value)
+			env[i] = ft_concat(3, env_lst->name, "=", env_lst->value);
+		else
+			env[i] = ft_concat(2, env_lst->name, "=");
 		if (!env[i])
 		{
 			ft_putstr_fd("error converting env to array\n", 2);

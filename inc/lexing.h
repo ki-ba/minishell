@@ -35,7 +35,6 @@ char			*expand_line(t_minishell *ms, char str[], int option);
 void			join_in_place(char **s1, char *s2);
 size_t			get_part_len_dollar(char str[]);
 size_t			get_part_len_metachar(char str[]);
-// size_t			get_part_len(char str[], int option);
 
 /* EXPAND CHECK */
 

@@ -30,15 +30,8 @@ void			error_handler(t_minishell *ms);
 int				handle_line(t_minishell *ms_data, char cmd[]);
 int				readline_loop(t_minishell *minishell_data);
 
-void			print_arr_oneline(char **arr);
-void			print_tokens(t_list *tokens);
-void			print_exec_lst(t_list *exec_lst);
-
 # ifndef HERE_DOC_LEN
 #  define HERE_DOC_LEN 8
 # endif
 
-# ifndef DEBUG
-#  define DEBUG 0
-# endif
 #endif
