@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_concat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kiba <kiba@student.42lyon.fr>              +#+  +:+       +#+        */
+/*   By: kbarru <kiba@student.42lyon.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/09 11:04:06 by kiba              #+#    #+#             */
-/*   Updated: 2025/03/09 11:04:12 by kiba             ###   ########lyon.fr   */
+/*   Created: 2025/03/09 11:04:06 by kbarru            #+#    #+#             */
+/*   Updated: 2025/09/03 10:00:19 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,9 @@ char	*ft_concat(size_t n, ...)
 	int		err;
 
 	i = 0;
-	string = malloc(sizeof(char));
+	string = ft_calloc(1, sizeof(char));
 	if (!string)
 		return (NULL);
-	string[0] = '\0';
 	va_start(lst, n);
 	while (i < n)
 	{

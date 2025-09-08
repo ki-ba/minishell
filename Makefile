@@ -1,8 +1,7 @@
 DEPS = $(OBJ:.o=.d)
 NAME = minishell
 CC = cc
-DEBUG = 1
-CFLAGS = -Wall -Wextra -Werror -g -DDEBUG=$(DEBUG)
+CFLAGS = -Wall -Wextra -Werror -g
 CPPFLAGS = -Iinc/ -Ilib/libft/inc -MMD -MP
 
 ###### SOURCE AND OBJ #####
@@ -46,7 +45,6 @@ LIBS = -L$(LIB_DIR) -lft -lreadline -lhistory
 R_INCLUDES = minishell.h color.h exec.h parsing.h lexing.h history.h signals.h builtins.h data_structures.h env.h error.h prompt.h ms_utils.h
 INCLUDES = $(addprefix $(INC_DIR), $(R_INCLUDES))
 OBJ = $(addprefix $(OBJ_DIR), $(SRC:%.c=%.o)) 
-TOBJ = $(filter-out $(OBJ_DIR)main.o, $(OBJ))
 
 .PHONY = all clean fclean re lib test
 
@@ -87,7 +85,6 @@ $(LIB_DIR)libft.a :
 clean :
 	$(MAKE) -C $(LIB_DIR) clean
 	rm -rf $(OBJ_DIR)
-	rm -rf $(UNITY_OBJ_DIR)
 
 fclean :	clean
 	$(MAKE) -C $(LIB_DIR) fclean

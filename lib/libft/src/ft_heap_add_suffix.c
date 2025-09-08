@@ -18,7 +18,7 @@
 *	@brief and replaces it by the new
 *	@param s1 pointer to the current string.
 *	@param suffix the suffix to add.
-*	@note will cause a segfault if the string was not allocated on the heap.
+*	@note will cause a segfault if s1 was not allocated on the heap.
 */
 int	heap_add_suffix(const char *suffix, char **s1)
 {
@@ -27,7 +27,7 @@ int	heap_add_suffix(const char *suffix, char **s1)
 	char	*s1_dup;
 	size_t	size;
 
-	if (!s1)
+	if (!s1 || !suffix)
 		return (1);
 	s1_dup = ft_strdup(*s1);
 	if (!s1_dup)

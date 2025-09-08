@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:08:55 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/01 19:33:28 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 18:18:51 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,24 @@ t_bool	is_inquote(char *str, size_t pos)
 	return ((sq % 2) + (dq % 2) % 2);
 }
 
+static t_bool	look_for_hd(char str[], size_t pos)
+{
+	size_t	i;
+	size_t	n;
+
+	i = 0;
+	n = 0;
+	while (i < pos)
+	{
+		if (str[i] == '<')
+			++n;
+		else if (str[i] != '\"' && !ft_iswhitespace(str[i]))
+			n = 0;
+		++i;
+	}
+	return (n == 2);
+}
+
 t_bool	must_expand(char str[], size_t pos)
 {
 	char	quote;
@@ -53,7 +71,7 @@ t_bool	must_expand(char str[], size_t pos)
 			quote = '\0';
 		++i;
 	}
-	return (quote != '\'');
+	return (!look_for_hd(str, pos) && quote != '\'');
 }
 
 int	check_meta_validity(char *str)
@@ -65,7 +83,8 @@ int	check_meta_validity(char *str)
 	{
 		if (is_metachar(str[i]) && !is_inquote(str, i))
 		{
-			if (str[i] == '|' && ((str[i + 1] == '>' || str[i + 1] == '<')))
+			if (str[i] == '|' && ((str[i + 1] == '>' || str[i + 1] == '<'))
+				&& !str[i + 2])
 				return (ERR_PARSING);
 			if (str[i] == '>' && ((str[i + 1] == '|' || str[i + 1] == '<')))
 				return (ERR_PARSING);

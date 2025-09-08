@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:02:21 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 10:19:40 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 16:47:23 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 # include "libft.h"
 # include "data_structures.h"
 
-# ifndef DEBUG
-#  define DEBUG 0
-# endif
 /* MS DATA */
 
 void			destroy_ms(t_minishell *ms);

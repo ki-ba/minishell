@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 13:35:23 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/02 10:45:34 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 19:12:07 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,15 @@ static void	set_child_io(t_minishell *ms, t_list **cur, int pipe_fd[2])
 {
 	if ((*cur)->next)
 	{
-		if (dup2(pipe_fd[1], STDOUT_FILENO))
-			ms->error = ERR_FAIL;
+		if (dup2(pipe_fd[1], STDOUT_FILENO) < 0)
+			ms->error = ERR_DUP;
 		sclose(pipe_fd[0]);
 		sclose(pipe_fd[1]);
 	}
 	if (ms->interface)
 	{
-		if (dup2(ms->interface, STDIN_FILENO))
-			ms->error = ERR_FAIL;
+		if (dup2(ms->interface, STDIN_FILENO) < 0)
+			ms->error = ERR_DUP;
 		sclose(ms->interface);
 	}
 }
@@ -40,19 +40,19 @@ static int	child(t_minishell *ms, t_list **cur, int pipe_fd[2])
 	t_exec_node	*exe;
 
 	exe = (t_exec_node *)(*cur)->content;
+	if (exe->cmd && !exe->cmd[0])
+		return (0);
 	pid = fork();
 	if (pid == 0)
 	{
 		set_child_io(ms, cur, pipe_fd);
 		ft_lstclear_but(&ms->exec_lst, del_exec_node, *cur);
 		cmd = duplicate_arr(exe->cmd);
-		if (ms->error == ERR_FAIL || apply_redirections(cur) < 0 || !cmd)
+		ms->error = apply_redirections(ms, cur);
+		if (ms->error == ERR_DUP || !cmd)
 		{
-			ms->error = 1;
 			if (!cmd)
 				ms->error = ERR_ALLOC;
-			else
-				perror("minishell");
 			clean_exit_child(ms, cur, cmd);
 			exit(ms->error);
 		}

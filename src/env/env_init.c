@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:03:16 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/01 13:19:29 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 13:35:12 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_env_lst	*create_environment(t_minishell *ms_data, char *envp[])
 		return (NULL);
 	while (envp[i])
 	{
-		new = create_env_lst(envp[i]);
+		new = create_env_lst(ms_data, envp[i]);
 		env_add_back(&ms_data->env, new);
 		if (!new)
 		{

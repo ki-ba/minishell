@@ -27,7 +27,7 @@ int				def_redir_type(t_token_type type);
 /* PARSING UTILS 2 */
 
 int				sclose(int fd);
-int				apply_redirections(t_list **cur_node);
+int				apply_redirections(t_minishell *ms, t_list **cur_node);
 
 /* EXEC NODE */
 

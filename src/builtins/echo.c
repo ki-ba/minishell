@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:04:31 by kbarru            #+#    #+#             */
-/*   Updated: 2025/08/29 07:06:14 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 19:11:56 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,19 @@ int	ft_echo(char **cmd, t_minishell *ms_data)
 	i = opt;
 	while (i && cmd[i])
 	{
-		ft_putstr_fd(cmd[i], 1);
+		if (ft_putstr_fd(cmd[i], 1) < 0)
+			return (ERR_PRINT);
 		if (cmd[i] && cmd[i + 1])
-			ft_putstr_fd(" ", 1);
+		{
+			if (ft_putstr_fd(" ", 1) < 0)
+				return (ERR_PRINT);
+		}
 		++i;
 	}
 	if (opt == 1)
-		printf("\n");
+	{
+		if (ft_putstr_fd("\n", 1) < 0)
+			return (ERR_PRINT);
+	}
 	return (SUCCESS);
 }

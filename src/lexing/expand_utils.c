@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:00:13 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 12:24:39 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 17:12:01 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ void	join_in_place(char **s1, char *s2)
 	char	*s3;
 
 	s3 = ft_strjoin(*s1, s2);
-	free(s2);
-	free(*s1);
+	if (s2)
+		free(s2);
+	if (*s1)
+		free(*s1);
 	*s1 = s3;
 }
 
@@ -44,24 +46,29 @@ static size_t	varnamelen(char str[])
 	return (i);
 }
 
-size_t	get_part_len(char str[])
+size_t	get_part_len_dollar(char str[])
 {
 	size_t	i;
-	size_t	tmp;
 
 	i = 0;
 	if (str[0] == '$')
 		i = varnamelen(str);
 	else
 		i = ft_strlen_c(str, '$');
-	tmp = ft_strlen_c(str, '|');
-	if (!is_inquote(str, tmp) && i > tmp && tmp > 0)
-		i = tmp;
+	return (i);
+}
+
+size_t	get_part_len_metachar(char str[])
+{
+	size_t	i;
+	size_t	tmp;
+
+	i = ft_strlen_c(str, '|');
 	tmp = ft_strlen_c(str, '<');
-	if (!is_inquote(str, tmp) && i > tmp && tmp > 0)
+	if (!is_inquote(str, tmp) && i > tmp)
 		i = tmp;
 	tmp = ft_strlen_c(str, '>');
-	if (!is_inquote(str, tmp) && i > tmp && tmp > 0)
+	if (!is_inquote(str, tmp) && i > tmp)
 		i = tmp;
 	return (i);
 }

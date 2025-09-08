@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:54 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 10:46:58 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 19:12:20 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include "env.h"
 #include "minishell.h"
 #include "parsing.h"
+#include <readline/readline.h>
 
 /**
  * @brief cleans memory before exit()ing.
@@ -27,11 +28,26 @@
  */
 int	clean_exit_child(t_minishell *ms, t_list **node, char **cmd)
 {
+	rl_clear_history();
 	ft_lstdelone(*node, del_exec_node);
 	destroy_ms(ms);
-	if (ms->error == ERR_ALLOC)
+	if (ms->error >= ERR_ALLOC)
 		error_handler(ms);
 	ft_free_arr(cmd);
+	return (ms->error);
+}
+
+int	prepare_exec(t_minishell *ms, t_list **exec, char **cmd)
+{
+	t_exec_node	*node;
+
+	node = ((t_exec_node *)(*exec)->content);
+	node->env_arr = envlist_to_arr(ms->env);
+	if (!node->env_arr)
+		return (ERR_ALLOC);
+	node->path = path_to_cmd(cmd, ms->env);
+	if (!node->path)
+		ms->error = ERR_ALLOC;
 	return (ms->error);
 }
 
@@ -40,25 +56,26 @@ int	clean_exit_child(t_minishell *ms, t_list **node, char **cmd)
  */
 int	try_exec(t_minishell *ms, t_list **exec, char **cmd)
 {
-	char		*path;
-	char		**env_arr;
+	t_exec_node	*node;
 
+	node = ((t_exec_node *)(*exec)->content);
 	ms->error = 127;
-	if (is_builtin(cmd))
+	if (ft_strlen(cmd[0]) != 0 && is_builtin(cmd))
 		ms->error = call_cmd(ms, cmd);
-	else
+	else if (ft_strlen(cmd[0]) != 0)
 	{
-		env_arr = envlist_to_arr(ms->env);
-		path = path_to_cmd(cmd, ms->env);
-		ms->error = define_error(path);
-		if (path && env_arr && ms->error == 0)
-			execve(path, cmd, env_arr);
-		else if (!path || !env_arr)
+		prepare_exec(ms, exec, cmd);
+		ms->error = define_error(node->path);
+		if (ms->error == 0 && node->path && node->env_arr)
+			execve(node->path, cmd, node->env_arr);
+		else if (!node->path || !node->env_arr)
 			ms->error = ERR_ALLOC;
-		ft_multifree(1, 1, path, env_arr);
+		ft_multifree(1, 1, node->path, node->env_arr);
 		if (ms->error == 127)
 			ft_printf_fd(2, "minishell: %s: command not found\n", cmd[0]);
 	}
+	else if (ft_strlen(cmd[0]) == 0)
+		ft_printf_fd(2, "minishell : '' : command not found\n", cmd[0]);
 	clean_exit_child(ms, exec, cmd);
 	exit(ms->error);
 }
@@ -69,21 +86,23 @@ int	exec_unique_cmd(t_minishell *ms_data, t_list **exec_lst)
 	int			saved;
 	int			err;
 
+	err = ms_data->error;
 	exe = (t_exec_node *)(*exec_lst)->content;
 	if (exe->status || exe->io[0] == -1 || exe->io[1] == -1)
 		return (1);
 	saved = dup(STDOUT_FILENO);
-	if (exe->io[1])
-	{
-		dup2(exe->io[1], STDOUT_FILENO);
-		if (exe->io[1] != STDOUT_FILENO && exe->io[1] > 0)
-			close(exe->io[1]);
-	}
-	err = call_cmd(ms_data, exe->cmd);
 	if (exe->io[1] != STDOUT_FILENO)
-		dup2(saved, STDOUT_FILENO);
-	if (saved > STDOUT_FILENO)
-		close (saved);
+	{
+		if (dup2(exe->io[1], STDOUT_FILENO) < 0)
+			err = ERR_DUP;
+		sclose(exe->io[1]);
+	}
+	if (err != ERR_DUP)
+		err = call_cmd(ms_data, exe->cmd);
+	if (exe->io[1] != STDOUT_FILENO)
+		if (dup2(saved, STDOUT_FILENO) < 0)
+			err = ERR_DUP;
+	sclose (saved);
 	return (err);
 }
 
@@ -106,6 +125,6 @@ pid_t	exec_pipeline(t_minishell *ms)
 		current = current->next;
 	}
 	if (pid == -1)
-		ft_printf_fd(2, "error : failed to create process");
+		ft_printf_fd(2, "error : failed to create process\n");
 	return (pid);
 }

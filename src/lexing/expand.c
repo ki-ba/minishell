@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 14:09:29 by mlouis            #+#    #+#             */
-/*   Updated: 2025/09/02 12:24:55 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/06 17:37:33 by mlouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,63 +17,75 @@
 #include "env.h"
 
 static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len);
-static char	*expand_metachar(char *str, size_t i, size_t len);
-static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len);
+static char	*expand_metachar(char *str, size_t *i, size_t len);
 
-char	*expand_line(t_minishell *ms, char str[])
+static char	*expand_line_dollar(t_minishell *ms, char str[], char *expanded)
 {
 	size_t	i;
 	size_t	part_len;
-	char	*expanded;
 	char	*next_chunk;
 
 	i = 0;
-	expanded = ft_calloc(1, sizeof(char));
-	if (!expanded)
-	{
-		ms->error = ERR_ALLOC;
-		return (NULL);
-	}
 	while (str[i])
 	{
-		part_len = get_part_len(&str[i]);
-		next_chunk = set_chunk_val(ms, str, i, part_len);
+		part_len = get_part_len_dollar(&str[i]);
+		if (str[i] == '$' && must_expand(str, i))
+			next_chunk = expand_dollar(ms, str, i, part_len);
+		else
+			next_chunk = ft_substr(str, i, part_len);
+		if (!next_chunk)
+		{
+			ms->error = ERR_ALLOC;
+			return (NULL);
+		}
 		i += part_len;
-		if (!is_inquote(str, i) && is_metachar(str[i]))
-			++i;
-		if (!is_inquote(str, i) && (str[i] == '<' || str[i] == '>'))
+		join_in_place(&expanded, next_chunk);
+	}
+	return (expanded);
+}
+
+static char	*expand_line_metachar(t_minishell *ms, char str[], char *expanded)
+{
+	size_t	i;
+	size_t	part_len;
+	char	*next_chunk;
+
+	i = 0;
+	while (str[i])
+	{
+		part_len = get_part_len_metachar(&str[i]);
+		if (is_metachar(str[i + part_len]))
+			next_chunk = expand_metachar(str, &i, part_len);
+		else
+			next_chunk = ft_substr(str, i, part_len);
+		if (!next_chunk)
+		{
+			ms->error = ERR_ALLOC;
+			return (NULL);
+		}
+		i += part_len;
+		if (is_metachar(str[i]))
 			++i;
 		join_in_place(&expanded, next_chunk);
 	}
 	return (expanded);
 }
 
-static char	*set_chunk_val(t_minishell *ms, char *str, size_t i, size_t len)
+char	*expand_line(t_minishell *ms, char str[], int option)
 {
-	char		*next_chunk;
+	char	*expanded;
 
-	if (must_expand(str, i) && i == 0 && is_metachar(str[i]))
+	expanded = ft_calloc(1, sizeof(char));
+	if (!expanded)
 	{
-		next_chunk = ft_strdup(" ");
-		return (next_chunk);
+		ms->error = ERR_ALLOC;
+		return (NULL);
 	}
-	if (i == 0 && is_metachar(str[i]))
-	{
-		++i;
-		--len;
-		if (str[i] == '<' || str[i] == '>')
-		{
-			++i;
-			--len;
-		}
-	}
-	if (must_expand(str, i) && i > 0 && is_metachar(str[i - 1]))
-		next_chunk = expand_metachar(str, i, len);
-	else if (str[i] == '$' && must_expand(str, i))
-		next_chunk = expand_dollar(ms, str, i, len);
-	else
-		next_chunk = ft_substr(str, i, len);
-	return (next_chunk);
+	if (option == DOLLAR)
+		return (expand_line_dollar(ms, str, expanded));
+	if (option == METACHAR)
+		return (expand_line_metachar(ms, str, expanded));
+	return (expanded);
 }
 
 static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len)
@@ -103,25 +115,28 @@ static char	*expand_dollar(t_minishell *ms, char *str, size_t i, size_t len)
 	return (next_chunk);
 }
 
-static char	*expand_metachar(char *str, size_t i, size_t len)
+static char	*expand_metachar(char *str, size_t *i, size_t len)
 {
 	char	*varname;
 	char	*next_chunk;
 	char	meta[3];
+	size_t	pos;
 
-	if (!is_inquote(str, i))
-		--i;
-	varname = ft_substr(str, i + 1, len);
+	pos = *i + len;
+	varname = ft_substr(str, *i, len);
 	if (!varname)
 		return (NULL);
 	ft_bzero(meta, 3);
-	meta[0] = str[i];
-	if (str[i] != '|' && (i > 0 && str[i] == str[i - 1]))
+	meta[0] = str[pos];
+	if (str[pos] != '|' && str[pos] == str[pos + 1])
+	{
 		meta[1] = meta[0];
-	if (is_inquote(str, i))
-		next_chunk = ft_concat(2, meta, varname);
+		(*i) = (*i) + 1;
+	}
+	if (is_inquote(str, pos))
+		next_chunk = ft_concat(2, varname, meta);
 	else
-		next_chunk = ft_concat(4, " ", meta, " ", varname);
+		next_chunk = ft_concat(4, varname, " ", meta, " ");
 	free(varname);
 	return (next_chunk);
 }

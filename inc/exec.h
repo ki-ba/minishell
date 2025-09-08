@@ -28,7 +28,7 @@ int		clean_exit_child(t_minishell *ms, t_list **node, char **cmd);
 /* BUILTINS CALL */
 
 char	*check_path_exist(t_env_lst *env);
-char	*find_path(char *cmd, t_env_lst *env);
+char	*find_executable(char **paths, char *cmd);
 t_bool	is_builtin(char **cmd);
 int		call_cmd(t_minishell *ms, char **cmd);
 

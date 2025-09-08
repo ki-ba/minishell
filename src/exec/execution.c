@@ -6,7 +6,7 @@
 /*   By: mlouis <mlouis@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 13:59:34 by kbarru            #+#    #+#             */
-/*   Updated: 2025/09/02 10:51:11 by mlouis           ###   ########.fr       */
+/*   Updated: 2025/09/02 17:11:05 by kbarru           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "builtins.h"
 #include "signals.h"
 #include <sys/wait.h>
+#include "minishell.h"
 
 static int	wait_processes(pid_t pid, int err)
 {
@@ -55,15 +56,15 @@ static int	start_execution(t_minishell *ms)
 	node = (t_exec_node *) ms->exec_lst->content;
 	exec_lst = ms->exec_lst;
 	if (ft_strlen(node->cmd[0]) == 0)
-		update_qm(&ms->error, 0, 0);
+		update_qm(ms, 0, 0);
 	if (!exec_lst->next && node->cmd[0] && !ft_strncmp(node->cmd[0], "exit", 5))
 		ms->is_exit = is_correct_exit(node->cmd);
 	if (!exec_lst->next && is_builtin(node->cmd))
-		update_qm(&ms->error, exec_unique_cmd(ms, &exec_lst), 1);
+		update_qm(ms, exec_unique_cmd(ms, &exec_lst), 1);
 	else
 	{
 		update_signals(1);
-		update_qm(&ms->error, wait_processes(exec_pipeline(ms), ms->error), 0);
+		update_qm(ms, wait_processes(exec_pipeline(ms), ms->error), 0);
 	}
 	return (ms->error);
 }
@@ -72,7 +73,7 @@ int	interpret_line(t_minishell *ms, char *cmd)
 {
 	t_list		*tokens;
 
-	update_qm(&ms->error, 0, 1);
+	update_qm(ms, 0, 1);
 	tokens = NULL;
 	if (tokenize(&tokens, cmd) != 0)
 		return (ERR_ALLOC);
