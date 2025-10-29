@@ -7,13 +7,13 @@ _Project version : 9.0_
 This project aims to create a shell interactive interpreter that mimics the behavior of the [Bourne Again Shell](https://www.gnu.org/software/bash/). It has the following features :
 
 + command history (with `readline`)
-+ Environment variables expansion (\$VAR) and exit status (\$?)
++ Environment variables expansion and exit status (\$?)
 + Redirections (<, >, <<, >>)
 + Pipes (|)
 + Signal handling for Ctrl-C (new prompt), Ctrl-D (exit), Ctrl-\ (ignore / quit).
 + Built-ins: `echo` (-n option), `cd` (relative/absolute paths), `pwd`, `export`, `unset`, `env`, `exit`.
 
-The goal of the `minishell` project is to deepen one's understanding of Unix system calls, inter-process communication, file descriptors, and to improve C skills. Built at [42 School](42.fr), the project focuses on low-level system programming in C, and has a strong emphasis on error handling and memory management.
+The goal of the `minishell` project is to deepen one's understanding of Unix system calls, inter-process communication, file descriptors, and to improve C skills. Built at [42 School](https://www.42.fr), the project focuses on low-level system programming in C, and has a strong emphasis on error handling and memory management.
 
 ### requirements
 
